@@ -1,0 +1,122 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+.vscode/
+
+# Magento core files
+/app/etc/env.php
+/app/etc/env.php.generated
+/app/etc/env.php.sample
+
+# Magento vendor directory
+/vendor/
+
+# Generated modules and themes
+/generated/
+/pub/static/*
+!/pub/static/.htaccess
+/var/*
+!/var/.htaccess
+!/var/package/
+
+# Media directory
+/pub/media/*
+!/pub/media/.htaccess
+!/pub/media/customer/
+
+# Emails and newsletters
+/pub/sitemaps/
+/pub/mailclients/
+/pub/newsletter/
+
+# PHP composer
+/auth.json
+/composer.phar
+/composer.lock
+
+# PHPStorm configuration
+/.buildpath
+/.cache
+/.metadata
+/.project
+/.settings
+/.htaccess.sample
+/.user.ini
+
+# Testing
+/dev/tests/*/tmp/
+/dev/tests/functional/tmp/
+/dev/tests/js/jasmine/
+
+# Log files
+/var/log/
+*.log
+
+# Session files
+/var/session/
+
+# Cache
+/var/cache/
+/var/page_cache/
+/var/view_preprocessed/
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# CLI Tools
+/grunt-config.json
+/Gruntfile.js.sample
+/package.json.sample
+/package-lock.json
+/node_modules/
+
+# phpunit configuration
+/dev/tests/integration/etc/install-config-mysql.php
+/dev/tests/integration/*/settings.xml
+/dev/tests/integration/tmp/sandbox-*
+
+# Backup and temporary files
+*~
+*.bak
+*.swp
+*.swo
+
+# Local overrides
+/app/etc/config.local.php
+/app/etc/env.*.php
+/pub/errors/local.xml
+
+# Third-party extensions installed manually
+/app/code/*/
+/app/design/*/
+/app/i18n/*/
+
+# Compiled CSS and LESS
+/pub/static/frontend/*/
+/pub/static/adminhtml/*/
+
+# Sample data
+/pub/media/tmp/*
+/pub/media/catalog/product/cache/*
+/pub/media/catalog/product/placeholder/*
+
+# API runtime
+/dev/tests/api-functional/
+
+# Upgrade scripts
+/update/
+
+# Used for updating files
+setup.log
