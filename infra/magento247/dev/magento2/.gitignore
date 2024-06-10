@@ -1,0 +1,66 @@
+# Magento generated files
+/app/etc/config.php
+/app/etc/env.php
+/var/
+/pub/media/
+/pub/static/
+/generated/
+*/vendor/
+
+# Composer dependencies
+vendor/
+/composer.lock
+
+# Node dependencies
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+/pnp.js
+.pnp/
+
+# Environment files
+/.env
+/.idea
+/.vscode
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# PHPUnit
+.phpunit.result.cache
+
+# Vim temporary files
+*~
+
+# IDE specific files
+/.project
+/.buildpath
+/.settings/
+
+# JetBrains specific files
+/.idea/
+*.iml
+
+# Sublime Text specific files
+*.sublime-project
+*.sublime-workspace
+
+# Magento build directories
+/.cache
+/.grunt
+/.sass-cache
+/.tmp
+.sass-cache
+/Gruntfile.js
+/.gitattributes
+/.editorconfig
+/.styleci.yml
+
+# Other
+/.php_cs.cache
+/phpcs.xml
+/coverage/
