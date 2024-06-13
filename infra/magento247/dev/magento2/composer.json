@@ -40,7 +40,9 @@
         "magento/module-widget-sample-data": "100.4.*",
         "magento/module-wishlist-sample-data": "100.4.*",
         "magento/product-community-edition": "2.4.7",
-        "magento/sample-data-media": "100.4.*"
+        "magento/sample-data-media": "100.4.*",
+        "payone-gmbh/magento-2": "^3.10",
+        "twint/magento-2": "1.0.0"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -89,12 +91,27 @@
             "Magento\\Tools\\Sanity\\": "dev/build/publication/sanity/Magento/Tools/Sanity/"
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
         {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        {
+            "name": "twint/magento-2",
+            "type": "path",
+            "url": "/var/www/plugin",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "twint/magento-2": "1.0.0"
+                }
+            }
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
         }
     ],
     "extra": {

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Twint_Core::core" title="core" sortOrder="500">
+                    <resource id="Twint_Core::core_configuration" title="Configuration" sortOrder="20">
+                        <resource id="Twint_Core::configuration_credential" title="Credentials" sortOrder="10" />
+                        <resource id="Twint_Core::configuration_express_checkout" title="Express Checkout" sortOrder="10" />
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

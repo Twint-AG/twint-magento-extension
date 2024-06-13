@@ -1,7 +1,59 @@
-**/vendor
+# Composer dependencies
+/vendor/
+/composer.lock
+
+# PHPStorm
 .idea
 
 **/.env
 
-**/node_modules
-**/var
+# PHP CS Fixer
+.php_cs.cache
+
+# PHPUnit
+.phpunit.result.cache
+
+# PHPStorm project files
+/*.iml
+
+# VS Code
+/.vscode/
+
+# SFTP configuration file
+.sftp-config.json
+
+# Vim temporary files
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs and debug output
+*.log
+*.cache
+*.tmp
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Miscellaneous
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+/pnp.js
+.pnp/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Static analysis
+/phpstan/cache
+
+# Coverage reports
+/coverage/
