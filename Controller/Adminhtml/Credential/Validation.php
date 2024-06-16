@@ -36,12 +36,15 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
         $merchantId = $this->request->get('merchantId') ?? '';
 
         try {
+            $valid = $this->validator->validate($cert, $merchantId, $testMode);
             return $resultJson->setData([
-                'success' => $this->validator->validate($cert, $merchantId, $testMode)
+                'success' => $valid,
+                'message' => $valid ? '' : __('Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)')
             ]);
         } catch (\Exception $e) {
             return $resultJson->setData([
                 'success' => false,
+                'message' => $e->getMessage()
             ]);
         }
     }

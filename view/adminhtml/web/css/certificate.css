@@ -17,6 +17,7 @@
     font-weight: 600;
     cursor: pointer;
     color: #0a6aa1;
+    display: inline-block;
 }
 
 #certificate-file{

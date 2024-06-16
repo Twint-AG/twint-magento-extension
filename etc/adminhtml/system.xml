@@ -9,9 +9,8 @@
             <resource>Twint_Core::configuration_general</resource>
             <group id="credential" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Credentials</label>
-                <field id="merchantID" translate="label,comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="merchantID" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant-ID</label>
-                    <comment>If you dont have Merchant ID then contact TWINT</comment>
                     <config_path>twint/credentials/merchantid</config_path>
                 </field>
 

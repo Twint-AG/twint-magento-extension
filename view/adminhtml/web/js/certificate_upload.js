@@ -1,6 +1,8 @@
 class TwintCertificateUpload {
-    constructor($) {
+    constructor($, $t) {
         this.$ = $;
+        this.$t = $t;
+
         this.fileInput = document.getElementById('certificate-file');
         this.fileNameLabel = document.getElementById('certificate-file-name');
         this.inputContainer = document.getElementById('twint-certificate-input-container');
@@ -13,6 +15,8 @@ class TwintCertificateUpload {
         this.envSelect = document.getElementById('twint_general_credential_environment');
 
         this.saveButton = document.getElementById('save');
+
+        this.testing = false;
     }
 
     init() {
@@ -107,9 +111,8 @@ class TwintCertificateUpload {
         return uuidRegex.test(uuid);
     }
 
-    showMerchantIdError() {
+    validateMerchantId() {
         if (!this.merchantError) {
-
             const label = document.createElement('label');
 
             // Set the attributes
@@ -118,40 +121,76 @@ class TwintCertificateUpload {
             label.setAttribute('for', 'twint_general_credential_merchantID');
 
             // Set the inner text
-            label.textContent = 'This is a required field.';
+            label.textContent = this.$t('Invalid Merchant ID. Merchant ID needs to be a UUIDv4');
 
             this.merchantInput.insertAdjacentElement('afterend', label);
             this.merchantError = label;
-        } else {
-            this.show(this.merchantError);
         }
-    }
 
-    validateCredential() {
         let merchantId = this.merchantInput.value;
         if (!this.isValidUUIDv4(merchantId)) {
-            this.showMerchantIdError();
-            return;
+            this.show(this.merchantError);
+            return false;
         }
 
         this.hide(this.merchantError);
 
+        return true;
+    }
+
+    validateCredential() {
+        if (!this.validateMerchantId()) {
+            return;
+        }
+
+        this.testing = true;
+        this.clonedSaveButton.innerHTML = '<span>' + this.$t('Validating credentials') + '</span>';
         this.$.ajax({
-            url: this.baseUrl() + '/index.php/admin/twint/credential/validation',
-            type: 'POST',
-            data: {
+            url: this.baseUrl() + '/index.php/admin/twint/credential/validation', type: 'POST', data: {
                 certificate: JSON.parse(this.hiddenInput.value),
                 testMode: this.envSelect.value,
-                merchantId: this.merchantInput.value
-            },
-            contentType: false,
-            processData: false,
-            showLoader: true,
-            success: function (data) {
+                merchantId: this.merchantInput.value,
+                form_key: window.FORM_KEY
+            }, showLoader: true,
+            success: (function (data) {
+                this.testing = false;
+                this.clonedSaveButton.innerHTML = this.saveButton.innerHTML;
 
-            },
-            error: this.handleError.bind(this)
+                if (data.success) {
+                    this.clonedSaveButton.innerHTML = '<span>' + this.$t('Saving...') + '</span>';
+                    this.saveButton.click();
+                } else {
+                    this.showValidationError(data.message);
+                }
+            }).bind(this), error: (function () {
+                this.testing = false;
+            }).bind(this)
         });
+    }
+
+    showValidationError(message) {
+        if (!this.errorSummary) {
+            const containerDiv = document.getElementById('twint_general_credential');
+            const table = containerDiv.querySelector('table');
+
+            // Create the outer div element with class "messages"
+            const errorSummary = document.createElement('div');
+            errorSummary.className = 'messages';
+
+            // Create the inner div element with class "message message-success success"
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'message message-error error';
+
+            // Set the text content of the inner div
+            innerDiv.textContent = message;
+
+            // Append the inner div to the outer div
+            errorSummary.appendChild(innerDiv);
+
+            // Insert the outer div into the container div
+            containerDiv.insertBefore(errorSummary, table);
+            this.errorSummary = errorSummary;
+        }
     }
 
     onFileChanged(event) {
@@ -198,12 +237,13 @@ class TwintCertificateUpload {
         this.uploadNewLabel.addEventListener('click', this.onChangeCertificate.bind(this));
         this.clonedSaveButton.addEventListener('click', this.onStartValidate.bind(this), true);
         this.passwordInput.addEventListener('change', this.uploadCertificate.bind(this));
+        this.merchantInput.addEventListener('change', this.validateMerchantId.bind(this));
     }
 }
 
-define(['jquery', 'domReady!'], function ($) {
+define(['jquery', 'mage/translate'], function ($, $t) {
     'use strict';
 
-    const twintUpload = new TwintCertificateUpload($);
+    const twintUpload = new TwintCertificateUpload($, $t);
     twintUpload.init();
 });
