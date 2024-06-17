@@ -6,7 +6,7 @@
                 <payment_action>Authorization</payment_action>
                 <model>Twint\Core\Model\Method\TwintRegularMethod</model>
                 <order_status>pending</order_status>
-                <title>TWINT payment</title>
+                <title>TWINT</title>
                 <allowspecific>0</allowspecific>
                 <group>twint</group>
             </twint_regular>

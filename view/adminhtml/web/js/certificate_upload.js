@@ -1,3 +1,79 @@
+class TwintConfigInherit {
+    constructor($, $t) {
+        this.$ = $;
+        this.$t = $t;
+
+        this.merchantIdCheckbox = document.getElementById('twint_credentials_merchantID_inherit');
+        this.envCheckbox = document.getElementById('twint_credentials_environment_inherit');
+        this.certCheckbox = document.getElementById('twint_credentials_certificate_inherit');
+    }
+
+    init() {
+        if (this.canInherit()) {
+            this.getInheritValues();
+        }
+    }
+
+    canInherit() {
+        return this.merchantIdCheckbox || this.envCheckbox || this.certCheckbox;
+    }
+
+    getScope() {
+        let label = document.querySelector(`label[for="twint_credentials_merchantID_inherit"]`);
+        if (label) {
+            return label.innerText === this.$t("Use Default") ? '' : 'websites';
+        }
+        return '';
+    }
+
+    getFinalValues(current) {
+        if (!this.values) {
+            return current;
+        }
+
+        if (this.merchantIdCheckbox.checked) {
+            current['merchantId'] = this.values.merchant_id;
+        }
+
+        if (this.certCheckbox.checked) {
+            current['certificate'] = JSON.parse(this.values.certificate);
+        }
+
+        if (this.envCheckbox.checked) {
+            current['testMode'] = this.values.test_mode;
+        }
+
+        return current;
+    }
+
+    getInheritValues() {
+        this.$.ajax({
+            url: this.baseUrl() + '/index.php/admin/twint/credentials/values',
+            type: 'POST',
+            data: {
+                scope: this.getScope(),
+                form_key: window.FORM_KEY
+            },
+            success: (function (data) {
+                this.values = data;
+            }).bind(this),
+            error: (function () {
+                this.values = null;
+            }).bind(this)
+        });
+    }
+
+    baseUrl() {
+        let fullUrl = window.location.href;
+
+        // Create a new URL object
+        let url = new URL(fullUrl);
+
+        // Extract the protocol, hostname, and port (if any) to form the base URL
+        return url.protocol + "//" + url.hostname + (url.port ? ':' + url.port : '');
+    }
+}
+
 class TwintCertificateUpload {
     constructor($, $t) {
         this.$ = $;
@@ -7,16 +83,19 @@ class TwintCertificateUpload {
         this.fileNameLabel = document.getElementById('certificate-file-name');
         this.inputContainer = document.getElementById('twint-certificate-input-container');
         this.loadedContainer = document.getElementById('twint-certificate-loaded-container');
-        this.hiddenInput = document.getElementById('twint_credential_certificate');
+        this.hiddenInput = document.getElementById('twint_credentials_certificate');
         this.uploadNewLabel = document.getElementById('twint-upload-new');
         this.passwordInput = document.getElementById('certificate-password');
         this.errorContainer = document.getElementById('certificate-error-container');
-        this.merchantInput = document.getElementById('twint_credential_merchantID');
-        this.envSelect = document.getElementById('twint_credential_environment');
+        this.merchantInput = document.getElementById('twint_credentials_merchantID');
+        this.envSelect = document.getElementById('twint_credentials_environment');
 
         this.saveButton = document.getElementById('save');
 
         this.testing = false;
+
+        this.inherit = new TwintConfigInherit($, $t);
+        this.inherit.init();
     }
 
     init() {
@@ -116,9 +195,9 @@ class TwintCertificateUpload {
             const label = document.createElement('label');
 
             // Set the attributes
-            label.id = 'twint_credential_merchantID-error';
+            label.id = 'twint_credentials_merchantID-error';
             label.className = 'mage-error';
-            label.setAttribute('for', 'twint_credential_merchantID');
+            label.setAttribute('for', 'twint_credentials_merchantID');
 
             // Set the inner text
             label.textContent = this.$t('Invalid Merchant ID. Merchant ID needs to be a UUIDv4');
@@ -146,12 +225,15 @@ class TwintCertificateUpload {
         this.testing = true;
         this.clonedSaveButton.innerHTML = '<span>' + this.$t('Validating credentials') + '</span>';
         this.$.ajax({
-            url: this.baseUrl() + '/index.php/admin/twint/credential/validation', type: 'POST', data: {
+            url: this.baseUrl() + '/index.php/admin/twint/credentials/validation',
+            type: 'POST',
+            data: this.inherit.getFinalValues({
                 certificate: JSON.parse(this.hiddenInput.value),
                 testMode: this.envSelect.value,
                 merchantId: this.merchantInput.value,
                 form_key: window.FORM_KEY
-            }, showLoader: true,
+            }),
+            showLoader: true,
             success: (function (data) {
                 this.testing = false;
                 this.clonedSaveButton.innerHTML = this.saveButton.innerHTML;
@@ -170,7 +252,7 @@ class TwintCertificateUpload {
 
     showValidationError(message) {
         if (!this.errorSummary) {
-            const containerDiv = document.getElementById('twint_credential');
+            const containerDiv = document.getElementById('twint_credentials');
             const table = containerDiv.querySelector('table');
 
             // Create the outer div element with class "messages"

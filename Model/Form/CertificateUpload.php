@@ -38,7 +38,7 @@ class CertificateUpload extends AbstractElement
                         <input type="password" id="certificate-password" name="certificate_password">
                     </div>
                     <div class="note">
-                        '.__("Password is required for all TWINT certificate.") .'                    
+                        '.__("Password is required for all TWINT certificates.") .'                    
                     </div>
                 </div>
                 

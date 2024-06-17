@@ -4,7 +4,7 @@
 "If you dont have Merchant ID then contact TWINT","If you dont have Merchant ID then contact TWINT"
 "Only .p12 files are allowed.","Only .p12 files are allowed."
 "Certificate validation successful","Certificate validation successful"
-"Password is required for all TWINT certificate.","Password is required for all TWINT certificate."
+"Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
 "Certificate is validated and encrypted successfully,","Certificate are encrypted,"
 "upload a new","upload a new"
 "ERROR_INVALID_INPUT","Certificate file and password are required"

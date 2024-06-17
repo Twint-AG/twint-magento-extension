@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Controller\Adminhtml\Credential;
+namespace Twint\Core\Controller\Adminhtml\Credentials;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
