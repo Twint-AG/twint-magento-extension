@@ -7,12 +7,12 @@ class TwintCertificateUpload {
         this.fileNameLabel = document.getElementById('certificate-file-name');
         this.inputContainer = document.getElementById('twint-certificate-input-container');
         this.loadedContainer = document.getElementById('twint-certificate-loaded-container');
-        this.hiddenInput = document.getElementById('twint_general_credential_certificate');
+        this.hiddenInput = document.getElementById('twint_credential_certificate');
         this.uploadNewLabel = document.getElementById('twint-upload-new');
         this.passwordInput = document.getElementById('certificate-password');
         this.errorContainer = document.getElementById('certificate-error-container');
-        this.merchantInput = document.getElementById('twint_general_credential_merchantID');
-        this.envSelect = document.getElementById('twint_general_credential_environment');
+        this.merchantInput = document.getElementById('twint_credential_merchantID');
+        this.envSelect = document.getElementById('twint_credential_environment');
 
         this.saveButton = document.getElementById('save');
 
@@ -116,9 +116,9 @@ class TwintCertificateUpload {
             const label = document.createElement('label');
 
             // Set the attributes
-            label.id = 'twint_general_credential_merchantID-error';
+            label.id = 'twint_credential_merchantID-error';
             label.className = 'mage-error';
-            label.setAttribute('for', 'twint_general_credential_merchantID');
+            label.setAttribute('for', 'twint_credential_merchantID');
 
             // Set the inner text
             label.textContent = this.$t('Invalid Merchant ID. Merchant ID needs to be a UUIDv4');
@@ -170,7 +170,7 @@ class TwintCertificateUpload {
 
     showValidationError(message) {
         if (!this.errorSummary) {
-            const containerDiv = document.getElementById('twint_general_credential');
+            const containerDiv = document.getElementById('twint_credential');
             const table = containerDiv.querySelector('table');
 
             // Create the outer div element with class "messages"

@@ -24,7 +24,7 @@
              module="Twint_Core"
              sortOrder="10"
              parent="Twint_Core::configuration"
-             action="adminhtml/system_config/edit/section/twint_general"
+             action="adminhtml/system_config/edit/section/twint"
              resource="Twint_Core::configuration_credential"/>
 
         <add id="Twint_Core::express"
