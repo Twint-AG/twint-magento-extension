@@ -1,16 +1,63 @@
 <?php
+
 namespace Twint\Core\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\ScopeInterface;
 use Twint\Core\Constant\TwintConstant;
+use Magento\Store\Model\StoreManagerInterface;
+use Twint\Core\Model\Config\Generic;
 
-class ConfigHelper extends AbstractHelper{
-    public function getCredentials(string $scope){
+class ConfigHelper extends AbstractHelper
+{
+    public function __construct(Context                              $context,
+                                private StoreManagerInterface        $storeManager,
+                                private \Magento\Framework\App\State $state
+    )
+    {
+        parent::__construct($context);
+    }
+
+    public function getCredentials(string $scope)
+    {
         return match ($scope) {
             'websites' => $this->scopeConfig->getValue(TwintConstant::CONFIG_CREDENTIALS, ScopeInterface::SCOPE_WEBSITES),
-            'stores' => $this->scopeConfig->getValue('twint/credentials', ScopeInterface::SCOPE_STORES),
-            default => $this->scopeConfig->getValue('twint/credentials', 'default'),
+            'stores' => $this->scopeConfig->getValue(TwintConstant::CONFIG_CREDENTIALS, ScopeInterface::SCOPE_STORES),
+            default => $this->scopeConfig->getValue(TwintConstant::CONFIG_CREDENTIALS, 'default'),
         };
+    }
+
+    public function getConfigs($sStoreCode = null)
+    {
+        $sScopeCode = ScopeInterface::SCOPE_STORES;
+        if (!$sStoreCode) {
+            list($sStoreCode, $sScopeCode) = $this->fetchCurrentStoreCode();
+        }
+
+        return new Generic($this->scopeConfig->getValue(TwintConstant::SECTION, $sScopeCode, $sStoreCode));
+    }
+
+    protected function fetchCurrentStoreCode()
+    {
+        $sScopeCode = \Magento\Store\Model\ScopeInterface::SCOPE_STORES;
+        $sStoreCode = $this->storeManager->getStore()->getCode();
+        if ($this->state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
+            $sStoreCode = 0; // 0 = default config, which should be used when neither website nor store parameter are present, storeManager returns default STORE though, which would be wrong
+            if (!empty($this->getRequestParameter('website'))) {
+                $sStoreCode = $this->getRequestParameter('website');
+                $sScopeCode = \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES;
+            }
+            if (!empty($this->getRequestParameter('store'))) {
+                $sStoreCode = $this->getRequestParameter('store');
+            }
+        }
+
+        return [$sStoreCode, $sScopeCode];
+    }
+
+    public function getRequestParameter($sParameter)
+    {
+        return $this->_getRequest()->getParam($sParameter);
     }
 }

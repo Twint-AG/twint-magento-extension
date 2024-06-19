@@ -5,7 +5,7 @@
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
                     <item name="components" xsi:type="array">
-                        <item name="checkout" xsi:type="array">L
+                        <item name="checkout" xsi:type="array">
                             <item name="children" xsi:type="array">
                                 <item name="steps" xsi:type="array">
                                     <item name="children" xsi:type="array">

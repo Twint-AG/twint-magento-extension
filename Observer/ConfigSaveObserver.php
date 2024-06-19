@@ -36,7 +36,7 @@ class ConfigSaveObserver implements ObserverInterface
                 $configModel = $this->configFactory->create(['data' => $data]);
                 $configModel->save();
             }catch (\Throwable $e){
-                dd($e);
+
             }
         }
     }

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="twint_pairing" resource="default" engine="innodb" comment="TWINT pairing table">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID" />
+        <column xsi:type="varchar" length="36" name="pairing_id" nullable="false" comment="Pairing ID"/>
+        <column xsi:type="varchar" length="32" name="status" nullable="false" comment="Status"/>
+        <column xsi:type="varchar" name="token" nullable="false" length="32" comment="Method Code"/>
+        <column xsi:type="varchar" name="transaction_status" nullable="false" length="32" comment="Reference ID"/>
+
+        <column xsi:type="smallint" name="store_id"  unsigned="true" nullable="true" identity="false"
+                comment="Store ID"/>
+        <column xsi:type="varchar" length="50" name="order_id"  nullable="true" comment="Order Increment ID"/>
+
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="true" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="TWINT_PAIRING_STORE_ID_FK"
+                    table="twint_pairing"
+                    column="store_id"
+                    referenceTable="store"
+                    referenceColumn="store_id"
+                    onDelete="SET NULL"
+        />
+
+        <index indexType="btree" referenceId="TWINT_PAIRING_STORE_ID_IDX">
+            <column name="order_id"/>
+        </index>
+
+        <index indexType="btree" referenceId="TWINT_PAIRING_STATUS_IDX">
+            <column name="status"/>
+        </index>
+
+        <index indexType="btree" referenceId="TWINT_PAIRING_ORDER_INCREMENT_IDX">
+            <column name="order_id"/>
+        </index>
+    </table>
+
+</schema>

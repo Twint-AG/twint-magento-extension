@@ -12,10 +12,6 @@ define(
             {
                 type: 'twint_regular',
                 component: 'Twint_Core/js/view/payment/method-renderers/twint_regular'
-            },
-            {
-                type: 'twint_express',
-                component: 'Twint_Core/js/view/payment/method-renderers/twint_express'
             }
         );
         return Component.extend({});
