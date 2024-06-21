@@ -2,4 +2,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Framework\Data\Form\FormKey\Validator" type="Twint\Core\Validator\FormKeyValidator" />
     <preference for="Twint\Core\Api\PairingRepositoryInterface" type="Twint\Core\Model\PairingRepository" />
+
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routers" xsi:type="array">
+                <item name="twint" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Framework\App\Router\Base</item>
+                    <item name="frontName" xsi:type="string">twint</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>

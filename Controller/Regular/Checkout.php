@@ -10,13 +10,18 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Twint\Core\Api\PairingRepositoryInterface;
+use Twint\Core\Model\Method\TwintRegularMethod;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Checkout extends Action implements ActionInterface, HttpPostActionInterface
 {
 
     public function __construct(Context                          $context,
                                 private Session                  $session,
-                                private OrderRepositoryInterface $orderRepository
+                                private OrderRepositoryInterface $orderRepository,
+                                private readonly PairingRepositoryInterface $repository,
+                                private readonly StoreManagerInterface $storeManager
     )
     {
         parent::__construct($context);
@@ -25,22 +30,22 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        dd($this->getRequest()->getParams());
-        $orderId = $this->request->getPost('orderId');
-        dd($orderId);
-        if(empty($orderId)){
-            throw new LocalizedException(__("Order not found"));
+        $order = $this->session->getLastRealOrder();
+        if(!$order){
+            throw new LocalizedException(__("Dont have needed order to pay"));
         }
 
-        $order = $this->orderRepository->get($orderId);
         $payment = $order->getPayment();
-        $qoute = $this->session->getQuote();
-        dd($payment, $orderId);
+        if(!$payment || $payment->getMethod() != TwintRegularMethod::CODE){
+            throw new LocalizedException(__("This order did not provided by TWINT"));
+        }
 
+        $data = [
+            'token' => $payment->getAdditionalInformation()['qrToken'],
+            'orderNumber' => $order->getIncrementId(),
+            'storeName' => $this->storeManager->getStore()->getName()
+        ];
 
-        return $json->setData([
-            'pairingToken' => 123,
-            'order' => [],
-        ]);
+        return $json->setData($data);
     }
 }

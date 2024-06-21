@@ -63,8 +63,7 @@ class PaymentService{
         $entity->setData('transaction_status', (string) $twintOrder->transactionStatus());
 
         /** @var Payment $payment */
-        dd($twintOrder->merchantTransactionReference(), $payment->getOrder()->getEntityId());
-        $entity->setData('order_id', (int) ((string) $twintOrder->merchantTransactionReference()));
+        $entity->setData('order_id', (string) $twintOrder->merchantTransactionReference());
         $entity->setData('store_id', $payment->getOrder()->getStore()->getId());
 
         return $this->pairingRepository->save($entity);
