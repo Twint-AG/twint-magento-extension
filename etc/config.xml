@@ -1,0 +1,25 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <twint_regular translate="title" module="Twint_Core">
+                <active>1</active>
+                <payment_action>Authorization</payment_action>
+                <model>Twint\Core\Model\Method\TwintRegularMethod</model>
+                <order_status>pending</order_status>
+                <title>TWINT</title>
+                <allowspecific>0</allowspecific>
+                <group>twint</group>
+            </twint_regular>
+
+            <twint_express translate="title" module="Twint_Core">
+                <active>1</active>
+                <payment_action>Authorization</payment_action>
+                <model>Twint\Core\Model\Method\TwintExpressMethod</model>
+                <order_status>pending</order_status>
+                <title>TWINT express checkout</title>
+                <allowspecific>0</allowspecific>
+                <group>twint</group>
+            </twint_express>
+        </payment>
+    </default>
+</config>

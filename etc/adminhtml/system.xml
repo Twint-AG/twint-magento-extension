@@ -1,0 +1,69 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="twint" translate="label" sortOrder="1111111">
+            <label>TWINT</label>
+        </tab>
+        <section id="twint" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <tab>twint</tab>
+            <label>Credentials</label>
+            <resource>Twint_Core::configuration_general</resource>
+            <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Credentials</label>
+                <field id="merchantID" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Merchant-ID</label>
+                    <config_path>twint/credentials/merchant_id</config_path>
+                </field>
+
+                <field id="environment" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Switch to test environment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>twint/credentials/test_mode</config_path>
+                </field>
+
+                <field id="certificate" translate="label" type="Twint\Core\Model\Form\CertificateUpload" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Certificate</label>
+                    <config_path>twint/credentials/certificate</config_path>
+                </field>
+            </group>
+
+        </section>
+
+        <section id="twint_regular" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Regular Checkout</label>
+            <tab>twint</tab>
+            <resource>Twint_Core::configuration_regular_checkout</resource>
+            <group id="regular" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>TWINT Regular Checkout</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <config_path>twint/regular/enabled</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+            </group>
+        </section>
+
+        <section id="twint_express" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Express Checkout</label>
+            <tab>twint</tab>
+            <resource>Twint_Core::configuration_express_checkout</resource>
+            <group id="express" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>TWINT Express Checkout</label>
+
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <config_path>twint/express/enabled</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="screens" translate="label,comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display screens</label>
+                    <comment>Users can see TWINT checkout buttons</comment>
+                    <source_model>Twint\Core\Model\Source\Screens</source_model>
+                    <config_path>twint/express/screens</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

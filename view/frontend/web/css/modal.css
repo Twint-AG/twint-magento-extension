@@ -1,0 +1,68 @@
+.modal-inner-wrap.twint {
+    background-color: rgb(243 244 246);
+    padding: 0 !important;
+}
+
+.twint header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.25);
+    padding-bottom: 1.2rem;
+    padding-top: 1.2rem;
+}
+
+.twint-logo {
+    width: 139px;
+    height: 53px;
+}
+
+.twint-close {
+    border: none;
+    background-color: inherit;
+}
+
+.twint-close:active {
+    box-shadow: none;
+}
+
+.twint-close:hover, .twint-close:focus {
+    background-color: inherit;
+    border: none;
+}
+
+.twint-close:before {
+    padding-top: 3.5px;
+    font-size: 14px;
+    line-height: 14px;
+    color: #757575;
+    content: '\e616';
+    font-family: 'luma-icons';
+    margin: 0;
+    vertical-align: top;
+    display: inline-block;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+}
+
+.twint-modal-slide {
+    left: 0 !important;
+}
+
+#qr-token {
+    text-align: center;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 41px;
+    letter-spacing: 4px;
+    color: black;
+    border: none;
+    opacity: 1;
+}
+
+.separator:before, .separator:before {
+    content: '';
+    flex-grow: 1;
+    border-bottom: 1px solid #CCCCCC;
+}

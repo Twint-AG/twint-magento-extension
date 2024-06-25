@@ -1,0 +1,82 @@
+#twint-certificate-container{
+    width: 100%;
+}
+
+#twint-certificate-container .d-none{
+    display: none;
+}
+
+#twint-certificate-loaded-container{
+    padding: 20px 10px;
+    border: solid 1px #32CD32 !important;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#twint-upload-new{
+    font-weight: 600;
+    cursor: pointer;
+    color: #0a6aa1;
+    display: inline-block;
+}
+
+#certificate-file{
+    padding-left: 0;
+}
+
+.file-upload-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.file-upload {
+    width: 100%;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #e3e3e3;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    line-height: 20px;
+    justify-content: space-between;
+    vertical-align: middle;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-upload-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #aaa6a0;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.file-upload-btn:hover {
+    background-color: #524d49;
+}
+
+.file-upload-label {
+    display: inline-block;
+    margin-left: 10px;
+    line-height: 20px;
+    color: #333;
+    padding-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

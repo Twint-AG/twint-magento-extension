@@ -1,0 +1,11 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd">
+    <head>
+        <css src="Twint_Core::css/tailwind/tailwind.css"/>
+        <css src="Twint_Core::css/modal.css"/>
+    </head>
+    <body>
+        <referenceContainer name="main">
+            <block class="Twint\Core\Block\QrCode" name="twint-qr-modal" template="qr.phtml" />
+        </referenceContainer>
+    </body>
+</page>

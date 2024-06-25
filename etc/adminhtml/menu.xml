@@ -1,0 +1,49 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- First level -->
+        <add id="Twint_Core::core"
+            title="TWINT"
+            translate="title"
+            module="Twint_Core"
+            sortOrder="19"
+            resource="Twint_Core::core"/>
+
+        <!-- Configuration - second level -->
+        <add id="Twint_Core::configuration"
+             title="Configuration"
+             translate="title"
+             module="Twint_Core"
+             sortOrder="20"
+             parent="Twint_Core::core"
+             resource="Twint_Core::core_configuration"/>
+
+        <add id="Twint_Core::general"
+             title="Credentials"
+             translate="title"
+             module="Twint_Core"
+             sortOrder="10"
+             parent="Twint_Core::configuration"
+             action="adminhtml/system_config/edit/section/twint"
+             resource="Twint_Core::configuration_credential"/>
+
+        <add id="Twint_Core::regular"
+             title="Regular Checkout"
+             translate="title"
+             module="Twint_Core"
+             sortOrder="10"
+             parent="Twint_Core::configuration"
+             action="adminhtml/system_config/edit/section/twint_regular"
+             resource="Twint_Core::configuration_regular_checkout"/>
+
+        <add id="Twint_Core::express"
+             title="Express Checkout"
+             translate="title"
+             module="Twint_Core"
+             sortOrder="10"
+             parent="Twint_Core::configuration"
+             action="adminhtml/system_config/edit/section/twint_express"
+             resource="Twint_Core::configuration_express_checkout"/>
+
+    </menu>
+</config>

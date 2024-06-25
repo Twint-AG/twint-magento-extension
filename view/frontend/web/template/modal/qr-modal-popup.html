@@ -1,0 +1,29 @@
+<aside role="dialog"
+       class="text-16 modal-<%- data.type %> <%- data.modalClass %>
+               <% if(data.responsive){ %><%- data.responsiveClass %><% } %>
+               <% if(data.innerScroll){ %><%- data.innerScrollClass %><% } %>"
+       <% if(data.title){ %> aria-labelledby="modal-title-<%- data.id %>"<% } %>
+       aria-describedby="modal-content-<%- data.id %>"
+       data-role="modal"
+       data-type="<%- data.type %>"
+       tabindex="0">
+    <div data-role="focusable-start" tabindex="0"></div>
+    <div class="modal-inner-wrap twint"
+         data-role="focusable-scope">
+        <header class="twint-modal-header flex justify-between items-center">
+            <button
+                class="twint-close ml-6 bg-gray-100"
+                data-role="closeBtn"
+                type="button">
+                <span class="bg-gray-100 hover:bg-gray-100"><%= data.closeText %></span>
+            </button>
+            <img class="twint-logo hidden md:block mr-4" src="<%= data.twintLogo %>" alt="TWINT Logo">
+        </header>
+        <div id="modal-content-<%- data.id %>"
+            class="twint-modal-content p-0 md:p-4"
+            data-role="content">
+
+        </div>
+    </div>
+    <div data-role="focusable-end" tabindex="0"></div>
+</aside>
