@@ -1,13 +1,13 @@
 <?php
 
-namespace Twint\Core\Controller\Adminhtml\Credentials;
+namespace Twint\Magento\Controller\Adminhtml\Credentials;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Twint\Core\Helper\ConfigHelper;
+use Twint\Magento\Helper\ConfigHelper;
 
 class Values extends Action implements ActionInterface, HttpPostActionInterface
 {

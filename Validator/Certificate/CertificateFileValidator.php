@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Validator\Certificate;
+namespace Twint\Magento\Validator\Certificate;
 
 class CertificateFileValidator{
     const ALLOWED_EXT = 'application/x-pkcs12';

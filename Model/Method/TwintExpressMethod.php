@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Model\Method;
+namespace Twint\Magento\Model\Method;
 
 class TwintExpressMethod extends TwintMethod{
     const CODE = 'twint_express';

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Framework\Data\Form\FormKey\Validator" type="Twint\Core\Validator\FormKeyValidator" />
-    <preference for="Twint\Core\Api\PairingRepositoryInterface" type="Twint\Core\Model\PairingRepository" />
+    <preference for="Magento\Framework\Data\Form\FormKey\Validator" type="Twint\Magento\Validator\FormKeyValidator" />
+    <preference for="Twint\Magento\Api\PairingRepositoryInterface" type="Twint\Magento\Model\PairingRepository" />
 
     <type name="Magento\Framework\App\RouterList">
         <arguments>

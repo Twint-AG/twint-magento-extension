@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Model\Source;
+namespace Twint\Magento\Model\Source;
 
 use Magento\Config\Model\Config\Source\Yesno;
 

@@ -2,48 +2,48 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <!-- First level -->
-        <add id="Twint_Core::core"
+        <add id="Twint_Magento::core"
             title="TWINT"
             translate="title"
-            module="Twint_Core"
+            module="Twint_Magento"
             sortOrder="19"
-            resource="Twint_Core::core"/>
+            resource="Twint_Magento::core"/>
 
         <!-- Configuration - second level -->
-        <add id="Twint_Core::configuration"
+        <add id="Twint_Magento::configuration"
              title="Configuration"
              translate="title"
-             module="Twint_Core"
+             module="Twint_Magento"
              sortOrder="20"
-             parent="Twint_Core::core"
-             resource="Twint_Core::core_configuration"/>
+             parent="Twint_Magento::core"
+             resource="Twint_Magento::core_configuration"/>
 
-        <add id="Twint_Core::general"
+        <add id="Twint_Magento::general"
              title="Credentials"
              translate="title"
-             module="Twint_Core"
+             module="Twint_Magento"
              sortOrder="10"
-             parent="Twint_Core::configuration"
+             parent="Twint_Magento::configuration"
              action="adminhtml/system_config/edit/section/twint"
-             resource="Twint_Core::configuration_credential"/>
+             resource="Twint_Magento::configuration_credential"/>
 
-        <add id="Twint_Core::regular"
+        <add id="Twint_Magento::regular"
              title="Regular Checkout"
              translate="title"
-             module="Twint_Core"
+             module="Twint_Magento"
              sortOrder="10"
-             parent="Twint_Core::configuration"
+             parent="Twint_Magento::configuration"
              action="adminhtml/system_config/edit/section/twint_regular"
-             resource="Twint_Core::configuration_regular_checkout"/>
+             resource="Twint_Magento::configuration_regular_checkout"/>
 
-        <add id="Twint_Core::express"
+        <add id="Twint_Magento::express"
              title="Express Checkout"
              translate="title"
-             module="Twint_Core"
+             module="Twint_Magento"
              sortOrder="10"
-             parent="Twint_Core::configuration"
+             parent="Twint_Magento::configuration"
              action="adminhtml/system_config/edit/section/twint_express"
-             resource="Twint_Core::configuration_express_checkout"/>
+             resource="Twint_Magento::configuration_express_checkout"/>
 
     </menu>
 </config>

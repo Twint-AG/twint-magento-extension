@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Validator;
+namespace Twint\Magento\Validator;
 
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Encryption\Helper\Security;
@@ -13,8 +13,6 @@ class FormKeyValidator extends Validator{
 
             $formKey = $data['form_key'] ?? '';
         }
-
-//        dd($request->getParams(), $this->_formKey->getFormKey());
 
         return $formKey && Security::compareStrings($formKey, $this->_formKey->getFormKey());
     }

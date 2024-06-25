@@ -1,13 +1,13 @@
 <?php
 
-namespace Twint\Core\Helper;
+namespace Twint\Magento\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\ScopeInterface;
-use Twint\Core\Constant\TwintConstant;
+use Twint\Magento\Constant\TwintConstant;
 use Magento\Store\Model\StoreManagerInterface;
-use Twint\Core\Model\Config\Generic;
+use Twint\Magento\Model\Config\Generic;
 
 class ConfigHelper extends AbstractHelper
 {

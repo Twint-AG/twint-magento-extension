@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Model\Method;
+namespace Twint\Magento\Model\Method;
 
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
@@ -15,7 +15,7 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Payment\Model\MethodInterface;
-use Twint\Core\Service\PaymentService;
+use Twint\Magento\Service\PaymentService;
 
 class TwintRegularMethod extends TwintMethod
 {

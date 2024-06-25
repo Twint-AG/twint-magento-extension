@@ -1,12 +1,12 @@
 <?php
 
-namespace Twint\Core\Builder;
+namespace Twint\Magento\Builder;
 
 use Soap\Engine\Transport;
 use Throwable;
-use Twint\Core\Exception\InvalidConfigException;
-use Twint\Core\Helper\ConfigHelper;
-use Twint\Core\Util\CryptoHandler;
+use Twint\Magento\Exception\InvalidConfigException;
+use Twint\Magento\Helper\ConfigHelper;
+use Twint\Magento\Util\CryptoHandler;
 use Twint\Sdk\Certificate\CertificateContainer;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 use Twint\Sdk\Client;

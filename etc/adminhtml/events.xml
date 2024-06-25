@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="admin_system_config_save">
-        <observer name="twint_core_config_save_observer" instance="Twint\Core\Observer\ConfigSaveObserver" />
+        <observer name="twint_magento_config_save_observer" instance="Twint\Magento\Observer\ConfigSaveObserver" />
     </event>
 </config>

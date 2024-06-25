@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Model\Form;
+namespace Twint\Magento\Model\Form;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 

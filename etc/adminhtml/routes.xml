@@ -3,7 +3,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="admin">
         <route id="twint" frontName="twint">
-            <module name="Twint_Core" />
+            <module name="Twint_Magento" />
         </route>
     </router>
 </config>

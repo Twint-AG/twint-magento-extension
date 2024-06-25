@@ -6,11 +6,13 @@
         <column xsi:type="varchar" length="36" name="pairing_id" nullable="false" comment="Pairing ID"/>
         <column xsi:type="varchar" length="32" name="status" nullable="false" comment="Status"/>
         <column xsi:type="varchar" name="token" nullable="false" length="32" comment="Method Code"/>
+        <column xsi:type="decimal" name="amount"  unsigned="true" nullable="false" scale="4" precision="20" comment="Amount"/>
         <column xsi:type="varchar" name="transaction_status" nullable="false" length="32" comment="Reference ID"/>
 
         <column xsi:type="smallint" name="store_id"  unsigned="true" nullable="true" identity="false"
                 comment="Store ID"/>
         <column xsi:type="varchar" length="50" name="order_id"  nullable="true" comment="Order Increment ID"/>
+        <column xsi:type="boolean" name="lock" default="false" nullable="true" comment="Is Lock? Processing by other process"/>
 
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
@@ -38,6 +40,10 @@
 
         <index indexType="btree" referenceId="TWINT_PAIRING_ORDER_INCREMENT_IDX">
             <column name="order_id"/>
+        </index>
+
+        <index indexType="btree" referenceId="TWINT_PAIRING_ID_IDX">
+            <column name="pairing_id"/>
         </index>
     </table>
 

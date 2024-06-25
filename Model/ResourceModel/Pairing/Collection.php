@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Twint\Core\Model\ResourceModel\Pairing;
+namespace Twint\Magento\Model\ResourceModel\Pairing;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Twint\Core\Model\Pairing;
-use Twint\Core\Model\ResourceModel\Pairing as ResourcePairing;
+use Twint\Magento\Model\Pairing;
+use Twint\Magento\Model\ResourceModel\Pairing as ResourcePairing;
 
 class Collection extends AbstractCollection
 {

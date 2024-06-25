@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Controller\Adminhtml\Certificate;
+namespace Twint\Magento\Controller\Adminhtml\Certificate;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -9,9 +9,9 @@ use Magento\Framework\App\Request\Http;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Twint\Core\Util\CertificateReader;
-use Twint\Core\Util\CryptoHandler;
-use Twint\Core\Validator\Certificate\CertificateFileValidator;
+use Twint\Magento\Util\CertificateReader;
+use Twint\Magento\Util\CryptoHandler;
+use Twint\Magento\Validator\Certificate\CertificateFileValidator;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 
 class Upload extends Action implements ActionInterface, HttpPostActionInterface {

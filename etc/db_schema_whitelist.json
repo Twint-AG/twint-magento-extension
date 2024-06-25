@@ -8,12 +8,15 @@
             "transaction_status": true,
             "store_id": true,
             "order_id": true,
+            "amount": true,
+            "lock": true,
             "created_at": true,
             "updated_at": true
         },
         "index": {
             "TWINT_PAIRING_ORDER_ID": true,
-            "TWINT_PAIRING_STATUS": true
+            "TWINT_PAIRING_STATUS": true,
+            "TWINT_PAIRING_PAIRING_ID": true
         },
         "constraint": {
             "PRIMARY": true,

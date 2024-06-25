@@ -1,9 +1,9 @@
 <?php
 
-namespace Twint\Core\Service;
+namespace Twint\Magento\Service;
 
 use Exception;
-use Twint\Core\Builder\ClientBuilder;
+use Twint\Magento\Builder\ClientBuilder;
 use function Psl\Type\string;
 
 class TwintAppService{

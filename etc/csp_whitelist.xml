@@ -4,6 +4,12 @@
         <policy id="script-src">
             <values>
                 <value id="cdn_cloudflare" type="host">cdnjs.cloudflare.com</value>
+                <value id="android_payment" type="host">payment</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="intent" type="host">intent://payment</value>
             </values>
         </policy>
     </policies>

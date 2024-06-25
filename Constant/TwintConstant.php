@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Constant;
+namespace Twint\Magento\Constant;
 
 class TwintConstant
 {

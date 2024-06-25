@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Controller\Regular;
+namespace Twint\Magento\Controller\Regular;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -10,8 +10,8 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Twint\Core\Api\PairingRepositoryInterface;
-use Twint\Core\Model\Method\TwintRegularMethod;
+use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Model\Method\TwintRegularMethod;
 use Magento\Store\Model\StoreManagerInterface;
 
 class Checkout extends Action implements ActionInterface, HttpPostActionInterface

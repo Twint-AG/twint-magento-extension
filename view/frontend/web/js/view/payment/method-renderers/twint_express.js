@@ -7,7 +7,7 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'Twint_Core/payment/customtemplate'
+                template: 'Twint_Magento/payment/customtemplate'
             },
             getCode: function () {
                 return 'twint_express';

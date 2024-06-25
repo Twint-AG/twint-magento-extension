@@ -1,8 +1,8 @@
 <?php
-namespace Twint\Core\Validator;
+namespace Twint\Magento\Validator;
 
 use Exception;
-use Twint\Core\Util\CryptoHandler;
+use Twint\Magento\Util\CryptoHandler;
 use Twint\Sdk\Certificate\CertificateContainer;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 use Twint\Sdk\Client;

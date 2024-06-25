@@ -11,7 +11,7 @@ define(
         rendererList.push(
             {
                 type: 'twint_regular',
-                component: 'Twint_Core/js/view/payment/method-renderers/twint_regular'
+                component: 'Twint_Magento/js/view/payment/method-renderers/twint_regular'
             }
         );
         return Component.extend({});

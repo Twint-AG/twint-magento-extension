@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Model\ResourceModel;
+namespace Twint\Magento\Model\ResourceModel;
 
 /**
  * Pairing resource model

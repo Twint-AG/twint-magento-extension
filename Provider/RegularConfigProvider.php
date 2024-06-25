@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Provider;
+namespace Twint\Magento\Provider;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\UrlInterface;
@@ -14,12 +14,13 @@ class RegularConfigProvider implements ConfigProviderInterface
     {
     }
 
-    public function getConfig()
+    public function getConfig(): array
     {
         return [
             'payment' => [
                 'twint' => [
-                    'getPairingTokenUrl' => $this->urlBuilder->getUrl('twint/regular/checkout')
+                    'getPairingInformationUrl' => $this->urlBuilder->getUrl('twint/regular/payment'),
+                    'getPairingStatusUrl' => $this->urlBuilder->getUrl('twint/regular/status'),
                 ]
             ]
         ];

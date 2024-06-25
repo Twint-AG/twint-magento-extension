@@ -1,13 +1,13 @@
 <?php
 
-namespace Twint\Core\Observer;
+namespace Twint\Magento\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Twint\Core\Constant\TwintConstant;
-use Twint\Core\Validator\CredentialValidator;
+use Twint\Magento\Constant\TwintConstant;
+use Twint\Magento\Validator\CredentialValidator;
 use Magento\Config\Model\Config\Factory;
-use Twint\Core\Helper\ConfigHelper;
+use Twint\Magento\Helper\ConfigHelper;
 
 class ConfigSaveObserver implements ObserverInterface
 {

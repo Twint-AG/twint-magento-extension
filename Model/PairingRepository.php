@@ -1,29 +1,34 @@
 <?php
-namespace Twint\Core\Model;
 
+namespace Twint\Magento\Model;
+
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\searchResultsInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Adapter\ConnectionException;
+use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
-use Twint\Core\Api\PairingRepositoryInterface;
-use Twint\Core\Model\ResourceModel\Pairing as ResourceModel;
-use Twint\Core\Model\ResourceModel\Pairing\CollectionFactory;
-use Twint\Core\Model\ResourceModel\Pairing\Collection;
+use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Model\ResourceModel\Pairing as ResourceModel;
+use Twint\Magento\Model\ResourceModel\Pairing\CollectionFactory;
+use Twint\Magento\Model\ResourceModel\Pairing\Collection;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 
-class PairingRepository implements PairingRepositoryInterface{
-
+class PairingRepository implements PairingRepositoryInterface
+{
     public function __construct(
-        private PairingFactory $factory,
-        private readonly ResourceModel $resourceModel,
-        private CollectionFactory $collectionFactory,
-        private SearchResultsFactory $searchResultsFactory,
-        private ?CollectionProcessorInterface $collectionProcessor = null
-    ) {
+        private PairingFactory                 $factory,
+        private readonly ResourceModel         $resourceModel,
+        private CollectionFactory              $collectionFactory,
+        private SearchResultsFactory           $searchResultsFactory,
+        private readonly SearchCriteriaBuilder $criteriaBuilder,
+        private ?CollectionProcessorInterface  $collectionProcessor = null
+    )
+    {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -40,12 +45,15 @@ class PairingRepository implements PairingRepositoryInterface{
         return $entity;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws AlreadyExistsException
+     */
     public function save(Pairing $pairing)
     {
         try {
-            $GLOBALS['test'] = true;
-
-            return $this->resourceModel->save($pairing);
+            $this->resourceModel->save($pairing);
         } catch (ConnectionException $exception) {
             throw new CouldNotSaveException(
                 __('Database connection error'),
@@ -56,16 +64,12 @@ class PairingRepository implements PairingRepositoryInterface{
             throw new CouldNotSaveException(__('Unable to save item'), $e);
         } catch (ValidatorException $e) {
             throw new CouldNotSaveException(__($e->getMessage()));
-        }catch (\Throwable $e){
-            dd($e);
         }
-
-        dd($pairing->getId());
 
         return $this->getById($pairing->getId());
     }
 
-    public function getList(SearchCriteriaInterface $criteria)
+    public function getList(SearchCriteriaInterface $criteria): SearchResultsInterface
     {
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
@@ -79,5 +83,58 @@ class PairingRepository implements PairingRepositoryInterface{
         $results->setItems($collection->getData());
 
         return $results;
+    }
+
+    public function getByPairingId(string $id): ?Pairing
+    {
+        $criteria = $this->criteriaBuilder->addFilter('pairing_id', $id)->create();
+        $items = $this->getList($criteria)->getItems();
+
+        if (!empty($items)) {
+            $item = reset($items);
+
+            $entity = $this->factory->create();
+            $entity->setData($item);
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
+     */
+    public function lock(Pairing $pairing)
+    {
+        $this->setLock($pairing->getId(), 1);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
+     */
+    public function unlock(Pairing $pairing)
+    {
+        $this->setLock($pairing->getId(), 0);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws AlreadyExistsException
+     */
+    private function setLock(string $id, int $value)
+    {
+        $clone = $this->factory->create();
+        $clone->setData([
+            'id' => $id,
+            'lock' => $value
+        ]);
+
+        $this->save($clone);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Twint\Core\Model\Method;
+namespace Twint\Magento\Model\Method;
 
 use Magento\Payment\Model\Method\AbstractMethod;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Twint\Core\Model\Config;
+namespace Twint\Magento\Model\Config;
 
 class Generic extends AbstractConfig
 {
