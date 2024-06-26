@@ -1,14 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Service;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
-use Magento\Store\Model\StoreManagerInterface;
+use Throwable;
+use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingFactory;
+use Twint\Magento\Model\PairingHistory;
+use Twint\Magento\Model\PairingHistoryFactory;
+use Twint\Magento\Model\RequestLog;
 use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
 use Twint\Sdk\Value\Uuid;
@@ -17,78 +26,131 @@ use Twint\Sdk\Value\Version;
 class PairingService
 {
     public function __construct(
-        private readonly StoreManagerInterface      $storeManager,
-        private readonly ClientBuilder              $connector,
-        private readonly PairingFactory             $pairingFactory,
+        private readonly ClientBuilder $connector,
+        private readonly PairingFactory $pairingFactory,
+        private readonly PairingHistoryFactory $historyFactory,
         private readonly PairingRepositoryInterface $pairingRepository,
-        private readonly OrderService $orderService
-    )
-    {
+        private readonly PairingHistoryRepositoryInterface $historyRepository,
+        private readonly OrderService $orderService,
+        private readonly ApiService $api,
+        private readonly TransactionService $transactionService,
+        private readonly InvoiceService $invoiceService
+    ) {
     }
 
-
+    /**
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     * @throws Throwable
+     */
     public function monitor(string $id): bool
     {
-        $storeCode = $this->storeManager->getStore()->getCode();
-        $client = $this->connector->build($storeCode, Version::LATEST);
-
-        $pairing = $this->pairingRepository->getByPairingId($id);
-
-        // prevent spam request to TWINT and reduce risk about parallel processing
-        if ($pairing->getLock()) {
+        $pairingOrg = $this->pairingRepository->getByPairingId($id);
+        if ($pairingOrg->isLocked()) {
             return false;
         }
 
-        if ($pairing->isFinish())
+        $this->pairingRepository->lock($pairingOrg);
+
+        $pairing = clone $pairingOrg;
+        $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
+
+        if ($pairing->isFinish()) {
             return true;
+        }
 
         try {
-            $tOrder = $client->monitorOrder(new OrderId(new Uuid((string)$pairing->getPairingId())));
-        } catch (\Throwable $e) {
+            $res = $this->api->call(
+                $client,
+                'monitorOrder',
+                [new OrderId(new Uuid((string) $pairing->getPairingId()))],
+                false
+            );
+        } catch (Throwable $e) {
+            throw new LocalizedException(__('Cannot get pairing status'));
+        }
 
+        /** @var Order $tOrder */
+        $tOrder = $res->getReturn();
+
+        if ($tOrder->pairingStatus() !== $pairing->getPairingStatus()
+            || $tOrder->transactionStatus() !== $pairing->getTransactionStatus()
+            || $tOrder->status() !== $pairing->getStatus()) {
+            $log = $this->api->saveLog($res->getRequest());
+            $pairing = $this->update($pairing, $tOrder);
+            $history = $this->createHistory($pairing, $log);
         }
 
         if ($tOrder->isPending()) {
             return false;
         }
 
-        if ($tOrder->isSuccessful()) {
-            $this->update($pairing, $tOrder);
-            $this->orderService->pay($pairing);
+        if ($tOrder->isSuccessful() && !$pairingOrg->isSuccessful()) {
+            $order = $this->orderService->getOrder($pairing->getOrderId());
+            $transaction = $this->transactionService->createCapture($order, $pairing, $history);
+            $this->orderService->pay($pairing, $transaction);
+            $invoice = $this->invoiceService->create($order, $transaction);
         }
 
-        if ($tOrder->isFailure()) {
-            $this->update($pairing, $tOrder);
-            $this->orderService->cancel($pairing);
+        if ($tOrder->isFailure() && !$pairingOrg->isFailure()) {
+            $order = $this->orderService->getOrder($pairing->getOrderId());
+            $transaction = $this->transactionService->createVoid($order, $pairing, $history);
+            $this->orderService->cancel($pairing, $transaction);
         }
 
-        $this->pairingRepository->unlock($pairing);
+        $this->pairingRepository->unlock($pairingOrg);
 
         return true;
     }
 
     public function update(Pairing $pairing, Order $order)
     {
-        $pairing->setData('status', (string)$order->pairingStatus());
-        $pairing->setData('transaction_status', (string)$order->transactionStatus());
+        $pairing->setData('status', (string) $order->status());
+        $pairing->setData('transaction_status', (string) $order->transactionStatus());
+        $pairing->setData('pairing_status', (string) $order->pairingStatus());
 
         return $this->pairingRepository->save($pairing);
     }
 
-    public function create($amount, Order $twintOrder, InfoInterface $payment)
+    public function create($amount, ApiResponse $response, InfoInterface $payment): array
     {
-        /** @var Pairing $entity */
-        $entity = $this->pairingFactory->create();
-        $entity->setData('pairing_id', (string)$twintOrder->id());
-        $entity->setData('status', (string)$twintOrder->pairingStatus());
-        $entity->setData('token', (string)$twintOrder->pairingToken());
-        $entity->setData('transaction_status', (string)$twintOrder->transactionStatus());
-        $entity->setData('amount', $amount);
+        /** @var Order $twintOrder */
+        $twintOrder = $response->getReturn();
+
+        /** @var Pairing $pairing */
+        $pairing = $this->pairingFactory->create();
+        $pairing->setData('pairing_id', (string) $twintOrder->id());
+        $pairing->setData('status', (string) $twintOrder->status());
+        $pairing->setData('token', (string) $twintOrder->pairingToken());
+        $pairing->setData('transaction_status', (string) $twintOrder->transactionStatus());
+        $pairing->setData('pairing_status', (string) $twintOrder->pairingStatus());
+        $pairing->setData('amount', $amount);
 
         /** @var Payment $payment */
-        $entity->setData('order_id', (string)$twintOrder->merchantTransactionReference());
-        $entity->setData('store_id', $payment->getOrder()->getStore()->getId());
+        $pairing->setData('order_id', (string) $twintOrder->merchantTransactionReference());
+        $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 
-        return $this->pairingRepository->save($entity);
+        $pairing = $this->pairingRepository->save($pairing);
+
+        $history = $this->createHistory($pairing, $response->getRequest());
+
+        return [$pairing, $history];
+    }
+
+    public function createHistory(Pairing $pairing, RequestLog $log): PairingHistory
+    {
+        /** @var PairingHistory $history */
+        $history = $this->historyFactory->create();
+        $history->setData('parent_id', (string) $pairing->getId());
+        $history->setData('status', $pairing->getStatus());
+        $history->setData('transaction_status', $pairing->getTransactionStatus());
+        $history->setData('pairing_status', $pairing->getPairingStatus());
+        $history->setData('token', $pairing->getToken());
+        $history->setData('amount', $pairing->getAmount());
+        $history->setData('store_id', $pairing->getStoreId());
+        $history->setData('order_id', $pairing->getOrderId());
+        $history->setData('request_id', $log->getId());
+
+        return $this->historyRepository->save($history);
     }
 }

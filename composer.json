@@ -6,10 +6,24 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "magento/framework": ">=103",
-        "ext-json": "*",
-        "twint-ch/twint-sdk": "dev-develop"
+        "php": ">=8.1",
+        "magento/framework": ">=103.0.4",
+        "twint-ch/twint-sdk": "dev-dev/magento"
     },
+    "require-dev": {
+        "symplify/easy-coding-standard": "^12.1",
+        "slevomat/coding-standard": "^8.15"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
+        }
+    ],
     "license": [
         "Proprietary"
     ],
@@ -19,6 +33,14 @@
         ],
         "psr-4": {
             "Twint\\Magento\\": ""
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "magento/composer-dependency-version-audit-plugin": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "magento/magento-composer-installer": true
         }
     }
 }

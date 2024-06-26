@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Twint\Magento\Model\ResourceModel\Pairing;
 
@@ -17,4 +18,11 @@ class Collection extends AbstractCollection
         );
     }
 
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
+        $this->addExpressionFieldToSelect('now', 'NOW()', []);
+        return $this;
+    }
 }

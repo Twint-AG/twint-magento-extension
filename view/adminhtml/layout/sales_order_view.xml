@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="sales_order_tabs">
+            <block class="Twint\Magento\Block\Adminhtml\Order\TwintTab" name="twint.grid.transaction.container"/>
+            <action method="addTab">
+                <argument name="name" xsi:type="string">order_twint</argument>
+                <argument name="block" xsi:type="string">twint.grid.transaction.container</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="twint.grid.transaction.container">
+            <uiComponent name="sales_order_view_pairing_grid"/>
+        </referenceBlock>
+    </body>
+</page>

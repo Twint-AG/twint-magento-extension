@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Controller\Adminhtml\Certificate;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
@@ -14,12 +17,16 @@ use Twint\Magento\Util\CryptoHandler;
 use Twint\Magento\Validator\Certificate\CertificateFileValidator;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 
-class Upload extends Action implements ActionInterface, HttpPostActionInterface {
-
+class Upload extends Action implements ActionInterface, HttpPostActionInterface
+{
     protected JsonFactory $jsonFactory;
+
     protected Http $request;
+
     protected CertificateFileValidator $fileValidator;
+
     protected CertificateReader $certificateReader;
+
     protected CryptoHandler $crypto;
 
     public function __construct(
@@ -56,10 +63,10 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface 
             $password = $this->request->get('password') ?? null;
 
             $validated = $this->fileValidator->validate($file);
-            if(is_string($validated)){
+            if (is_string($validated)) {
                 return $resultJson->setData([
                     'success' => false,
-                    'message' => __($validated)
+                    'message' => __($validated),
                 ]);
             }
 
@@ -84,12 +91,12 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface 
         } catch (LocalizedException $e) {
             return $resultJson->setData([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
-                'message' => __('Something went wrong while processing the data.')
+                'message' => __('Something went wrong while processing the data.'),
             ]);
         }
     }

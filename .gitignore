@@ -57,3 +57,11 @@ yarn.lock
 
 # Coverage reports
 /coverage/
+
+app/
+bin/
+vendor/
+dev/
+lib/
+generated/
+

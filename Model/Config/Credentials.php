@@ -1,21 +1,28 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Twint\Magento\Model\Config;
 
-class Credentials extends AbstractConfig {
-
-    public function getCertificate(): array{
+class Credentials extends AbstractConfig
+{
+    public function getCertificate(): array
+    {
         return json_decode($this->data['certificate'] ?? '', true);
     }
 
-    public function getMerchantId(): string {
+    public function getMerchantId(): string
+    {
         return $this->data['merchant_id'] ?? '';
     }
 
-    public function getTestMode(): string {
+    public function getTestMode(): string
+    {
         return (bool) $this->data['test_mode'] ?? '';
     }
 
-    public function getValidated(): string {
+    public function getValidated(): string
+    {
         return (bool) $this->data['validated'] ?? false;
     }
 }

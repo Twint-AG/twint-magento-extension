@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Twint\Magento\Model\Form;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
@@ -23,11 +26,11 @@ class CertificateUpload extends AbstractElement
                         <div class="file-upload-container">
                             <label class="file-upload">
                                 <input type="file" id="certificate-file" accept=".p12"/>
-                                <span class="file-upload-btn">'.__("Chose File") .'</span>
+                                <span class="file-upload-btn">' . __('Chose File') . '</span>
                                 <span class="file-upload-label" 
                                     id="certificate-file-name"
-                                    data-empty-title="'.__("Only .p12 files are allowed.") .'"
-                                >'.__("Only .p12 files are allowed.") .'</span>
+                                    data-empty-title="' . __('Only .p12 files are allowed.') . '"
+                                >' . __('Only .p12 files are allowed.') . '</span>
                             </label>
                         </div>
                     </div>
@@ -38,7 +41,7 @@ class CertificateUpload extends AbstractElement
                         <input type="password" id="certificate-password" name="certificate_password">
                     </div>
                     <div class="note">
-                        '.__("Password is required for all TWINT certificates.") .'                    
+                        ' . __('Password is required for all TWINT certificates.') . '                    
                     </div>
                 </div>
                 
@@ -46,8 +49,8 @@ class CertificateUpload extends AbstractElement
                 </div>
             </div>
             <div id="twint-certificate-loaded-container" class="d-none">
-                ' . __("Certificate are loaded and encrypted successfully,") .'
-                <span id="twint-upload-new">' . __("upload a new") .'</span>
+                ' . __('Certificate are loaded and encrypted successfully,') . '
+                <span id="twint-upload-new">' . __('upload a new') . '</span>
             </div>
         </div>';
     }

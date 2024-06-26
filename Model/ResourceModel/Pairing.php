@@ -1,18 +1,23 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Twint\Magento\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Pairing resource model
  */
-class Pairing extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+class Pairing extends AbstractDb
 {
+    public const TABLE_NAME = 'twint_pairing';
+
     /**
      * Resource initialization
-     *
-     * @return void
      */
     protected function _construct()
     {
-        $this->_init('twint_pairing', 'id');
+        $this->_init(self::TABLE_NAME, 'id');
     }
 }

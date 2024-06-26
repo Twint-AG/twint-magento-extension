@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Model\Config;
 
 class BasePaymentConfig extends AbstractConfig

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Controller\Regular;
 
 use Magento\Checkout\Model\Session;
@@ -17,15 +19,14 @@ use Twint\Magento\Model\Method\TwintRegularMethod;
 
 class Payment extends BaseAction implements ActionInterface, HttpPostActionInterface
 {
-
-    public function __construct(Context                                     $context,
-                                private Session                             $session,
-                                private OrderRepositoryInterface            $orderRepository,
-                                private readonly PairingRepositoryInterface $repository,
-                                private readonly SearchCriteriaBuilder      $criteriaBuilder,
-                                private readonly PriceHelper                $priceHelper
-    )
-    {
+    public function __construct(
+        Context $context,
+        private Session $session,
+        private OrderRepositoryInterface $orderRepository,
+        private readonly PairingRepositoryInterface $repository,
+        private readonly SearchCriteriaBuilder $criteriaBuilder,
+        private readonly PriceHelper $priceHelper
+    ) {
         parent::__construct($context);
     }
 
@@ -42,8 +43,8 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         $order = $this->getOrder($orderId);
 
         $payment = $order->getPayment();
-        if (!$payment || $payment->getMethod() != TwintRegularMethod::CODE) {
-            throw new LocalizedException(__("This order did not processed by TWINT"));
+        if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
+            throw new LocalizedException(__('This order did not processed by TWINT'));
         }
 
         $pairing = $this->getPairing($order);
@@ -52,7 +53,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
             'id' => $pairing['pairing_id'],
             'token' => $pairing['token'],
             'orderNumber' => $order->getIncrementId(),
-            'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false)
+            'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false),
         ];
 
         return $json->setData($data);
@@ -65,11 +66,12 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
     {
         if (!empty($orderId)) {
             $order = $this->orderRepository->get($orderId);
-        } else
+        } else {
             $order = $this->session->getLastRealOrder();
+        }
 
         if ((!$order instanceof Order)) {
-            throw new LocalizedException(__("Order not found"));
+            throw new LocalizedException(__('Order not found'));
         }
 
         return $order;
@@ -80,8 +82,10 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
      */
     protected function getPairing(Order $order)
     {
-        $criteria = $this->criteriaBuilder->addFilter('order_id', $order->getIncrementId())->create();
-        $pairings = $this->repository->getList($criteria)->getItems();
+        $criteria = $this->criteriaBuilder->addFilter('order_id', $order->getIncrementId())
+            ->create();
+        $pairings = $this->repository->getList($criteria)
+            ->getItems();
 
         if (!empty($pairings)) {
             return reset($pairings); // Return the first item

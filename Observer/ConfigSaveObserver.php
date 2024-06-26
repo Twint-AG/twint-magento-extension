@@ -1,42 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Observer;
 
+use Magento\Config\Model\Config\Factory;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Throwable;
 use Twint\Magento\Constant\TwintConstant;
-use Twint\Magento\Validator\CredentialValidator;
-use Magento\Config\Model\Config\Factory;
 use Twint\Magento\Helper\ConfigHelper;
+use Twint\Magento\Validator\CredentialValidator;
 
 class ConfigSaveObserver implements ObserverInterface
 {
-
-    public function __construct(private Factory             $configFactory,
-                                private ConfigHelper        $configHelper,
-                                private CredentialValidator $validator
-
-    )
-    {
+    public function __construct(
+        private Factory $configFactory,
+        private ConfigHelper $configHelper,
+        private CredentialValidator $validator
+    ) {
     }
 
     public function execute(Observer $observer)
     {
         $data = $observer->getData('configData') ?? [];
 
-        if ($data['section'] == TwintConstant::SECTION) {
+        if ($data['section'] === TwintConstant::SECTION) {
             try {
                 $credentials = $this->getCurrentCredentials($data);
-                $validated = $this->validator->validate($credentials['certificate'], $credentials['merchant_id'], (bool)$credentials['test_mode']);
+                $validated = $this->validator->validate(
+                    $credentials['certificate'],
+                    $credentials['merchant_id'],
+                    (bool) $credentials['test_mode']
+                );
 
                 $data['groups']['credentials']['fields']['validated'] = [
                     'value' => (int) $validated,
                 ];
 
-                $configModel = $this->configFactory->create(['data' => $data]);
+                $configModel = $this->configFactory->create([
+                    'data' => $data,
+                ]);
                 $configModel->save();
-            }catch (\Throwable $e){
-
+            } catch (Throwable $e) {
             }
         }
     }
@@ -52,7 +58,7 @@ class ConfigSaveObserver implements ObserverInterface
                 $credentials = [
                     'merchant_id' => $fields['merchantID']['value'] ?? null,
                     'test_mode' => $fields['environment']['value'] ?? null,
-                    'certificate' => json_decode($fields['certificate']['value'] ?? '', true)
+                    'certificate' => json_decode($fields['certificate']['value'] ?? '', true),
                 ];
                 break;
 

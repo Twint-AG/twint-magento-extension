@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Builder;
 
 use Soap\Engine\Transport;
@@ -39,7 +41,8 @@ class ClientBuilder
             return self::$instances[$storeCode];
         }
 
-        $credentials = $this->configHelper->getConfigs()->getCredentials();
+        $credentials = $this->configHelper->getConfigs()
+            ->getCredentials();
 
         if ($credentials->getValidated() === false) {
             throw new InvalidConfigException(InvalidConfigException::ERROR_NOT_VALIDATED);

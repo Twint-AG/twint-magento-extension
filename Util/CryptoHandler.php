@@ -6,16 +6,18 @@ namespace Twint\Magento\Util;
 
 use InvalidArgumentException;
 use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\Encryption\Encryptor;
 use RuntimeException;
 
 class CryptoHandler
 {
-    private string $key;
     public const CIPHERING = 'AES-128-CBC';
+
+    private string $key;
 
     public function __construct(DeploymentConfig $deploymentConfig)
     {
-        $this->key = $deploymentConfig->get(\Magento\Framework\Encryption\Encryptor::PARAM_CRYPT_KEY);
+        $this->key = $deploymentConfig->get(Encryptor::PARAM_CRYPT_KEY);
     }
 
     /**
