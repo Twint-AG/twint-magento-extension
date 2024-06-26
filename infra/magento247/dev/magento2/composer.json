@@ -41,8 +41,7 @@
         "magento/module-wishlist-sample-data": "100.4.*",
         "magento/product-community-edition": "2.4.7",
         "magento/sample-data-media": "100.4.*",
-        "payone-gmbh/magento-2": "^3.10",
-        "twint/magento-2": "1.0.0"
+        "twint/magento-2": "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -100,7 +99,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://git.nfq.asia/twint-ag/woo-extension.git"
+            "url": "https://git.nfq.asia/twint-ag/magento-extension.git"
         },
         {
             "type": "vcs",
