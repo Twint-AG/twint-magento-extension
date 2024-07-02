@@ -75,7 +75,6 @@ ARG COMPOSER_AUTH
 COPY --from=composer:2.7.1@sha256:da5213f1c0c4db435ad335be4e782ebf8677b45d37677a6db1e73e474c7ad947 /usr/bin/composer /usr/bin/composer
 
 COPY --chown=www-data composer.json composer.json
-COPY --chown=www-data composer.lock composer.lock
 
 RUN composer check-platform-reqs --lock && \
     composer validate && \
@@ -126,5 +125,4 @@ RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME
 ARG GITLAB_USERNAME
 ARG GITLAB_TOKEN
 RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
-RUN rm composer.lock
 RUN composer install
