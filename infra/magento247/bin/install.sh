@@ -17,7 +17,7 @@ yes | php bin/magento setup:install \
     --admin-email=$ADMIN_EMAIL \
     --db-host=$DB_HOST \
     --db-user=$DB_USER \
-    --db-password=$DB_PASSWORD \
+    --db-password=$DB_PASS \
     --db-name=$DB_NAME \
     --search-engine=elasticsearch7 \
     --elasticsearch-host= $ELASTICSEARCH_HOST \
