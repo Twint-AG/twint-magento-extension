@@ -76,6 +76,15 @@ COPY --from=composer:2.7.1@sha256:da5213f1c0c4db435ad335be4e782ebf8677b45d37677a
 
 COPY --chown=www-data composer.json composer.json
 
+# Repo auth config
+#
+ARG MAGENTO_REPO_USERNAME
+ARG MAGENTO_REPO_PASSWORD
+RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
+ARG GITLAB_USERNAME
+ARG GITLAB_TOKEN
+RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
+
 RUN composer validate && \
     composer install \
         --no-interaction \
@@ -93,15 +102,6 @@ COPY setup/performance-toolkit/profiles/ce/mok.xml setup/performance-toolkit/pro
 EXPOSE 80
 
 FROM build as dev
-
-# Repo auth config
-#
-ARG MAGENTO_REPO_USERNAME
-ARG MAGENTO_REPO_PASSWORD
-RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
-ARG GITLAB_USERNAME
-ARG GITLAB_TOKEN
-RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
 
 RUN composer install \
     --no-interaction \
