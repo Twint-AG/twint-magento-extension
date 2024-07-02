@@ -100,7 +100,7 @@ COPY bin/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 COPY setup/performance-toolkit/profiles/ce/mok.xml setup/performance-toolkit/profiles/ce/mok.xml
 
-EXPOSE 80
+EXPOSE 8080
 
 FROM build as dev
 
