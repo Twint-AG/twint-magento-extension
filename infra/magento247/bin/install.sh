@@ -20,7 +20,7 @@ yes | php bin/magento setup:install \
     --db-password=$DB_PASS \
     --db-name=$DB_NAME \
     --search-engine=elasticsearch7 \
-    --elasticsearch-host= $ELASTICSEARCH_HOST \
+    --elasticsearch-host=$ELASTICSEARCH_HOST \
     --elasticsearch-index-prefix=magento2
 
 mv app/etc/config.php.bak app/etc/config.php
