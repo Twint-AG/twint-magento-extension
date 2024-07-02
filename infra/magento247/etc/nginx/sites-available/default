@@ -13,8 +13,8 @@ server {
 server {
     access_log /dev/stdout;
 
-    listen 8080;
-    listen 8081 proxy_protocol;
+    listen 80;
+    listen 81 proxy_protocol;
     server_name _;
     set $MAGE_ROOT /var/www/html;
 

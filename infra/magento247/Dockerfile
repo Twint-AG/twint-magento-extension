@@ -76,8 +76,7 @@ COPY --from=composer:2.7.1@sha256:da5213f1c0c4db435ad335be4e782ebf8677b45d37677a
 
 COPY --chown=www-data composer.json composer.json
 
-RUN composer check-platform-reqs --lock && \
-    composer validate && \
+RUN composer validate && \
     composer install \
         --no-interaction \
         --no-progress \
@@ -91,9 +90,18 @@ COPY bin/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 COPY setup/performance-toolkit/profiles/ce/mok.xml setup/performance-toolkit/profiles/ce/mok.xml
 
-EXPOSE 8080
+EXPOSE 80
 
 FROM build as dev
+
+# Repo auth config
+#
+ARG MAGENTO_REPO_USERNAME
+ARG MAGENTO_REPO_PASSWORD
+RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
+ARG GITLAB_USERNAME
+ARG GITLAB_TOKEN
+RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
 
 RUN composer install \
     --no-interaction \
@@ -116,13 +124,3 @@ RUN rm -rf /var/www/html/var/page_cache
 RUN rm -rf /var/www/html/var/session
 
 COPY --chown=www-data app/etc/env.docker.php app/etc/env.php
-
-# Repo auth config
-#
-ARG MAGENTO_REPO_USERNAME
-ARG MAGENTO_REPO_PASSWORD
-RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
-ARG GITLAB_USERNAME
-ARG GITLAB_TOKEN
-RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
-RUN composer install
