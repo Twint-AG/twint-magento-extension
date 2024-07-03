@@ -125,7 +125,9 @@ RUN rm -rf /var/www/html/var/page_cache
 RUN rm -rf /var/www/html/var/session
 
 COPY --chown=www-data app/etc/env.docker.php app/etc/env.php
+COPY --chown=www-data update_module.sh update_module.sh
 COPY --chown=www-data mount-folders.sh mount-folders.sh
 COPY --chown=www-data mount-folders.txt mount-folders.txt
+RUN chmod +x update_module.sh mount-folders.sh
 
 RUN composer install
