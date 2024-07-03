@@ -1,73 +1,133 @@
-FROM 555581995966.dkr.ecr.ap-southeast-1.amazonaws.com/magento2:2.4.7
-LABEL maintainer "paj@gaiterjones.com"
-LABEL service "Magento 2 PHP-APACHE Service"
-# ------------------------------------------------------------------
+FROM php:8.2.12-fpm@sha256:62fba478afcfb1a31c402ef29b0ae504fe52c1c6b65371e647c4672fa7299951 as base
 
-COPY ./magento247 /var/www
-RUN chmod +wr /var/www
+ENV COMPOSER_HOME=/tmp/composer
 
-COPY ./docker/ubuntu/magento247-build/bin/install-magento /usr/local/bin/install-magento
-COPY ./docker/ubuntu/magento247-build/bin/install-sampledata /usr/local/bin/install-sampledata
-COPY ./docker/ubuntu/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN apt-get update && apt-get install -y --no-install-recommends gnupg \
+    git \
+    nginx \
+    netcat-openbsd \
+    libicu-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libsodium-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libzip-dev \
+    rsync \
+    supervisor \
+    unzip \
+    ;
 
-# configs
-#
-COPY ./docker/ubuntu/php/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY ./docker/ubuntu/phpRedisAdmin_config.inc.php /var/www/dev/phpRedisAdmin/includes/config.inc.php
+RUN pecl install apcu-5.1.22
 
-# Magento repo auth config
+RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
+RUN docker-php-ext-install -j "$(nproc)" \
+    bcmath \
+    gd \
+    intl \
+    mysqli \
+    opcache \
+    pdo_mysql \
+    sockets \
+    soap \
+    xsl \
+    zip \
+    ;
+
+RUN docker-php-ext-enable apcu
+
+RUN echo "memory_limit=1G" >> /usr/local/etc/php/conf.d/zz-memory-limit-php.ini
+RUN echo "apc.enable=1" >> /usr/local/etc/php/conf.d/zz-apcu.ini
+RUN echo "apc.enable_cli=1" >> /usr/local/etc/php/conf.d/zz-apcu.ini
+RUN echo "opcache.memory_consumption=512MB" >> /usr/local/etc/php/conf.d/zz-opcache.conf
+RUN echo "opcache.max_accelerated_files=60000" >> /usr/local/etc/php/conf.d/zz-opcache.conf
+RUN echo "opcache.consistency_checks=0" >> /usr/local/etc/php/conf.d/zz-opcache.conf
+RUN echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/conf.d/zz-opcache.conf
+RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/zz-opcache.conf
+
+RUN echo "[www]" >> /usr/local/etc/php-fpm.d/zz-status.conf
+RUN echo "; Expose PHP-FPM status" >> /usr/local/etc/php-fpm.d/zz-status.conf
+RUN echo "pm.status_listen=9001" >> /usr/local/etc/php-fpm.d/zz-status.conf
+RUN echo "pm.status_path=/status" >> /usr/local/etc/php-fpm.d/zz-status.conf
+
+RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
+    chown -R www-data:www-data /var/lib/nginx
+
+RUN touch /run/nginx.pid && \
+    chown www-data:www-data /run/nginx.pid
+
+FROM base as build
+
+COPY etc/supervisord.conf /etc/supervisor/supervisord.conf
+COPY etc/nginx /etc/nginx
+
+RUN curl https://files.magerun.net/n98-magerun2.phar -o /usr/local/bin/magerun \
+    && chmod 755 /usr/local/bin/magerun
+
+RUN mkdir -p /var/log/supervisor \
+    && chown www-data:www-data /var/log/supervisor
+
+USER www-data
+WORKDIR /var/www/html
+
+ARG COMPOSER_AUTH
+
+COPY --from=composer:2.7.1@sha256:da5213f1c0c4db435ad335be4e782ebf8677b45d37677a6db1e73e474c7ad947 /usr/bin/composer /usr/bin/composer
+
+COPY --chown=www-data composer.json composer.json
+
+# Repo auth config
 #
 ARG MAGENTO_REPO_USERNAME
 ARG MAGENTO_REPO_PASSWORD
-RUN set -x \
-	&& sed -i "s/XUSERNAMEX/$MAGENTO_REPO_USERNAME/g" /var/www/.composer/auth.json \
-	&& sed -i "s/XPASSWORDX/$MAGENTO_REPO_PASSWORD/g" /var/www/.composer/auth.json \
-	&& cat /var/www/.composer/auth.json
-
-# msmtprc smtp config
-#
-COPY ./docker/ubuntu/php/msmtprc /usr/local/etc/msmtprc
-ARG APPDOMAIN
-ARG SMTP
-RUN set -x \
-	&& sed -i "s/XMAILHOSTX/$SMTP/g" /usr/local/etc/msmtprc \
-	&& sed -i "s/XMAILDOMAINX/$APPDOMAIN/g" /usr/local/etc/msmtprc \
-	&& cat /usr/local/etc/msmtprc
-
-COPY ./docker/ubuntu/apache/apache2.conf /etc/apache2/apache2.conf
-COPY ./docker/ubuntu/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./docker/ubuntu/apache/remoteip.conf /etc/apache2/conf-available/remoteip.conf
-# enable mods and sites
-#
-RUN a2enmod rewrite \
-	&& a2enmod expires \
-	&& a2enmod headers \
-	&& a2enmod remoteip \
-	&& a2enconf remoteip \
-	&& a2ensite 000-default.conf
-
-# https://devdocs.magento.com/guides/v2.3/config-guide/cli/config-cli.html#config-install-cli-first
-RUN export PATH=$PATH:/var/www/dev/magento2/bin
-
-# DISABLE XDEBUG
-# https://stackoverflow.com/questions/8754826/how-to-disable-xdebug
-#RUN cd /usr/local/etc/php/conf.d \
-#	&& mkdir disabled \
-#	&& mv docker-php-ext-xdebug.ini disabled
-
-# cron job
-#
-ADD ./docker/ubuntu/crontab /etc/cron.d/magento2-cron
-RUN chmod 0644 /etc/cron.d/magento2-cron
-RUN crontab -u magento /etc/cron.d/magento2-cron
-
-WORKDIR /var/www/dev/magento2
-
-# Git repo auth config
-#
+RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
 ARG GITLAB_USERNAME
 ARG GITLAB_TOKEN
 RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
-RUN git config --global --add safe.directory /var/www/html/vendor/twint-ch/twint-sdk
-RUN rm composer.lock
+
+RUN composer validate && \
+    composer install \
+        --no-interaction \
+        --no-progress \
+        --no-autoloader  \
+        --no-dev
+
+COPY --chown=www-data app/etc/config.php app/etc/config.php
+
+COPY --chown=www-data bin bin
+COPY bin/entrypoint.sh /usr/local/bin/docker-php-entrypoint
+
+COPY setup/performance-toolkit/profiles/ce/mok.xml setup/performance-toolkit/profiles/ce/mok.xml
+
+EXPOSE 8080
+
+FROM build as dev
+
+RUN composer install \
+    --no-interaction \
+    --no-progress
+
+COPY --chown=www-data app/etc/env.docker.php app/etc/env.php
+
+FROM build as app
+
+ENV MAGE_MODE=production
+
+RUN composer dump-autoload \
+        --optimize \
+        --apcu
+
+RUN php -d memory_limit=2G bin/magento setup:di:compile
+RUN php -d memory_limit=2G bin/magento setup:static-content:deploy -f
+RUN rm -rf /var/www/html/var/cache
+RUN rm -rf /var/www/html/var/page_cache
+RUN rm -rf /var/www/html/var/session
+
+COPY --chown=www-data app/etc/env.docker.php app/etc/env.php
+COPY --chown=www-data update_module.sh update_module.sh
+COPY --chown=www-data mount-folders.sh mount-folders.sh
+COPY --chown=www-data mount-folders.txt mount-folders.txt
+RUN chmod +x update_module.sh mount-folders.sh
+
 RUN composer install
