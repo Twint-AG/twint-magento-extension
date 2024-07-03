@@ -77,7 +77,8 @@ test:
       bin/magento cache:flush
       
     - bin/magento module:enable Twint_Magento
-    - bin/magento setup:install
+    - bin/magento setup:upgrade
+    - bin/magento setup:di:compile
 
   cache:
     key: $CI_COMMIT_REF_SLUG-${CI_JOB_NAME}
