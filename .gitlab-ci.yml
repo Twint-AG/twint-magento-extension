@@ -21,8 +21,8 @@ test:
   stage: check
   parallel:
     matrix:
-      - MAGENTO_VERSION: [ "2.4.7" ]
-        PHP_VERSION: ["8.3" ]
+      - MAGENTO_VERSION: ["2.4.4", "2.4.5", "2.4.6" "2.4.7" ]
+        PHP_VERSION: ["8.1", "8.2", "8.3" ]
   services:
     - mysql:8.0
     - name: elasticsearch:7.17.22
