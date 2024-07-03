@@ -21,7 +21,11 @@ yes | php bin/magento setup:install \
     --db-name=$DB_NAME \
     --search-engine=elasticsearch7 \
     --elasticsearch-host=$ELASTICSEARCH_HOST \
-    --elasticsearch-index-prefix=magento2
+    --elasticsearch-index-prefix=magento2 \
+    --base-url=$BASE_URL \
+    --base-url-secure=$BASE_URL_SECURE \
+    --use-secure=1 \
+    --use-secure-admin=1
 
 mv app/etc/config.php.bak app/etc/config.php
 
