@@ -1,4 +1,4 @@
-# Twint_Core module
+# Twint_Magento module
 
 <font color='red'>**The following example is a complete README for a module Magento_Default:** </font>
 # Magento_Default module

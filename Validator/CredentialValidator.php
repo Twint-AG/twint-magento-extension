@@ -1,8 +1,11 @@
 <?php
-namespace Twint\Core\Validator;
+
+declare(strict_types=1);
+
+namespace Twint\Magento\Validator;
 
 use Exception;
-use Twint\Core\Util\CryptoHandler;
+use Twint\Magento\Util\CryptoHandler;
 use Twint\Sdk\Certificate\CertificateContainer;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 use Twint\Sdk\Client;
@@ -11,7 +14,8 @@ use Twint\Sdk\Value\Environment;
 use Twint\Sdk\Value\MerchantId;
 use Twint\Sdk\Value\Version;
 
-class CredentialValidator {
+class CredentialValidator
+{
     public function __construct(readonly CryptoHandler $crypto)
     {
     }

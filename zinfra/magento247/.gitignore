@@ -1,2 +1,5 @@
 .composer
 phpRedisAdmin
+
+dev/magento2/dev/tests
+

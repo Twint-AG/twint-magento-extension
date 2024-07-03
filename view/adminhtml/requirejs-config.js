@@ -1,5 +1,5 @@
 var config = {
     paths: {
-        'twintCertificateUpload': 'Twint_Core/js/certificate_upload'
+        'twintCertificateUpload': 'Twint_Magento/js/certificate_upload'
     }
 };

@@ -1,23 +1,25 @@
 <?php
 
-namespace Twint\Core\Controller\Adminhtml\Credentials;
+declare(strict_types=1);
 
+namespace Twint\Magento\Controller\Adminhtml\Credentials;
+
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Twint\Core\Helper\ConfigHelper;
+use Twint\Magento\Helper\ConfigHelper;
 
 class Values extends Action implements ActionInterface, HttpPostActionInterface
 {
     public function __construct(
-        Action\Context       $context,
-        private JsonFactory  $jsonFactory,
-        private Http         $request,
+        Action\Context $context,
+        private JsonFactory $jsonFactory,
+        private Http $request,
         private ConfigHelper $helper,
-    )
-    {
+    ) {
         parent::__construct($context);
     }
 
@@ -29,10 +31,10 @@ class Values extends Action implements ActionInterface, HttpPostActionInterface
         try {
             $credentials = $this->helper->getCredentials($scope);
             return $resultJson->setData($credentials);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }

@@ -93,8 +93,19 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "type": "composer", 
+            "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        {
+            "name": "twint/magento-2",
+            "type": "path",
+            "url": "/var/www/plugin",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "twint/magento-2": "1.0.0"
+                }
+            }
         },
         {
             "type": "vcs",

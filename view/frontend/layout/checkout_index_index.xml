@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="Twint_Core::css/button.css"/>
-    </head>
     <body>
         <referenceBlock name="checkout.root">
             <arguments>
@@ -20,7 +17,7 @@
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
                                                                 <item name="twint-payments" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Twint_Core/js/view/payment/twint-payments</item>
+                                                                    <item name="component" xsi:type="string">Twint_Magento/js/view/payment/twint-payments</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="twint_regular" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>

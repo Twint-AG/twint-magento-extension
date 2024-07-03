@@ -1,10 +1,13 @@
 <?php
 
-namespace Twint\Core\Model\Config;
+declare(strict_types=1);
 
-abstract  class AbstractConfig
+namespace Twint\Magento\Model\Config;
+
+abstract class AbstractConfig
 {
-    public function __construct(protected array $data)
-    {
+    public function __construct(
+        protected array $data
+    ) {
     }
 }

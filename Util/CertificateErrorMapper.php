@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Twint\Core\Util;
+namespace Twint\Magento\Util;
 
 use ReflectionClass;
 use Twint\Sdk\Exception\InvalidCertificate;

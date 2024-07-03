@@ -11,7 +11,7 @@
                     <button id="btn-copy-token"
                             data-clipboard-action="copy"
                             data-clipboard-target="#qr-token"
-                            class="p-4 px-6 bg-white rounded-lg border-black"
+                            class="p-4 px-6 bg-white rounded-lg border-black hover:shadow-none hover:border-inherit hover:text-inherit"
                     ><?php echo __("Copy code"); ?></button>
                 </div>
 
@@ -36,32 +36,20 @@
             <div class="app-selector md:hidden">
                 <?php echo $block->getLinks(); ?>
             </div>
-
-            <div class="text-center md:hidden">
-                <div class="flex items-center justify-center my-4">
-                    <div class="flex-grow border-t border-gray-300"></div>
-                    <span class="mx-4 text-black">or</span>
-                    <div class="flex-grow border-t border-gray-300"></div>
-                </div>
-
-                <div class="row qr-code my-3">
-                    <div class="col-9 text-center"><?php echo __("Enter this code in your TWINT app:"); ?></div>
-                </div>
-            </div>
         </div>
     </div>
 
     <div class="container mx-auto mt-4 text-16">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex flex-col items-center p-4 transition duration-300">
+            <div class="flex flex-col items-center p-4">
                 <div class="flex justify-center">
-                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Core/images/icons/icon-scan.svg') ?>" alt="scan">
+                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-scan.svg') ?>" alt="scan">
                 </div>
                 <div class="text-center mt-4"><?php echo __("Scan this QR Code with your TWINT app to complete the checkout.") ?></div>
             </div>
-            <div class="flex flex-col items-center p-4 transition duration-300">
+            <div class="flex flex-col items-center p-4">
                 <div class="flex justify-center">
-                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Core/images/icons/icon-contact.svg') ?>" alt="scan">
+                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-contact.svg') ?>" alt="scan">
                 </div>
                 <div class="text-center mt-4"><?php echo __("Select a shipping address and complete the purchase in the app.") ?></div>
             </div>

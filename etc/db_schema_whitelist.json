@@ -8,16 +8,83 @@
             "transaction_status": true,
             "store_id": true,
             "order_id": true,
+            "amount": true,
+            "lock": true,
             "created_at": true,
-            "updated_at": true
+            "updated_at": true,
+            "order_status": true,
+            "pairing_status": true
         },
         "index": {
             "TWINT_PAIRING_ORDER_ID": true,
-            "TWINT_PAIRING_STATUS": true
+            "TWINT_PAIRING_STATUS": true,
+            "TWINT_PAIRING_PAIRING_ID": true
         },
         "constraint": {
             "PRIMARY": true,
             "TWINT_PAIRING_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "twint_request_log": {
+        "column": {
+            "id": true,
+            "method": true,
+            "request": true,
+            "response": true,
+            "soap_request": true,
+            "soap_response": true,
+            "exception": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "twint_pairing_history": {
+        "column": {
+            "id": true,
+            "parent_id": true,
+            "status": true,
+            "transaction_status": true,
+            "token": true,
+            "amount": true,
+            "store_id": true,
+            "order_id": true,
+            "created_at": true,
+            "request_id": true,
+            "order_status": true,
+            "pairing_status": true
+        },
+        "index": {
+            "TWINT_PAIRING_HISTORY_ORDER_ID": true,
+            "TWINT_PAIRING_HISTORY_PARENT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "TWINT_PAIRING_HISTORY_PARENT_ID_TWINT_PAIRING_ID": true,
+            "TWINT_PAIRING_HISTORY_REQUEST_ID_TWINT_REQUEST_LOG_ID": true
+        }
+    },
+    "twint_refund": {
+        "column": {
+            "id": true,
+            "pairing_id": true,
+            "reversal_id": true,
+            "amount": true,
+            "currency": true,
+            "reason": true,
+            "status": true,
+            "refunded_by": true,
+            "created_at": true,
+            "request_id": true
+        },
+        "index": {
+            "TWINT_REFUND_PAIRING_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "TWINT_REFUND_PAIRING_ID_TWINT_PAIRING_ID": true,
+            "TWINT_REFUND_REQUEST_ID_TWINT_REQUEST_LOG_ID": true
         }
     }
 }

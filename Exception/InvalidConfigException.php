@@ -1,5 +1,8 @@
 <?php
-namespace Twint\Core\Exception;
+
+declare(strict_types=1);
+
+namespace Twint\Magento\Exception;
 
 use RuntimeException;
 use Throwable;

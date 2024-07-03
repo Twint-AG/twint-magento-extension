@@ -1,71 +1,24 @@
 <?php
 
-namespace Twint\Core\Service;
+declare(strict_types=1);
 
-use Magento\Payment\Model\InfoInterface;
+namespace Twint\Magento\Service;
+
+use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Model\Order\Payment;
-use Twint\Core\Api\PairingRepositoryInterface;
-use Twint\Core\Builder\ClientBuilder;
-use Twint\Core\Model\PairingFactory;
-use Twint\Core\Model\Pairing;
-use Twint\Sdk\Value\Money;
-use Twint\Sdk\Value\Order;
-use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
-use Twint\Sdk\Value\Version;
+use Magento\Sales\Model\Order\Payment\Transaction;
 
-class PaymentService{
+class PaymentService
+{
     public function __construct(
-        private readonly ClientBuilder     $connector,
-        private readonly PairingFactory             $pairingFactory,
-        private readonly PairingRepositoryInterface $pairingRepository
-    )
-    {
+        private OrderPaymentRepositoryInterface $repository
+    ) {
     }
 
-    /**
-     * @param InfoInterface $payment
-     * @param $amount
-     * @return Order|void
-     */
-    public function createOrder(InfoInterface $payment, $amount){
-        /** @var Payment $payment */
-        $storeCode = $payment->getOrder()->getStore()->getCode();
-        $client = $this->connector->build($storeCode, Version::LATEST);
-
-
-        try {
-            $order = $payment->getOrder();
-            $orderId = $order->getIncrementId();
-
-            $twintOrder =  $client->startOrder(
-                new UnfiledMerchantTransactionReference($orderId),
-                new Money(Money::CHF, $amount)
-            );
-
-            $this->createPairing($twintOrder, $payment);
-
-            return $twintOrder;
-        }catch (\Throwable $e){
-            dd($e);
-        } finally {
-
-            //write logs
-        }
-    }
-
-    protected function createPairing(Order $twintOrder, InfoInterface $payment)
+    public function update(Payment $payment, Transaction $transaction)
     {
-        /** @var Pairing $entity */
-        $entity = $this->pairingFactory->create();
-        $entity->setData('pairing_id', (string) $twintOrder->id());
-        $entity->setData('status', (string) $twintOrder->pairingStatus());
-        $entity->setData('token', (string) $twintOrder->pairingToken());
-        $entity->setData('transaction_status', (string) $twintOrder->transactionStatus());
+        $payment->setLastTransId($transaction->getId());
 
-        /** @var Payment $payment */
-        $entity->setData('order_id', (string) $twintOrder->merchantTransactionReference());
-        $entity->setData('store_id', $payment->getOrder()->getStore()->getId());
-
-        return $this->pairingRepository->save($entity);
+        $this->repository->save($payment);
     }
 }

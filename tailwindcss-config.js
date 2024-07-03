@@ -1,11 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  mode: 'jit',
   content: [
-    '/Users/taitran/TaiTran/NFQ/projects/twint/magento-extension/view/**/*.phtml',
-    '/Users/taitran/TaiTran/NFQ/projects/twint/magento-extension/view/**/*.html',
-    '/Users/taitran/TaiTran/NFQ/projects/twint/magento-extension/view/**/*.js',
-    '/Users/taitran/TaiTran/NFQ/projects/twint/magento-extension/Block/**/*.php',
+    './view/frontend/**/*.phtml',
+    './view/frontend/**/*.html',
+    './view/frontend/**/*.js',
+    './Block/Frontend/**/*.php'
   ],
   theme: {
     extend: {

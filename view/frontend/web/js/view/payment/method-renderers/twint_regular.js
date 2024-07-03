@@ -1,67 +1,92 @@
-define(['jquery','Magento_Checkout/js/view/payment/default', 'ko', 'qr-modal'], function ($,Component, ko, QrModal) {
-    'use strict';
+define([
+  'jquery',
+  'Magento_Checkout/js/view/payment/default',
+  'Magento_Checkout/js/model/payment/additional-validators',
+  'ko',
+  'qr-modal',
+  'twint-checkout'
+], function ($, Component, additionalValidators, ko, QrModal, TwintCheckout) {
+  'use strict';
 
-    return Component.extend({
-        redirectAfterPlaceOrder: false,
-        defaults: {
-            template: 'Twint_Core/payment/twint'
-        },
+  return Component.extend({
+    redirectAfterPlaceOrder: false,
+    orderId: null,
+    defaults: {
+      template: 'Twint_Magento/payment/twint'
+    },
 
-        initialize: function () {
-            this._super();
-        },
+    initialize: function () {
+      this._super();
+    },
 
-        afterPlaceOrder: function () {
-            console.log("after play order")
-            QrModal.initModal({ target: '#qr-modal-content' });
-            QrModal.openModal();
-        },
+    afterPlaceOrder: function () {
+      TwintCheckout(this.orderId);
+    },
 
-        showModal: function (){
-            QrModal.initModal(
-                {
-                    target: '#qr-modal-content',
-                    token: 122342,
-                    amount: 'CHF 23.92'
-                }
-            );
-            QrModal.openModal();
-        },
-
-        getCode: function () {
-            return 'twint_regular';
-        },
-
-        getInstruction: function (){
-            return $.mage.__('Payment method supported by TWINT');
-        },
-
-        isActive: function () {
-            return true;
-        },
-
-        getLogoUrl: function () {
-            return require.toUrl('Twint_Core/images/twint.svg');
-        },
-
-        getExpressUrl: function (){
-            return require.toUrl('Twint_Core/images/express.svg');
-        },
-
-        continueToTwint: function () {
-            if (additionalValidators.validate()) {
-                //update payment method information if additional data was changed
-                setPaymentMethodAction(this.messageContainer).done(
-                    function () {
-                        customerData.invalidate(['cart']);
-                        $.mage.redirect(
-                            window.checkoutConfig.payment.paypalExpress.redirectUrl[quote.paymentMethod().method]
-                        );
-                    }
-                );
-
-                return false;
-            }
+    showModal: function () {
+      QrModal.init(
+        {
+          token: 122342,
+          amount: 'CHF 23.92'
         }
-    });
+      );
+      QrModal.open();
+    },
+
+    getCode: function () {
+      return 'twint_regular';
+    },
+
+    getInstruction: function () {
+      return $.mage.__('Payment method offered by TWINT');
+    },
+
+    isActive: function () {
+      return true;
+    },
+
+    getLogoUrl: function () {
+      return require.toUrl('Twint_Magento/images/twint.svg');
+    },
+
+    getExpressUrl: function () {
+      return require.toUrl('Twint_Magento/images/express.svg');
+    },
+
+    placeOrder: function (data, event) {
+      var self = this;
+
+      if (event) {
+        event.preventDefault();
+      }
+
+      if (this.validate() &&
+        additionalValidators.validate() &&
+        this.isPlaceOrderActionAllowed() === true
+      ) {
+        this.isPlaceOrderActionAllowed(false);
+
+        this.getPlaceOrderDeferredObject()
+          .done(
+            function (data) {
+              console.log(data);
+              self.orderId = data;
+              self.afterPlaceOrder();
+
+              if (self.redirectAfterPlaceOrder) {
+                redirectOnSuccessAction.execute();
+              }
+            }
+          ).always(
+          function () {
+            self.isPlaceOrderActionAllowed(true);
+          }
+        );
+
+        return true;
+      }
+
+      return false;
+    },
+  });
 });

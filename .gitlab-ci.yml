@@ -1,0 +1,114 @@
+image: shivammathur/node:jammy
+
+variables:
+  COMPOSER_ALLOW_SUPERUSER: "1"
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: m2_test
+
+stages:
+  - check
+
+.base:
+  before_script:
+    - set -euo pipefail
+  tags:
+    - d13-runner
+
+test:
+  only:
+    - dev/init
+  extends: .base
+  stage: check
+  parallel:
+    matrix:
+      - MAGENTO_VERSION: [ "2.4.7" ]
+        PHP_VERSION: ["8.3" ]
+  services:
+    - mysql:8.0
+    - name: elasticsearch:7.17.22
+      alias: elasticsearch
+      command: [ "elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node", "-Expack.license.self_generated.type=basic" ]
+  variables:
+    ELASTIC_PASSWORD: e_password
+    ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+  script:
+    # Update spc (See https://github.com/shivammathur/spc for options)
+    - spc -U
+
+    # Setup PHP
+    - spc --php-version "$PHP_VERSION"
+      --extensions "bcmath, ctype, curl, dom, fileinfo, filter,gd, hash, iconv, intl, json, libxml, mbstring, openssl, pcre, pdo_mysql, simplexml, soap, sockets, sodium, xsl, tokenizer, xmlwriter, xsl, zlib, libxml"
+    
+    - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
+    - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
+    
+    # Checkout Magento production template
+    - composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO_VERSION magento
+    - cd magento
+    - |
+      composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
+      composer config prefer-stable true
+      composer config minimum-stability dev
+      composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
+      composer config repositories.twint-extension vcs git@git.nfq.asia:twint-ag/magento-extension.git
+    - composer require twint/magento-2 --no-update
+    - |
+      rm -f composer.lock
+      composer install --prefer-dist --no-progress --no-interaction
+  
+    # Make sure elastic search is ready
+    - |
+      until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
+        echo 'Waiting for Elasticsearch to be ready...'
+        sleep 5
+      done
+      
+    - bin/magento setup:install --base-url=http://ci.magento.com --backend-frontname=admin --language=en_GB --timezone=Europe/Berlin --currency=CHF --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --use-secure=0 --base-url-secure=0 --use-secure-admin=0 --admin-firstname=First --admin-lastname=Last --admin-email=admin@magento.com --admin-user=admin --admin-password=passw0rd --search-engine=elasticsearch7 --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2
+    - |
+      ls -al vendor/twint
+      bin/magento cache:clean
+      bin/magento cache:flush
+      bin/magento module:status
+      
+    - bin/magento module:enable Twint_Core
+    - bin/magento setup:install
+
+#    - |
+#      rm -f composer.lock
+#      composer config prefer-stable true
+#      composer config minimum-stability dev
+#      composer install --prefer-dist --no-progress --no-interaction
+#    - ./vendor/bin/ecs --no-progress-bar
+
+  cache:
+    key: $CI_COMMIT_REF_SLUG-${CI_JOB_NAME}
+    paths:
+      - $CI_PROJECT_DIR/.gitlab-ci-cache
+
+test2:
+  only:
+    - dev/init-2
+  extends: .base
+  stage: check
+  parallel:
+    matrix:
+      - MAGENTO_VERSION: [ "2.4.7" ]
+        PHP_VERSION: ["8.3" ]
+  services:
+    - mysql:8.0
+    - name: elasticsearch:7.17.22
+      alias: elasticsearch
+      command: [ "elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node", "-Expack.license.self_generated.type=basic" ]
+  variables:
+    ELASTIC_PASSWORD: e_password
+    ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+  
+  script:
+    - |
+      until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
+        echo 'Waiting for Elasticsearch to be ready...'
+        sleep 5
+      done
+    - curl -u elastic:e_password -X GET "http://elasticsearch:9200/_cluster/health?pretty"
+

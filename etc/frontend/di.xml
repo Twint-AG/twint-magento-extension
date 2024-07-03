@@ -4,7 +4,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="twint_regular_config_provider" xsi:type="object">Twint\Core\Provider\RegularConfigProvider</item>
+                <item name="twint_regular_config_provider" xsi:type="object">Twint\Magento\Provider\RegularConfigProvider</item>
             </argument>
         </arguments>
     </type>

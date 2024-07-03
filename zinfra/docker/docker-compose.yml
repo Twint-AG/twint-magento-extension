@@ -66,16 +66,16 @@ services:
       - "./ubuntu/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
       # prevent recursive binding volumes
       - "./../..:/var/www/plugin"
-      - "/var/www/plugin/infra/"
+      - "/var/www/plugin/zinfra/"
     networks:
       - database
       - wwwserver
     healthcheck:
-      test: "curl --fail -sS ${MAGENTO_URL}:80/pub/health_check.php || exit 1"
+      test: "curl --fail -sS ${MAGENTO_URL}:/pub/health_check.php || exit 1"
       interval: 2m
       timeout: 60s
       retries: 5
-    depends_on:
+    depends_on:80
       - mysql
     env_file: .env
 

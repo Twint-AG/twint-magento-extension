@@ -1,12 +1,14 @@
 <?php
 
-namespace Twint\Core\Builder;
+declare(strict_types=1);
+
+namespace Twint\Magento\Builder;
 
 use Soap\Engine\Transport;
 use Throwable;
-use Twint\Core\Exception\InvalidConfigException;
-use Twint\Core\Helper\ConfigHelper;
-use Twint\Core\Util\CryptoHandler;
+use Twint\Magento\Exception\InvalidConfigException;
+use Twint\Magento\Helper\ConfigHelper;
+use Twint\Magento\Util\CryptoHandler;
 use Twint\Sdk\Certificate\CertificateContainer;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 use Twint\Sdk\Client;
@@ -39,7 +41,8 @@ class ClientBuilder
             return self::$instances[$storeCode];
         }
 
-        $credentials = $this->configHelper->getConfigs()->getCredentials();
+        $credentials = $this->configHelper->getConfigs()
+            ->getCredentials();
 
         if ($credentials->getValidated() === false) {
             throw new InvalidConfigException(InvalidConfigException::ERROR_NOT_VALIDATED);

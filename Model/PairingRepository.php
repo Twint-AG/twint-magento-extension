@@ -1,27 +1,41 @@
 <?php
-namespace Twint\Core\Model;
 
+declare(strict_types=1);
+
+namespace Twint\Magento\Model;
+
+use Magento\Framework\Api\Filter;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\Search\FilterGroupBuilder;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DB\Adapter\ConnectionException;
+use Magento\Framework\DB\Sql\Expression;
+use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
-use Twint\Core\Api\PairingRepositoryInterface;
-use Twint\Core\Model\ResourceModel\Pairing as ResourceModel;
-use Twint\Core\Model\ResourceModel\Pairing\CollectionFactory;
-use Twint\Core\Model\ResourceModel\Pairing\Collection;
-use Magento\Framework\Api\SearchResultsFactory;
-use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
+use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Model\ResourceModel\Pairing as ResourceModel;
+use Twint\Magento\Model\ResourceModel\Pairing\Collection;
+use Twint\Magento\Model\ResourceModel\Pairing\CollectionFactory;
+use Twint\Sdk\Value\TransactionStatus;
+use Zend_Db_Expr;
 
-class PairingRepository implements PairingRepositoryInterface{
-
+class PairingRepository implements PairingRepositoryInterface
+{
     public function __construct(
         private PairingFactory $factory,
         private readonly ResourceModel $resourceModel,
         private CollectionFactory $collectionFactory,
         private SearchResultsFactory $searchResultsFactory,
+        private readonly SearchCriteriaBuilder $criteriaBuilder,
+        private readonly FilterGroupBuilder $filterGroupBuilder,
+        private readonly FilterBuilder $filterBuilder,
         private ?CollectionProcessorInterface $collectionProcessor = null
     ) {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
@@ -40,44 +54,155 @@ class PairingRepository implements PairingRepositoryInterface{
         return $entity;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws AlreadyExistsException
+     */
     public function save(Pairing $pairing)
     {
         try {
-            $GLOBALS['test'] = true;
-
-            return $this->resourceModel->save($pairing);
+            $this->resourceModel->save($pairing);
         } catch (ConnectionException $exception) {
-            throw new CouldNotSaveException(
-                __('Database connection error'),
-                $exception,
-                $exception->getCode()
-            );
+            throw new CouldNotSaveException(__('Database connection error'), $exception, $exception->getCode());
         } catch (CouldNotSaveException $e) {
             throw new CouldNotSaveException(__('Unable to save item'), $e);
         } catch (ValidatorException $e) {
             throw new CouldNotSaveException(__($e->getMessage()));
-        }catch (\Throwable $e){
-            dd($e);
         }
-
-        dd($pairing->getId());
 
         return $this->getById($pairing->getId());
     }
 
-    public function getList(SearchCriteriaInterface $criteria)
+    public function getList(SearchCriteriaInterface $criteria): searchResultsInterface
     {
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
 
         $this->collectionProcessor->process($criteria, $collection);
 
-        /** @var SearchResultsInterface $results */
+        /** @var searchResultsInterface $results */
         $results = $this->searchResultsFactory->create();
         $results->setSearchCriteria($criteria);
         $results->setTotalCount($collection->getSize());
         $results->setItems($collection->getData());
 
         return $results;
+    }
+
+    public function getByPairingId(string $id): ?Pairing
+    {
+        $criteria = $this->criteriaBuilder->addFilter('pairing_id', $id)
+            ->create();
+        $items = $this->getList($criteria)
+            ->getItems();
+
+        if (!empty($items)) {
+            $item = reset($items);
+
+            $entity = $this->factory->create();
+            $entity->setData($item);
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    public function getByOrderId(string $id): ?Pairing
+    {
+        $criteria = $this->criteriaBuilder->addFilter('order_id', $id)
+            ->create();
+        $items = $this->getList($criteria)
+            ->getItems();
+
+        if (!empty($items)) {
+            $item = reset($items);
+
+            $entity = $this->factory->create();
+            $entity->setData($item);
+
+            return $entity;
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
+     */
+    public function lock(Pairing $pairing)
+    {
+        $this->setLock($pairing->getId(), true);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws AlreadyExistsException
+     * @throws CouldNotSaveException
+     */
+    public function unlock(Pairing $pairing)
+    {
+        $this->setLock($pairing->getId(), false);
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws AlreadyExistsException
+     */
+    private function setLock(string $id, bool $value)
+    {
+        $clone = $this->factory->create();
+        $clone->setData([
+            'id' => $id,
+            'lock' => $value ? new Expression('timestamp(DATE_ADD(NOW(), INTERVAL 30 SECOND))') : null,
+        ]);
+
+        $this->save($clone);
+    }
+
+    public function getUnFinishes(): searchResultsInterface
+    {
+        $statuses = [
+            TransactionStatus::ORDER_RECEIVED,
+            TransactionStatus::ORDER_CONFIRMATION_PENDING,
+            TransactionStatus::ORDER_PENDING,
+        ];
+
+        $statusFilter = $this->filterBuilder
+            ->setField('transaction_status')
+            ->setValue($statuses)
+            ->setConditionType('in')
+            ->create();
+
+        // Create the first lock filter
+        $lockFilter1 = $this->filterBuilder
+            ->setField('lock')
+            ->setValue(null)
+            ->setConditionType('null')
+            ->create();
+
+        // Create the second lock filter
+        $lockFilter2 = $this->filterBuilder
+            ->setField('lock')
+            ->setValue(new Zend_Db_Expr('now()'))
+            ->setConditionType('lteq')
+            ->create();
+
+        // Create the first filter group for the lock filters (OR condition)
+        $lockFilterGroup = $this->filterGroupBuilder->setFilters([$lockFilter1, $lockFilter2])->create();
+
+        // Create the main filter group (AND condition)
+        $mainFilterGroup = $this->filterGroupBuilder->setFilters([$statusFilter])->create();
+
+        // Build the search criteria
+        $criteria = $this->criteriaBuilder
+            ->setFilterGroups([$mainFilterGroup, $lockFilterGroup])
+            ->create();
+
+        return $this->getList($criteria);
     }
 }

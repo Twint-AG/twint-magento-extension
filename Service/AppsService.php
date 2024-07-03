@@ -1,19 +1,22 @@
 <?php
 
-namespace Twint\Core\Service;
+declare(strict_types=1);
+
+namespace Twint\Magento\Service;
 
 use Exception;
-use Twint\Core\Builder\ClientBuilder;
+use Twint\Magento\Builder\ClientBuilder;
 use function Psl\Type\string;
 
-class TwintAppService{
+class AppsService
+{
     public function __construct(
-        private readonly ClientBuilder     $connector,
-    )
-    {
+        private readonly ClientBuilder $connector,
+    ) {
     }
 
-    public function getLinks(string $storeCode, string $token = '--TOKEN--'){
+    public function getLinks(string $storeCode, string $token = '--TOKEN--')
+    {
         $links = [];
 
         try {

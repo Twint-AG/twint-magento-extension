@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
-namespace Twint\Core\Model\ResourceModel\Pairing;
+namespace Twint\Magento\Model\ResourceModel\Pairing;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Twint\Core\Model\Pairing;
-use Twint\Core\Model\ResourceModel\Pairing as ResourcePairing;
+use Twint\Magento\Model\Pairing;
+use Twint\Magento\Model\ResourceModel\Pairing as ResourcePairing;
 
 class Collection extends AbstractCollection
 {
@@ -17,4 +18,11 @@ class Collection extends AbstractCollection
         );
     }
 
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
+        $this->addExpressionFieldToSelect('now', 'NOW()', []);
+        return $this;
+    }
 }
