@@ -125,3 +125,4 @@ RUN rm -rf /var/www/html/var/page_cache
 RUN rm -rf /var/www/html/var/session
 
 COPY --chown=www-data app/etc/env.docker.php app/etc/env.php
+RUN composer install
