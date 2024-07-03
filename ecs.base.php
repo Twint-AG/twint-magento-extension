@@ -70,6 +70,7 @@ return static function (ECSConfig $ecsConfig): void {
         __DIR__ . '/build',
         __DIR__ . '/zinfra',
         __DIR__ . '/var',
+        __DIR__ . '/magento',
         FinalClassFixer::class => [__DIR__ . '/src/Generated/'],
     ]);
 
