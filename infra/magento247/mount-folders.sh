@@ -1,4 +1,4 @@
-mount_dir=/data/app
+mount_dir=/data/html
 app_dir=/var/www/html
 while IFS= read -r folder
 do
