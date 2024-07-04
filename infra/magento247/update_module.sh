@@ -1,4 +1,5 @@
-composer update twint/magento-2
+rm -rf /var/www/html/vendor/twint/magento-2
+composer update twint/magento-2 --no-progress --no-interaction
 
 # Avoid di compile issue when running setup:di:compile
 rm -rf /var/www/html/vendor/twint/magento-2/zinfra

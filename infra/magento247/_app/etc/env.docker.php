@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 $env = [
     'backend' => [
-        'frontName' => getenv('ADMIN_URI')
+        'frontName' => getenv('ADMIN_URI'),
     ],
     'crypt' => [
-        'key' => getenv('KEY')
+        'key' => getenv('KEY'),
     ],
     'db' => [
         'table_prefix' => '',
@@ -17,14 +20,14 @@ $env = [
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
-                'active' => '1'
-            ]
-        ]
+                'active' => '1',
+            ],
+        ],
     ],
     'resource' => [
         'default_setup' => [
-            'connection' => 'default'
-        ]
+            'connection' => 'default',
+        ],
     ],
     'x-frame-options' => 'SAMEORIGIN',
     'MAGE_MODE' => getenv('MAGE_MODE'),
@@ -42,29 +45,29 @@ $env = [
         'full_page' => 1,
         'config_webservice' => 1,
         'translate' => 1,
-        'compiled_config' => 1
+        'compiled_config' => 1,
     ],
     'session' => [
         'save' => 'db',
         'gc_probability' => 1,
         'gc_divisor' => 1000,
-        'gc_maxlifetime' => 1440
+        'gc_maxlifetime' => 1440,
     ],
     'directories' => [
-        'document_root_is_pub' => true
-    ]
+        'document_root_is_pub' => true,
+    ],
 ];
 
 if (!getenv('INSTALL_MAGENTO')) {
     $env['install'] = [
-        'date' => 'Wed, 10 Oct 2018 09:52:12 +0000'
+        'date' => 'Wed, 10 Oct 2018 09:52:12 +0000',
     ];
 }
 
 if (getenv('MEMCACHED_SESSION_HOST') && getenv('MEMCACHED_SESSION_PORT')) {
     $env['session'] = [
         'save' => 'memcached',
-        'save_path' => getenv('MEMCACHED_SESSION_HOST') . ":" . getenv('MEMCACHED_SESSION_PORT'),
+        'save_path' => getenv('MEMCACHED_SESSION_HOST') . ':' . getenv('MEMCACHED_SESSION_PORT'),
     ];
 }
 
@@ -76,7 +79,7 @@ if (getenv('REDIS_SESSION_HOST')) {
             'host' => getenv('REDIS_SESSION_HOST'),
             'database' => '2',
             'max_concurrency' => '16',
-        ]
+        ],
     ];
 
     if (getenv('REDIS_SESSION_PORT')) {
@@ -93,7 +96,7 @@ if (getenv('REDIS_CACHE_HOST')) {
         'backend_options' => [
             'server' => getenv('REDIS_CACHE_HOST'),
             'database' => '0',
-        ]
+        ],
     ];
 
     if (getenv('REDIS_CACHE_PORT')) {
@@ -110,7 +113,7 @@ if (getenv('REDIS_FPC_HOST')) {
         'backend_options' => [
             'server' => getenv('REDIS_FPC_HOST'),
             'database' => '1',
-        ]
+        ],
     ];
 
     if (getenv('REDIS_FPC_PORT')) {
@@ -125,7 +128,7 @@ if (getenv('VARNISH_HOST')) {
     $env['http_cache_hosts'] = [
         [
             'host' => getenv('VARNISH_HOST'),
-        ]
+        ],
     ];
 
     if (getenv('VARNISH_PORT')) {

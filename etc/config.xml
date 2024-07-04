@@ -14,6 +14,7 @@
                 <can_refund>1</can_refund>
                 <can_use_checkout>1</can_use_checkout>
                 <can_refund_invoice_partial>1</can_refund_invoice_partial>
+                <sort_order>1</sort_order>
                 <group>twint</group>
             </twint_regular>
 
@@ -30,6 +31,7 @@
                 <can_refund>1</can_refund>
                 <can_use_checkout>0</can_use_checkout>
                 <can_refund_invoice_partial>1</can_refund_invoice_partial>
+                <sort_order>2</sort_order>
                 <group>twint</group>
             </twint_express>
         </payment>

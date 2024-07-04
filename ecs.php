@@ -8,6 +8,7 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->import(__DIR__ . '/ecs.base.php');
     $ecsConfig->paths([__DIR__]);
+    $ecsConfig->skip([__DIR__ . '/infra']);
     $ecsConfig->skip([__DIR__ . '/zinfra']);
     $ecsConfig->skip([__DIR__ . '/bin']);
     $ecsConfig->skip([__DIR__ . '/tests']);

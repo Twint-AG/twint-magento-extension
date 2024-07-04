@@ -23,6 +23,7 @@ return RectorConfig::configure()
         __DIR__ . '/Service',
         __DIR__ . '/Util',
         __DIR__ . '/Validator',
+        __DIR__ . '/Setup',
     ])
     // uncomment to reach your current PHP version
     // ->withPhpSets()

@@ -41,6 +41,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
+                <field id="sort_order" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Sort Order</label>
+                    <config_path>payment/twint_regular/sort_order</config_path>
+                </field>
+
             </group>
         </section>
 
@@ -62,6 +67,11 @@
                     <comment>Users can see TWINT checkout buttons</comment>
                     <source_model>Twint\Magento\Model\Source\Screens</source_model>
                     <config_path>twint/express/screens</config_path>
+                </field>
+
+                <field id="sort_order" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Sort Order</label>
+                    <config_path>payment/twint_express/sort_order</config_path>
                 </field>
             </group>
         </section>
