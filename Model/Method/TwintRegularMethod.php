@@ -29,6 +29,8 @@ class TwintRegularMethod extends TwintMethod
 {
     public const CODE = 'twint_regular';
 
+    public $logger;
+
     protected $_code = self::CODE;
 
     public function __construct(
@@ -46,9 +48,8 @@ class TwintRegularMethod extends TwintMethod
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [],
-        DirectoryHelper $directory = null,
+        DirectoryHelper $directory = null
     ) {
-        parent::__construct($context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data, $directory);
     }
 
     public function canAuthorize(): bool

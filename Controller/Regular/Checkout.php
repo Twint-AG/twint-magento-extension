@@ -11,9 +11,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 
 class Checkout extends Action implements ActionInterface, HttpPostActionInterface
@@ -21,8 +19,6 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
     public function __construct(
         Context $context,
         private Session $session,
-        private OrderRepositoryInterface $orderRepository,
-        private readonly PairingRepositoryInterface $repository,
         private readonly StoreManagerInterface $storeManager
     ) {
         parent::__construct($context);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Twint\Magento\Model;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
@@ -29,7 +28,6 @@ class RefundRepository implements RefundRepositoryInterface
         private readonly ResourceModel $resourceModel,
         private CollectionFactory $collectionFactory,
         private SearchResultsFactory $searchResultsFactory,
-        private readonly SearchCriteriaBuilder $criteriaBuilder,
         private readonly ResourceConnection $resource,
         private ?CollectionProcessorInterface $collectionProcessor = null
     ) {
@@ -94,7 +92,7 @@ class RefundRepository implements RefundRepositoryInterface
             ->from($tableName, [
                 'sum_amount' => new Zend_Db_Expr('SUM(amount)'),
             ])
-            ->where('pairing_id = ?', (int) $pairingId);
+            ->where('pairing_id = ?', $pairingId);
 
         return (float) $connection->fetchOne($select);
     }

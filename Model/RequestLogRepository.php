@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Twint\Magento\Model;
 
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
@@ -27,7 +26,6 @@ class RequestLogRepository implements RequestLogRepositoryInterface
         private readonly ResourceModel $resourceModel,
         private CollectionFactory $collectionFactory,
         private SearchResultsFactory $searchResultsFactory,
-        private readonly SearchCriteriaBuilder $criteriaBuilder,
         private ?CollectionProcessorInterface $collectionProcessor = null
     ) {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
