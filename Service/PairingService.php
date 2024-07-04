@@ -7,7 +7,6 @@ namespace Twint\Magento\Service;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\InfoInterface;
-use Magento\Sales\Model\Order\Payment;
 use Throwable;
 use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
@@ -63,7 +62,7 @@ class PairingService
             $res = $this->api->call(
                 $client,
                 'monitorOrder',
-                [new OrderId(new Uuid((string) $pairing->getPairingId()))],
+                [new OrderId(new Uuid($pairing->getPairingId()))],
                 false
             );
         } catch (Throwable $e) {
@@ -126,7 +125,6 @@ class PairingService
         $pairing->setData('pairing_status', (string) $twintOrder->pairingStatus());
         $pairing->setData('amount', $amount);
 
-        /** @var Payment $payment */
         $pairing->setData('order_id', (string) $twintOrder->merchantTransactionReference());
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 

@@ -18,7 +18,7 @@ class CertificateFileValidator
 
     public function validate(array $file)
     {
-        if (empty($file)) {
+        if ($file === []) {
             return self::ERR_BLANK;
         }
 

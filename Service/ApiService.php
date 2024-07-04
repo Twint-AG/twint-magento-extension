@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Throwable;
 use Twint\Magento\Api\RequestLogRepositoryInterface;
 use Twint\Magento\Model\Api\ApiResponse;
@@ -19,7 +18,6 @@ class ApiService
     public function __construct(
         private readonly RequestLogFactory $factory,
         private readonly RequestLogRepositoryInterface $repository,
-        private readonly SearchCriteriaBuilder $criteriaBuilder,
     ) {
     }
 
@@ -37,7 +35,6 @@ class ApiService
 
     /**
      * @param Invocation[] $invocation
-     * @return mixed
      */
     protected function log(string $method, array $invocation, bool $save = true): RequestLog
     {
