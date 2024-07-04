@@ -96,9 +96,9 @@ test:
       
     - bin/magento module:disable Twint_Magento
     - bin/magento module:enable Twint_Magento
-    - bin/magento setup:upgrade
-    - bin/magento setup:di:compile
-    - bin/magento setup:static-content:deploy -f
+    - bin/magento setup:upgrade | grep Twint
+    - bin/magento setup:di:compile > /dev/null
+    - bin/magento setup:static-content:deploy -f > /dev/null
 
   cache:
     key: $CI_COMMIT_REF_SLUG-${CI_JOB_NAME}
