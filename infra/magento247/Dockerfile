@@ -116,7 +116,7 @@ ENV MAGE_MODE=production
 RUN composer dump-autoload \
         --optimize \
         --apcu
-
+RUN rm -rf /var/www/html/vendor/twint/magento-2/zinfra
 RUN php -d memory_limit=2G bin/magento setup:di:compile
 RUN php -d memory_limit=2G bin/magento setup:static-content:deploy -f
 RUN rm -rf /var/www/html/var/cache
