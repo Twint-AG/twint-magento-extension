@@ -3,6 +3,7 @@ FROM php:8.2.12-fpm@sha256:62fba478afcfb1a31c402ef29b0ae504fe52c1c6b65371e647c46
 ENV COMPOSER_HOME=/tmp/composer
 
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg \
+    vim \
     git \
     nginx \
     netcat-openbsd \
@@ -125,7 +126,8 @@ RUN rm -rf /var/www/html/var/session
 COPY --chown=www-data _app/etc/env.docker.php app/etc/env.php
 COPY --chown=www-data update_module.sh update_module.sh
 COPY --chown=www-data mount-folders.sh mount-folders.sh
+COPY --chown=www-data run.sh run.sh
 COPY --chown=www-data mount-folders.txt mount-folders.txt
-RUN chmod +x update_module.sh mount-folders.sh
+RUN chmod +x update_module.sh mount-folders.sh run.sh
 
-RUN composer install
+RUN ./run.sh

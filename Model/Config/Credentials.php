@@ -16,12 +16,12 @@ class Credentials extends AbstractConfig
         return $this->data['merchant_id'] ?? '';
     }
 
-    public function getTestMode(): string
+    public function getTestMode(): bool
     {
-        return (bool) $this->data['test_mode'] ?? '';
+        return (bool) $this->data['test_mode'] ?? false;
     }
 
-    public function getValidated(): string
+    public function getValidated(): bool
     {
         return (bool) $this->data['validated'] ?? false;
     }
