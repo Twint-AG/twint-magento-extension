@@ -36,7 +36,7 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
     {
         $resultJson = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
-        $testMode = $this->request->get('testMode') ?? false;
+        $testMode = (bool) $this->request->get('testMode') ?? false;
         $merchantId = $this->request->get('merchantId') ?? '';
 
         try {
