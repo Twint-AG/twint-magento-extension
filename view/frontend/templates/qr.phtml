@@ -1,58 +1,59 @@
-<div id="qr-modal-content" class="!text-20" style="display: none">
-    <div class="!flex !flex-col !md:flex-row !gap-4 !bg-gray-100">
+<div id="qr-modal-content" class="text-20" style="display: none">
+    <div class="flex flex-col md:flex-row gap-4 bg-gray-100">
         <!-- Left Column -->
-        <div class="!flex !flex-1 !order-1 !md:order-none !bg-white !p-4 !md:rounded-lg !items-center !justify-center">
-            <div data-twint-copy-token="" class="!flex !flex-col !text-center !md:flex-col-reverse">
-                <div class="qr-token !text-center !my-4 !md:mt-6">
-                    <input id="qr-token" class="!bg-white" type="text" value="" disabled>
+        <div class="flex flex-1 order-1 md:order-none bg-white p-4 md:rounded-lg items-center justify-center">
+            <div data-twint-copy-token="" class="flex flex-col text-center md:flex-col-reverse">
+                <div class="qr-token text-center my-4 md:mt-6">
+                    <input id="qr-token" class="bg-white" type="text" value="" disabled>
                 </div>
 
-                <div class="!md:hidden !text-center !my-6">
+                <div class="md:hidden text-center my-6">
                     <button id="btn-copy-token"
                             data-clipboard-action="copy"
                             data-clipboard-target="#qr-token"
-                            class="!p-4 !px-6 !bg-white !rounded-lg !border-black !hover:shadow-none !hover:border-inherit !hover:text-inherit"
+                            class="p-4 px-6 bg-white rounded-lg border-black hover:shadow-none hover:border-inherit hover:text-inherit"
                     ><?php echo __("Copy code"); ?></button>
                 </div>
 
-                <div class="!flex !text-center !items-center !justify-center !p-6" id="qrcode">
+                <div class="flex text-center items-center justify-center p-6" id="qrcode">
                 </div>
             </div>
         </div>
 
         <!-- Right Column -->
-        <div class="!flex-1 !order-0 !md:order-1 !flex !flex-col !gap-1 !md:gap-4">
+        <div class="flex-1 order-0 md:order-1 flex flex-col gap-1 md:gap-4">
             <!-- First Div -->
-            <div class="!flex !flex-1 !bg-white !p-4 !md:rounded-lg !items-center !justify-center">
-                <span id="twint-amount" class="!text-35 !inline-block !p-4 !px-6 !text-white !bg-black !font-semibold">
+            <div class="flex flex-1 bg-white p-4 md:rounded-lg items-center justify-center">
+                <span id="twint-amount" class=" text-35 inline-block p-4 px-6 text-white bg-black font-semibold">
                     CHF 12.00
                 </span>
             </div>
             <!-- Second Div -->
-            <div class="!flex !flex-1 !bg-white !p-4 !md:rounded-lg !items-center !justify-center">
+            <div class="flex flex-1 bg-white p-4 md:rounded-lg items-center justify-center">
                 <?php echo $block->getStoreName(); ?>
             </div>
 
-            <div class="!app-selector !md:hidden">
+            <div class="app-selector md:hidden">
                 <?php echo $block->getLinks(); ?>
             </div>
         </div>
     </div>
 
-    <div class="!container !mx-auto !mt-4 !text-16">
-        <div class="!grid !grid-cols-1 !sm:grid-cols-2 !gap-4">
-            <div class="!flex !flex-col !items-center !p-4">
-                <div class="!flex !justify-center">
-                    <img class="!guide-icon !w-55 !h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-scan.svg') ?>" alt="scan">
+    <div class="container mx-auto mt-4 text-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col items-center p-4">
+                <div class="flex justify-center">
+                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-scan.svg') ?>" alt="scan">
                 </div>
-                <div class="!text-center !mt-4"><?php echo __("Scan this QR Code with your TWINT app to complete the checkout.") ?></div>
+                <div class="text-center mt-4"><?php echo __("Scan this QR Code with your TWINT app to complete the checkout.") ?></div>
             </div>
-            <div class="!flex !flex-col !items-center !p-4">
-                <div class="!flex !justify-center">
-                    <img class="!guide-icon !w-55 !h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-contact.svg') ?>" alt="scan">
+            <div class="flex flex-col items-center p-4">
+                <div class="flex justify-center">
+                    <img class="guide-icon w-55 h-55" src="<?= $block->getViewFileUrl('Twint_Magento/images/icons/icon-contact.svg') ?>" alt="scan">
                 </div>
-                <div class="!text-center !mt-4"><?php echo __("Select a shipping address and complete the purchase in the app.") ?></div>
+                <div class="text-center mt-4"><?php echo __("Select a shipping address and complete the purchase in the app.") ?></div>
             </div>
         </div>
     </div>
 </div>
+
