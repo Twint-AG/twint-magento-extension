@@ -17,4 +17,8 @@ class TwintConstant
     public const CONFIG_CERTIFICATE = self::CONFIG_CREDENTIALS . '/certificate';
 
     public const CURRENCY = 'CHF';
+
+    public const REGULAR_ENABLED = 'twint/regular/enabled';
+
+    public const EXPRESS_ENABLED = 'twint/regular/enabled';
 }

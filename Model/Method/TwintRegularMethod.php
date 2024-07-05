@@ -4,52 +4,33 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model\Method;
 
-use Magento\Checkout\Model\Session;
-use Magento\Directory\Helper\Data as DirectoryHelper;
-use Magento\Framework\Api\AttributeValueFactory;
-use Magento\Framework\Api\ExtensionAttributesFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\Registry;
-use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
-use Magento\Payment\Model\Method\Logger;
 use Magento\Payment\Model\MethodInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
 use Throwable;
-use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Pairing;
-use Twint\Magento\Service\ClientService;
 
 class TwintRegularMethod extends TwintMethod
 {
     public const CODE = 'twint_regular';
 
+    protected $_scopeConfig;
+
     public $logger;
 
     protected $_code = self::CODE;
 
-    public function __construct(
-        Context $context,
-        Registry $registry,
-        ExtensionAttributesFactory $extensionFactory,
-        AttributeValueFactory $customAttributeFactory,
-        Data $paymentData,
-        ScopeConfigInterface $scopeConfig,
-        Logger $logger,
-        private ClientService $clientService,
-        private Session $checkoutSession,
-        private PriceCurrencyInterface $priceCurrency,
-        private PairingRepositoryInterface $pairingRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = [],
-        DirectoryHelper $directory = null
-    ) {
+    public function isAvailable(CartInterface $quote = null)
+    {
+        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED);
+    }
+
+    public function isActive($storeId = null)
+    {
+        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED);
     }
 
     public function canAuthorize(): bool
