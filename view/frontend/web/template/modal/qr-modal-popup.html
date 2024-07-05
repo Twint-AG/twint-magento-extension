@@ -1,7 +1,7 @@
 <aside role="dialog"
        class="text-16 modal-<%- data.type %> <%- data.modalClass %>
                <% if(data.responsive){ %><%- data.responsiveClass %><% } %>
-               <% if(data.innerScroll){ %><%- data.innerScrollClass %><% } %>"
+               <% if(data.innerScroll){ %><%- data.innerScrollClass %><% } %> "
        <% if(data.title){ %> aria-labelledby="modal-title-<%- data.id %>"<% } %>
        aria-describedby="modal-content-<%- data.id %>"
        data-role="modal"
@@ -11,10 +11,13 @@
     <div class="modal-inner-wrap twint"
          data-role="focusable-scope">
         <header class="twint-modal-header flex justify-between items-center">
-            <button
-                class="twint-close ml-6 bg-gray-100"
+            <button id="twint-close"
+                class="ml-6 bg-gray-100"
                 data-role="closeBtn"
                 type="button">
+                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.40001 12.8078L0.692261 12.1L6.29226 6.50001L0.692261 0.900011L1.40001 0.192261L7.00001 5.79226L12.6 0.192261L13.3078 0.900011L7.70776 6.50001L13.3078 12.1L12.6 12.8078L7.00001 7.20776L1.40001 12.8078Z" fill="#1C1B1F"/>
+                </svg>
                 <span class="bg-gray-100 hover:bg-gray-100"><%= data.closeText %></span>
             </button>
             <img class="twint-logo hidden md:block mr-4" src="<%= data.twintLogo %>" alt="TWINT Logo">
@@ -22,7 +25,6 @@
         <div id="modal-content-<%- data.id %>"
             class="twint-modal-content p-0 md:p-4"
             data-role="content">
-
         </div>
     </div>
     <div data-role="focusable-end" tabindex="0"></div>

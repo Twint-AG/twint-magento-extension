@@ -16,34 +16,32 @@
     height: 53px;
 }
 
-.twint-close {
+#twint-close {
     border: none;
     background-color: inherit;
+    color: #262626;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
 }
 
-.twint-close:active {
+#twint-close svg {
+    margin: 0 8px 0 0;
+}
+
+#twint-close span {
+    display: inline-block;
+}
+
+#twint-close:active {
     box-shadow: none;
 }
 
-.twint-close:hover, .twint-close:focus {
+#twint-close:hover, #twint-close:focus {
     background-color: inherit;
     border: none;
-}
-
-.twint-close:before {
-    padding-top: 3.5px;
-    font-size: 14px;
-    line-height: 14px;
-    color: #757575;
-    content: '\e616';
-    font-family: 'luma-icons';
-    margin: 0;
-    vertical-align: top;
-    display: inline-block;
-    font-weight: normal;
-    overflow: hidden;
-    speak: none;
-    text-align: center;
+    color: #262626;
+    font-weight: 400;
 }
 
 .twint-modal-slide {
@@ -65,4 +63,8 @@
     content: '';
     flex-grow: 1;
     border-bottom: 1px solid #CCCCCC;
+}
+
+.twint #btn-copy-token{
+    color: #262626;
 }
