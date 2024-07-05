@@ -40,7 +40,7 @@ class ClientService
 
         $res = $this->api->call($client, 'startOrder', [
             new UnfiledMerchantTransactionReference($orderId),
-            new Money(Money::CHF, 1),
+            new Money(Money::CHF, $amount),
         ]);
 
         $twintOrder = $res->getReturn();

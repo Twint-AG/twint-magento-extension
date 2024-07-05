@@ -6,6 +6,7 @@ namespace Twint\Magento\Block\Adminhtml\Order;
 
 use Magento\Backend\Block\Widget\Tab\TabInterface;
 use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Context;
 use Magento\Framework\View\Element\Text\ListText;
@@ -13,8 +14,6 @@ use Twint\Magento\Model\Method\TwintMethod;
 
 class TwintTab extends ListText implements TabInterface
 {
-    //    protected string $_template = 'Twint_Magento::order/view/tab/twint.phtml';
-
     public function __construct(
         Context $context,
         private AuthorizationInterface $authorization,
@@ -29,12 +28,12 @@ class TwintTab extends ListText implements TabInterface
         return $this->registry->registry('current_order');
     }
 
-    public function getTabLabel(): string
+    public function getTabLabel(): Phrase
     {
-        return __('TWINT');
+        return __("TWINT");
     }
 
-    public function getTabTitle(): string
+    public function getTabTitle(): Phrase
     {
         return __('TWINT Tab Title');
     }

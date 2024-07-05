@@ -94,14 +94,12 @@ class TwintRegularMethod extends TwintMethod
             throw new LocalizedException(__('Cannot get Pairing record to refund'));
         }
 
-        $reversalId = __('R-%1-%2', $order->getIncrementId(), time());
+        $reversalId = (string) __('R-%1-%2', $order->getIncrementId(), time());
 
         try {
             $this->clientService->refund($pairing->getPairingId(), $reversalId, $amount, $order->getStoreId());
         } catch (Throwable $e) {
             $this->logger->debug([$order->getIncrementId(), $reversalId, $amount, $order->getStoreId()]);
-            dd($e->getMessage());
-
             throw $e;
         }
     }

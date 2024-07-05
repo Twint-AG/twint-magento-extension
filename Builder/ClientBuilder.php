@@ -35,7 +35,7 @@ class ClientBuilder
      * @phpstan-type FutureVersionId = int<Version::NEXT,max>
      * @phpstan-type version = FutureVersionId
      */
-    public function build(string $storeCode, int $version = Version::LATEST): InvocationRecordingClient
+    public function build(string|int $storeCode, int $version = Version::LATEST): InvocationRecordingClient
     {
         if (isset(self::$instances[$storeCode])) {
             return self::$instances[$storeCode];
