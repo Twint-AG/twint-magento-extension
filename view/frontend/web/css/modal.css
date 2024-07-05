@@ -23,6 +23,7 @@
     display: flex;
     align-items: center;
     vertical-align: middle;
+    font-weight: 400;
 }
 
 #twint-close svg {
