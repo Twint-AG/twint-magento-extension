@@ -38,7 +38,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
 
         $data = $this->getPostData();
-        $orderId = $data['order'] ?? null;
+        $orderId = (int) $data['order'] ?? 0;
 
         $order = $this->getOrder($orderId);
 
@@ -62,9 +62,9 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
     /**
      * @throws LocalizedException
      */
-    protected function getOrder(string $orderId): Order
+    protected function getOrder(int $orderId): Order
     {
-        $order = $orderId === '' || $orderId === '0' ? $this->session->getLastRealOrder() : $this->orderRepository->get(
+        $order = $orderId === 0 ? $this->session->getLastRealOrder() : $this->orderRepository->get(
             $orderId
         );
 

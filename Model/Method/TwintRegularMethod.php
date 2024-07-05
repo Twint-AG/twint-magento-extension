@@ -24,9 +24,9 @@ class TwintRegularMethod extends TwintMethod
 
     protected $_code = self::CODE;
 
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(CartInterface $quote = null): bool
     {
-        return $this->_scopeConfig->getValue(
+        return parent::isAvailable($quote) && $this->_scopeConfig->getValue(
             TwintConstant::REGULAR_ENABLED,
             ScopeInterface::SCOPE_STORE,
             $quote->getStoreId()

@@ -17,7 +17,9 @@ use Magento\Framework\Registry;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Quote\Api\Data\CartInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Service\ClientService;
 
 abstract class TwintMethod extends AbstractMethod
@@ -56,5 +58,10 @@ abstract class TwintMethod extends AbstractMethod
             $data,
             $directory
         );
+    }
+
+    public function isAvailable(CartInterface $quote = null): bool
+    {
+        return $quote->getCurrency()->getStoreCurrencyCode() === TwintConstant::CURRENCY;
     }
 }

@@ -102,6 +102,6 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getAmount(): float
     {
-        return $this->getData('amount');
+        return (float) $this->getData('amount');
     }
 }

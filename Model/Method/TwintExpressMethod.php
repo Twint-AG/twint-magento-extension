@@ -16,13 +16,13 @@ class TwintExpressMethod extends TwintMethod
 
     protected $_code = self::CODE;
 
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(CartInterface $quote = null): bool
     {
-        return $this->_scopeConfig->getValue(
-            TwintConstant::EXPRESS_ENABLED,
-            ScopeInterface::SCOPE_STORE,
-            $quote->getStoreId()
-        );
+        return parent::isAvailable($quote) && $this->_scopeConfig->getValue(
+                TwintConstant::EXPRESS_ENABLED,
+                ScopeInterface::SCOPE_STORE,
+                $quote->getStoreId()
+            );
     }
 
     public function isActive($storeId = null)
