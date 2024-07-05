@@ -22,8 +22,8 @@ class CopyToken {
     e.clearSelection();
     this.button.innerHTML = this.$.mage.__('Copied!')
     this.button.classList.add('copied');
-    this.button.classList.add('border-green-500');
-    this.button.classList.add('text-green-500');
+    this.button.classList.add('!border-green-500');
+    this.button.classList.add('!text-green-500');
     this.input.disabled = true
   }
 
@@ -35,8 +35,8 @@ class CopyToken {
   reset() {
     this.button.innerHTML = this.$.mage.__('Copy code')
     this.button.classList.remove('copied');
-    this.button.classList.remove('border-green-500');
-    this.button.classList.remove('text-green-500');
+    this.button.classList.remove('!border-green-500');
+    this.button.classList.remove('!text-green-500');
   }
 }
 

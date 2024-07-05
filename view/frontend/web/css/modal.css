@@ -68,3 +68,7 @@
 .twint #btn-copy-token{
     color: #262626;
 }
+
+.twint #btn-copy-token.copied{
+    color: rgb(34 197 94 / var(--tw-text-opacity));
+}
