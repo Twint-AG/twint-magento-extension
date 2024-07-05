@@ -9,6 +9,7 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
+use Magento\Store\Model\ScopeInterface;
 use Throwable;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Pairing;
@@ -25,12 +26,16 @@ class TwintRegularMethod extends TwintMethod
 
     public function isAvailable(CartInterface $quote = null)
     {
-        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED);
+        return $this->_scopeConfig->getValue(
+            TwintConstant::REGULAR_ENABLED,
+            ScopeInterface::SCOPE_STORE,
+            $quote->getStoreId()
+        );
     }
 
     public function isActive($storeId = null)
     {
-        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED);
+        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     public function canAuthorize(): bool
