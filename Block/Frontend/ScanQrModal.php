@@ -39,7 +39,7 @@ class ScanQrModal extends Template
 
         if ($isAndroid) {
             $html .= '<div class="text-center mt-4 px-4">
-                        <a id="twint-addroid-button" class="block mb-1 w-full bg-black text-white font-bold p-4 rounded-lg text-center hover:bg-gray-800 focus:outline-none focus:ring-gray-600 focus:ring-opacity-75
+                        <a id="twint-addroid-button" class="block mb-1 bg-black text-white font-bold p-4 rounded-lg text-center hover:bg-gray-800 focus:outline-none focus:ring-gray-600 focus:ring-opacity-75
                             hover:text-white hover:no-underline
                         "
                            href="javascript:window.location = ' . $links['android'] . '">
@@ -94,10 +94,10 @@ class ScanQrModal extends Template
         if ($isIos || $isAndroid) {
             $html .= '
                 <div class="text-center md:hidden">
-                    <div class="flex items-center justify-center my-4">
-                        <div class="flex-grow border-t border-gray-300"></div>
+                    <div class="flex items-center justify-center mx-4">
+                        <div class="flex-grow border-t border-solid border-gray-300"></div>
                         <span class="mx-4 text-black">' . __('or') . '</span>
-                        <div class="flex-grow border-t border-gray-300"></div>
+                        <div class="flex-grow border-t border-solid border-gray-300"></div>
                     </div>
     
                     <div class="row qr-code my-3">
