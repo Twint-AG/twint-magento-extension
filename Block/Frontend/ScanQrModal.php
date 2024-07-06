@@ -95,9 +95,9 @@ class ScanQrModal extends Template
             $html .= '
                 <div class="text-center md:hidden">
                     <div class="flex items-center justify-center mx-4">
-                        <div class="flex-grow border-t border-solid border-gray-300"></div>
+                        <div class="flex-grow border-b-0 border-t border-solid border-gray-300"></div>
                         <span class="mx-4 text-black">' . __('or') . '</span>
-                        <div class="flex-grow border-t border-solid border-gray-300"></div>
+                        <div class="flex-grow border-b-0 border-t border-solid border-gray-300"></div>
                     </div>
     
                     <div class="row qr-code my-3">
