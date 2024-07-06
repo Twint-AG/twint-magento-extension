@@ -44,5 +44,11 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "magento/magento-composer-installer": true
         }
+    },
+    "archive": {
+        "exclude": [
+            "/infra",
+            "/zinfra"
+        ]
     }
 }
