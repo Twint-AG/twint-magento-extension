@@ -1,7 +1,7 @@
 <div id="qr-modal-content" class="text-20" style="display: none">
     <div class="flex flex-col md:flex-row gap-4 bg-gray-100">
         <!-- Left Column -->
-        <div class="default-hidden hidden md:flex flex flex-1 order-1 md:order-none bg-white p-4 md:rounded-lg items-center justify-center">
+        <div class="default-hidden <?php echo $block->getMobileClass(); ?> md:flex flex flex-1 order-1 md:order-none bg-white p-4 md:rounded-lg items-center justify-center">
             <div data-twint-copy-token="" class="default-hidden <?php echo $block->getMobileClass(); ?> md:flex flex flex-col text-center md:flex-col-reverse ">
                 <div class="qr-token text-center my-4 md:mt-6">
                     <input id="qr-token" class="bg-white" type="text" value="" disabled>
