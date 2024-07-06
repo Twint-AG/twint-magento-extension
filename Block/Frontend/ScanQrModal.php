@@ -9,11 +9,14 @@ use Twint\Magento\Service\AppsService;
 
 class ScanQrModal extends Template
 {
+    private $links = [];
+
     public function __construct(
         private readonly AppsService $appService,
-        Template\Context $context,
-        array $data = []
-    ) {
+        Template\Context             $context,
+        array                        $data = []
+    )
+    {
         parent::__construct($context, $data);
     }
 
@@ -28,9 +31,27 @@ class ScanQrModal extends Template
             ->getName();
     }
 
+    public function getMobileClass(): string
+    {
+        return $this->getIsMobile() ? 'hidden' : '';
+    }
+
+    public function getIsMobile(): bool
+    {
+        if (empty($this->links)) {
+            $this->links = $this->appService->getLinks($this->_storeManager->getStore()->getId());
+        }
+
+        return isset($this->links['android']) || isset($this->links['ios']);
+    }
+
     public function getLinks(): string
     {
-        $links = $this->appService->getLinks($this->_storeManager->getStore()->getId());
+        if (empty($this->links)) {
+            $this->links = $this->appService->getLinks($this->_storeManager->getStore()->getId());
+        }
+
+        $links = $this->links;
 
         $isAndroid = isset($links['android']);
         $isIos = isset($links['ios']);
@@ -93,7 +114,7 @@ class ScanQrModal extends Template
 
         if ($isIos || $isAndroid) {
             $html .= '
-                <div class="text-center md:hidden">
+                <div class="default-hidden md:flex text-center md:hidden hidden">
                     <div class="flex items-center justify-center mx-4">
                         <div class="flex-grow border-b-0 border-t border-solid border-gray-300"></div>
                         <span class="mx-4 text-black">' . __('or') . '</span>

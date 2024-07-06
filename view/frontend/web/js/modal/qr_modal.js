@@ -54,6 +54,15 @@ class AndroidConnector {
     this.button.href = this.button.href.replace('--TOKEN--', token);
 
     this.button.click();
+    this.showMobileQrCode();
+  }
+
+  showMobileQrCode(){
+    let blocks = document.querySelectorAll('.default-hidden');
+
+    blocks.forEach(block => {
+      block.classList.remove('hidden');
+    });
   }
 }
 
@@ -158,11 +167,19 @@ class IosConnector {
             this.showMobileQrCode();
           }
           clearInterval(checkLocation);
-        }, 5 * 1000);
+        }, 5000);
       } catch (e) {
         this.showMobileQrCode();
       }
     }
+  }
+
+  showMobileQrCode(){
+    let blocks = document.querySelectorAll('.default-hidden');
+
+    blocks.forEach(block => {
+      block.classList.remove('hidden');
+    });
   }
 }
 

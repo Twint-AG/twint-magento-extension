@@ -28,7 +28,7 @@
         <div class="actions-toolbar">
             <button class="twint-button" type="submit"
                     data-bind="
-                     click: placeOrder,
+                     click: showModal,
                      attr: {title: $t('Place Order')},
                      css: {disabled: !isPlaceOrderActionAllowed()},
                      enable: (getCode() == isChecked())
