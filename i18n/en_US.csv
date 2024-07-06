@@ -1,12 +1,6 @@
-"TWINT","TWINT"
+TWINT,TWINT
 "Credentials","Credentials"
-"Switch to test environment","Switch to test environment"
-"If you dont have Merchant ID then contact TWINT","If you dont have Merchant ID then contact TWINT"
-"Only .p12 files are allowed.","Only .p12 files are allowed."
-"Certificate validation successful","Certificate validation successful"
-"Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
-"Certificate is validated and encrypted successfully,","Certificate are encrypted,"
-"upload a new","upload a new"
+
 "ERROR_INVALID_INPUT","Certificate file and password are required"
 "ERROR_INVALID_UNKNOWN","Certificate cannot be validated. Please try again"
 "ERROR_INVALID_CERTIFICATE_FORMAT","Invalid certificate format"
@@ -16,3 +10,74 @@
 "ERROR_INVALID_EXPIRY_DATE","Invalid expiry date"
 "ERROR_CERTIFICATE_EXPIRED","Certificate expired"
 "ERROR_CERTIFICATE_NOT_YET_VALID","Certificate is not yet valid"
+
+"TWINT Tab Title","TWINT Tab Title"
+"Switch to TWINT app now","Switch to TWINT app now"
+"Select your TWINT app:","Select your TWINT app:"
+"Other banks","Other banks"
+or,or
+"Enter this code in your TWINT app:","Enter this code in your TWINT app:"
+"Certificate validation successful","Certificate validation successful"
+"Something went wrong while processing the data.","Something went wrong while processing the data."
+"Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)","Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)"
+"Dont have needed order to pay","Dont have needed order to pay"
+"This order did not provided by TWINT","This order did not provided by TWINT"
+"This order did not processed by TWINT","This order did not processed by TWINT"
+"Order not found","Order not found"
+"Chose File","Chose File"
+"Only .p12 files are allowed.","Only .p12 files are allowed."
+"Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
+"Certificate are loaded and encrypted successfully,","Certificate are loaded and encrypted successfully,"
+"upload a new","upload a new"
+"Unable to handle payment","Unable to handle payment"
+"Cannot get Pairing record to refund","Cannot get Pairing record to refund"
+R-%1-%2,R-%1-%2
+"Requested item doesn't exist","Requested item doesn't exist"
+"Database connection error","Database connection error"
+"Unable to save item","Unable to save item"
+"Product details page","Product details page"
+"Product listing page","Product listing page"
+"Cart page","Cart page"
+"Cart flyout","Cart flyout"
+"'Cannot create invoice: ' .","'Cannot create invoice: ' ."
+"Captured amount of CHF %1, Transaction ID %2","Captured amount of CHF %1, Transaction ID %2"
+"'Unable to cancel Checkout' .","'Unable to cancel Checkout' ."
+"Cannot get pairing status","Cannot get pairing status"
+"Refund amount has to greater than 0","Refund amount has to greater than 0"
+"Refund amount is exceed the transaction amount","Refund amount is exceed the transaction amount"
+"Custom Information for new tab","Custom Information for new tab"
+"Copy code","Copy code"
+"Open your bank's TWINT app on your smartphone.","Open your bank's TWINT app on your smartphone."
+"Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
+"Select a shipping address and complete the purchase in the app.","Select a shipping address and complete the purchase in the app."
+"TWINT Checkout","TWINT Checkout"
+"Place Order","Place Order"
+"Use Default","Use Default"
+"Invalid Merchant ID. Merchant ID needs to be a UUIDv4","Invalid Merchant ID. Merchant ID needs to be a UUIDv4"
+"Validating credentials","Validating credentials"
+Saving...,Saving...
+Copied!,Copied!
+"Cancel checkout","Cancel checkout"
+"Payment method offered by TWINT","Payment method offered by TWINT"
+Configuration,Configuration
+Credentials,Credentials
+"Regular Checkout","Regular Checkout"
+"Express Checkout","Express Checkout"
+Merchant-ID,Merchant-ID
+"Switch to test environment","Switch to test environment"
+Certificate,Certificate
+twint,twint
+"TWINT Regular Checkout","TWINT Regular Checkout"
+Enabled,Enabled
+"Sort Order","Sort Order"
+"TWINT Express Checkout","TWINT Express Checkout"
+"Display screens","Display screens"
+"Users can see TWINT checkout buttons","Users can see TWINT checkout buttons"
+"TWINT express checkout","TWINT express checkout"
+Pairing,Pairing
+ID,ID
+"Amount (CHF)","Amount (CHF)"
+Status,Status
+"Pairing Status","Pairing Status"
+"Transaction Status","Transaction Status"
+"Transaction Date","Transaction Date"
