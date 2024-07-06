@@ -15,6 +15,7 @@ class TwintConstant
     public const CONFIG_TEST_MODE = self::CONFIG_CREDENTIALS . '/test_mode';
 
     public const CONFIG_CERTIFICATE = self::CONFIG_CREDENTIALS . '/certificate';
+
     public const CONFIG_VALIDATED = self::CONFIG_CREDENTIALS . '/validated';
 
     public const CURRENCY = 'CHF';

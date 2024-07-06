@@ -30,7 +30,7 @@ class TwintTab extends ListText implements TabInterface
 
     public function getTabLabel(): Phrase
     {
-        return __("TWINT");
+        return __('TWINT');
     }
 
     public function getTabTitle(): Phrase

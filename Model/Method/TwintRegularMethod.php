@@ -7,7 +7,6 @@ namespace Twint\Magento\Model\Method;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
-use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
 use Throwable;
@@ -24,10 +23,13 @@ class TwintRegularMethod extends TwintMethod
 
     protected $_code = self::CODE;
 
-
     public function isEnabled(string|int $storeId): bool
     {
-        return (bool) $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED, ScopeInterface::SCOPE_STORE, $storeId)  == 1;
+        return (bool) $this->_scopeConfig->getValue(
+            TwintConstant::REGULAR_ENABLED,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     public function canAuthorize(): bool

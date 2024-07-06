@@ -13,10 +13,9 @@ class ScanQrModal extends Template
 
     public function __construct(
         private readonly AppsService $appService,
-        Template\Context             $context,
-        array                        $data = []
-    )
-    {
+        Template\Context $context,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
     }
 
