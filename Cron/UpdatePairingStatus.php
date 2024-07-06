@@ -22,8 +22,6 @@ class UpdatePairingStatus
     {
         $pairings = $this->repository->getUnFinishes();
 
-        dd($pairings->getItems());
-
         /** @var array $pairing */
         foreach ($pairings->getItems() as $pairing) {
             try {

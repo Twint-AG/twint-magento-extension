@@ -24,18 +24,10 @@ class TwintRegularMethod extends TwintMethod
 
     protected $_code = self::CODE;
 
-    public function isAvailable(CartInterface $quote = null): bool
-    {
-        return parent::isAvailable($quote) && $this->_scopeConfig->getValue(
-            TwintConstant::REGULAR_ENABLED,
-            ScopeInterface::SCOPE_STORE,
-            $quote->getStoreId()
-        );
-    }
 
-    public function isActive($storeId = null)
+    public function isEnabled(string|int $storeId): bool
     {
-        return $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED, ScopeInterface::SCOPE_STORE, $storeId);
+        return (bool) $this->_scopeConfig->getValue(TwintConstant::REGULAR_ENABLED, ScopeInterface::SCOPE_STORE, $storeId)  == 1;
     }
 
     public function canAuthorize(): bool

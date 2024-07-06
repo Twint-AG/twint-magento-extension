@@ -9,6 +9,7 @@ use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -29,22 +30,23 @@ abstract class TwintMethod extends AbstractMethod
     protected $_code = self::CODE;
 
     public function __construct(
-        Context $context,
-        Registry $registry,
-        ExtensionAttributesFactory $extensionFactory,
-        AttributeValueFactory $customAttributeFactory,
-        Data $paymentData,
-        ScopeConfigInterface $scopeConfig,
-        Logger $logger,
-        protected ClientService $clientService,
-        protected Session $checkoutSession,
-        protected PriceCurrencyInterface $priceCurrency,
+        Context                              $context,
+        Registry                             $registry,
+        ExtensionAttributesFactory           $extensionFactory,
+        AttributeValueFactory                $customAttributeFactory,
+        Data                                 $paymentData,
+        ScopeConfigInterface                 $scopeConfig,
+        Logger                               $logger,
+        protected ClientService              $clientService,
+        protected Session                    $checkoutSession,
+        protected PriceCurrencyInterface     $priceCurrency,
         protected PairingRepositoryInterface $pairingRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = [],
-        DirectoryHelper $directory = null
-    ) {
+        AbstractResource                     $resource = null,
+        AbstractDb                           $resourceCollection = null,
+        array                                $data = [],
+        DirectoryHelper                      $directory = null
+    )
+    {
         parent::__construct(
             $context,
             $registry,
@@ -62,6 +64,24 @@ abstract class TwintMethod extends AbstractMethod
 
     public function isAvailable(CartInterface $quote = null): bool
     {
-        return $quote->getCurrency()->getStoreCurrencyCode() === TwintConstant::CURRENCY;
+        return $quote->getCurrency()->getStoreCurrencyCode() === TwintConstant::CURRENCY
+            && $this->_scopeConfig->getValue(
+                TwintConstant::CONFIG_VALIDATED,
+                ScopeInterface::SCOPE_STORE,
+                $quote->getStoreId()
+            ) == 1
+            && $this->isEnabled($quote->getStoreId());
     }
+
+    public function isActive($storeId = null): bool
+    {
+        return $this->_scopeConfig->getValue(
+                TwintConstant::CONFIG_VALIDATED,
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            ) == 1
+            && $this->isEnabled($storeId);
+    }
+
+    abstract function isEnabled(string|int $storeId);
 }
