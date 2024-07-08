@@ -73,3 +73,14 @@
 .twint #btn-copy-token.copied{
     color: rgb(34 197 94 / var(--tw-text-opacity));
 }
+
+.twint-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE0Ljg3NSAxLjU2MjVMOCA4LjQzNzVMMS4xMjUgMS41NjI1IiBzdHJva2U9IiMyNjI2MjYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    text-align-last: center;
+}

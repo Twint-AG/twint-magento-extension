@@ -10,15 +10,14 @@
     <div data-role="focusable-start" tabindex="0"></div>
     <div class="modal-inner-wrap twint"
          data-role="focusable-scope">
-        <header class="twint-modal-header flex justify-between items-center">
+        <header class="twint-modal-header sticky top-0 flex justify-between items-center bg-white">
             <button id="twint-close"
-                class="bg-gray-100"
                 data-role="closeBtn"
                 type="button">
                 <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.40001 12.8078L0.692261 12.1L6.29226 6.50001L0.692261 0.900011L1.40001 0.192261L7.00001 5.79226L12.6 0.192261L13.3078 0.900011L7.70776 6.50001L13.3078 12.1L12.6 12.8078L7.00001 7.20776L1.40001 12.8078Z" fill="#1C1B1F"/>
                 </svg>
-                <span class="bg-gray-100 hover:bg-gray-100"><%= data.closeText %></span>
+                <span><%= data.closeText %></span>
             </button>
             <img class="twint-logo hidden md:block mr-4" src="<%= data.twintLogo %>" alt="TWINT Logo">
         </header>

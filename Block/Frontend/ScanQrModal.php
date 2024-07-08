@@ -103,7 +103,7 @@ class ScanQrModal extends Template
                         ' . $app . '
                     </div>
                     
-                    <select class="h-55 block my-4 w-full p-4 bg-white text-center appearance-none border-none focus:outline-none focus:ring-0">
+                    <select class="twint-select h-55 block my-4 w-full p-4 bg-white text-center appearance-none border-none focus:outline-none focus:ring-0">
                         <option>' . __('Other banks') . '</option>
                         ' . $else . '
                     </select>    
