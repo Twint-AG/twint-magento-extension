@@ -62,6 +62,9 @@ RUN touch /run/nginx.pid && \
 RUN touch /run/crond.pid && \
     chown www-data:www-data /run/crond.pid
 
+RUN chmod gu+rw /var/run
+RUN chmod gu+s /usr/sbin/cron
+
 FROM base as build
 
 COPY etc/supervisord.conf /etc/supervisor/supervisord.conf
