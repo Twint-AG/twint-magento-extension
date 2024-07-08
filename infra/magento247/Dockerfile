@@ -57,7 +57,9 @@ RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
     chown -R www-data:www-data /var/lib/nginx
 
 RUN touch /run/nginx.pid && \
-    chown www-data:www-data /run/nginx.pid
+    chown www-data:www-data /run/nginx.pid \
+
+RUN touch /var/run/crond.pid  && chown www-data:www-data /var/run/crond.pid
 
 FROM base as build
 
