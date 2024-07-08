@@ -59,8 +59,6 @@ RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
 RUN touch /run/nginx.pid && \
     chown www-data:www-data /run/nginx.pid \
 
-RUN touch /var/run/crond.pid  && chown www-data:www-data /var/run/crond.pid
-
 FROM base as build
 
 COPY etc/supervisord.conf /etc/supervisor/supervisord.conf
