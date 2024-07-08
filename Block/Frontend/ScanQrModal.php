@@ -62,7 +62,9 @@ class ScanQrModal extends Template
                         <a id="twint-addroid-button" class="block mb-1 bg-black text-white font-bold p-4 rounded-lg text-center hover:bg-gray-800 focus:outline-none focus:ring-gray-600 focus:ring-opacity-75
                             hover:text-white hover:no-underline
                         "
-                           href="javascript:window.location = ' . $links['android'] . '">
+                           data-href="javascript:window.location = ' . htmlentities($links['android']) . '"
+                           href="#"
+                           >
                             ' . __('Switch to TWINT app now') . '
                         </a>
                     </div>';
@@ -86,10 +88,10 @@ class ScanQrModal extends Template
                 if ($icon) {
                     $app .= '<img src="' . $this->getViewFileUrl("Twint_Magento/images/apps/{$icon}.png") . '" 
                     class="shadow-2xl w-64 h-64 rounded-3xl mx-auto"
-                    data-link="' . $link['link'] . '"
-                    alt="' . $link['name'] . '">';
+                    data-link="' . htmlentities($link['link']) . '"
+                    alt="' . htmlentities($link['name']) . '">';
                 } else {
-                    $else .= '<option value="' . $link['link'] . '">' . $link['name'] . '</option>';
+                    $else .= '<option value="' . htmlentities($link['link']) . '">' . htmlentities($link['name']) . '</option>';
                 }
             }
 

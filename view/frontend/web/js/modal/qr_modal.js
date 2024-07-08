@@ -39,30 +39,95 @@ class CopyToken {
     this.button.classList.remove('text-green-500');
   }
 }
-
-class AndroidConnector {
-  constructor($, buttonId) {
+class Connector{
+  constructor($) {
     this.$ = $;
-
-    this.button = document.getElementById(buttonId);
   }
 
-  init(token) {
-    if (!this.button)
-      return;
-
-    this.button.href = this.button.href.replace('--TOKEN--', token);
-
-    this.button.click();
-    this.showMobileQrCode();
-  }
-
-  showMobileQrCode(){
+  showMobileQrCode() {
     let blocks = document.querySelectorAll('.default-hidden');
 
     blocks.forEach(block => {
       block.classList.remove('hidden');
     });
+  }
+}
+
+class AndroidConnector extends Connector{
+  constructor($) {
+    super($);
+
+    this.button = document.getElementById('twint-addroid-button');
+  }
+
+  init(token) {
+    this.token = token;
+    if (!this.button)
+      return;
+
+    this.button.href = this.button.getAttribute('data-href').replace('--TOKEN--', this.token);
+
+    this.button.click();
+    this.showMobileQrCode();
+  }
+}
+
+class IosConnector extends Connector{
+  constructor($) {
+    super($);
+
+    this.container = document.getElementById('twint-ios-container');
+  }
+
+  init(values) {
+    this.values = values;
+
+    if (!this.container)
+      return;
+
+    this.banks = this.container.querySelectorAll('img');
+    if (this.banks) {
+      this.banks.forEach((bank) => {
+        bank.addEventListener('touchend', (event) => {
+          this.onClickBank(event, bank);
+        });
+      });
+    }
+
+    this.$appLinks = this.container.querySelector('select');
+    if (this.$appLinks)
+      this.$appLinks.addEventListener('change', this.onChangeAppList.bind(this))
+  }
+
+  onChangeAppList(event) {
+    const select = event.target;
+    let link = select.options[select.selectedIndex].value;
+
+    this.openAppBank(link);
+  }
+
+  onClickBank(event, bank) {
+    var link = bank.getAttribute('data-link');
+    this.openAppBank(link);
+  }
+
+  openAppBank(link) {
+    if (link) {
+      link = link.replace('--TOKEN--', this.values.token);
+
+      try {
+        window.location.replace(link);
+
+        const checkLocation = setInterval(() => {
+          if (window.location.href !== link) {
+            this.showMobileQrCode();
+          }
+          clearInterval(checkLocation);
+        }, 2000);
+      } catch (e) {
+        this.showMobileQrCode();
+      }
+    }
   }
 }
 
@@ -118,71 +183,6 @@ class QrGenerator {
   }
 }
 
-class IosConnector {
-  constructor($) {
-    this.$ = $;
-
-    this.container = document.getElementById('twint-ios-container');
-  }
-
-  init(values) {
-    if (!this.container)
-      return;
-
-    this.banks = this.container.querySelectorAll('img');
-    if (this.banks) {
-      this.banks.forEach((bank) => {
-        let link = bank.getAttribute('data-link').replace('--TOKEN--', values.token);
-        bank.setAttribute('data-link', link);
-
-        bank.addEventListener('touchend', (event) => {
-          this.onClickBank(event, bank);
-        });
-      });
-    }
-
-    this.$appLinks = this.container.querySelector('select');
-    if (this.$appLinks)
-      this.$appLinks.addEventListener('change', this.onChangeAppList.bind(this))
-  }
-
-  onChangeAppList(event) {
-    const select = event.target;
-    let link = select.options[select.selectedIndex].value;
-    this.openAppBank(link);
-  }
-
-  onClickBank(event, bank) {
-    var link = bank.getAttribute('data-link');
-    this.openAppBank(link);
-  }
-
-  openAppBank(link) {
-    if (link) {
-      try {
-        window.location.replace(link);
-
-        const checkLocation = setInterval(() => {
-          if (window.location.href !== link) {
-            this.showMobileQrCode();
-          }
-          clearInterval(checkLocation);
-        }, 5000);
-      } catch (e) {
-        this.showMobileQrCode();
-      }
-    }
-  }
-
-  showMobileQrCode(){
-    let blocks = document.querySelectorAll('.default-hidden');
-
-    blocks.forEach(block => {
-      block.classList.remove('hidden');
-    });
-  }
-}
-
 class StatusRefresher {
   constructor($, storage, redirectOnSuccess) {
     this.$ = $;
@@ -192,7 +192,7 @@ class StatusRefresher {
     this.count = 0;
   }
 
-  setId(value){
+  setId(value) {
     this.id = value;
   }
 
@@ -232,7 +232,7 @@ define([
 
   return {
     copier: new CopyToken($, 'qr-token', 'btn-copy-token', Clipboard),
-    androidConnector: new AndroidConnector($, 'twint-addroid-button'),
+    androidConnector: new AndroidConnector($),
     iosConnector: new IosConnector($),
     modal: new QrGenerator($, template),
     statusRefresher: new StatusRefresher($, storage, redirectOnSuccess),
