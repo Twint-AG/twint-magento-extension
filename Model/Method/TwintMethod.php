@@ -64,7 +64,7 @@ abstract class TwintMethod extends AbstractMethod
     public function isAvailable(CartInterface $quote = null): bool
     {
         return $quote->getCurrency()
-            ->getStoreCurrencyCode() === TwintConstant::CURRENCY
+            ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
             && $this->_scopeConfig->getValue(
                 TwintConstant::CONFIG_VALIDATED,
                 ScopeInterface::SCOPE_STORE,
