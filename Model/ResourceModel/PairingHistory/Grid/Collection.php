@@ -28,8 +28,8 @@ class Collection extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
-        $mainTable = PairingHistory::TABLE_NAME,
-        $resourceModel = PairingHistory::class
+        string $mainTable = PairingHistory::TABLE_NAME,
+        string $resourceModel = PairingHistory::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }

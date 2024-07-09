@@ -24,8 +24,8 @@ class Collection extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
-        $mainTable = Pairing::TABLE_NAME,
-        $resourceModel = Pairing::class
+        string $mainTable = Pairing::TABLE_NAME,
+        string $resourceModel = Pairing::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
