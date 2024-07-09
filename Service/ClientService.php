@@ -51,7 +51,7 @@ class ClientService
         return [$twintOrder, $pairing, $history];
     }
 
-    public function refund(string $pairingId, string $reversalReference, float $amount, int $storeId): ApiResponse
+    public function refund(string|int $pairingId, string $reversalReference, float $amount, int $storeId): ApiResponse
     {
         $client = $this->connector->build($storeId);
 

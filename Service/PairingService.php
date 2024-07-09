@@ -73,9 +73,10 @@ class PairingService
         $tOrder = $res->getReturn();
 
         if ($tOrder->pairingStatus()->__toString() !== $pairing->getPairingStatus()
-            || $tOrder->transactionStatus()->__toString() !== $pairing->getTransactionStatus()
-            || $tOrder->status()->__toString() !== $pairing->getStatus()) {
-
+            || $tOrder->transactionStatus()
+                ->__toString() !== $pairing->getTransactionStatus()
+            || $tOrder->status()
+                ->__toString() !== $pairing->getStatus()) {
             $log = $this->api->saveLog($res->getRequest());
             $pairing = $this->update($pairing, $tOrder);
             $history = $this->createHistory($pairing, $log);

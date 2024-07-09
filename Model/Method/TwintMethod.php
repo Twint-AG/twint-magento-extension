@@ -10,18 +10,25 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Registry;
 use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
+use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Constant\TwintConstant;
+use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\ClientService;
+use Twint\Magento\Service\RefundService;
 
 abstract class TwintMethod extends AbstractMethod
 {
@@ -38,6 +45,7 @@ abstract class TwintMethod extends AbstractMethod
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
         protected ClientService $clientService,
+        protected RefundService $refundService,
         protected Session $checkoutSession,
         protected PriceCurrencyInterface $priceCurrency,
         protected PairingRepositoryInterface $pairingRepository,
@@ -80,4 +88,72 @@ abstract class TwintMethod extends AbstractMethod
     }
 
     abstract public function isEnabled(string|int $storeId);
+
+    public function canAuthorize(): bool
+    {
+        return true;
+    }
+
+    public function canCapture(): bool
+    {
+        return true;
+    }
+
+    public function canRefund(): bool
+    {
+        return true;
+    }
+
+    public function canRefundPartialPerInvoice(): bool
+    {
+        return true;
+    }
+
+    public function canVoid(): bool
+    {
+        return true;
+    }
+
+    public function getConfigPaymentAction(): string
+    {
+        return MethodInterface::ACTION_AUTHORIZE;
+    }
+
+    public function authorize(InfoInterface $payment, $amount): self
+    {
+        $amount = $this->priceCurrency->convertAndRound($amount);
+        /** @var Pairing $pairing */
+        list($order, $pairing, $history) = $this->clientService->createOrder($payment, $amount);
+        if (!$order) {
+            throw new LocalizedException(__('Unable to handle payment'));
+        }
+
+        $this->checkoutSession->setPairingId($pairing->getPairingId() . '-' . $history->getId());
+
+        return parent::authorize($payment, $amount);
+    }
+
+    /**
+     * @throws Throwable
+     * @throws LocalizedException
+     */
+    public function refund(InfoInterface $payment, $amount)
+    {
+        $amount = $this->priceCurrency->convertAndRound($amount);
+
+        /** @var Order $order */
+        $order = $payment->getOrder();
+
+        $pairing = $this->pairingRepository->getByOrderId($order->getIncrementId());
+        if (!($pairing instanceof Pairing)) {
+            throw new LocalizedException(__('Cannot get Pairing record to refund'));
+        }
+
+        try {
+            $this->refundService->refund($pairing, $amount);
+        } catch (Throwable $e) {
+            $this->logger->debug([$order->getIncrementId(), $amount, $order->getStoreId()]);
+            throw $e;
+        }
+    }
 }

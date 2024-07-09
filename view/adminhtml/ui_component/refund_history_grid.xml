@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">refund_history_grid.refund_history_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>refund_history_columns</spinner>
+        <deps>
+            <dep>refund_history_grid.refund_history_grid_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="refund_history_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <filterUrlParams>
+                <param name="id">*</param>
+            </filterUrlParams>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+        </settings>
+        <aclResource>Twint_Magento::twint_pairing</aclResource>
+        <dataProvider class="Twint\Magento\Provider\Data\RefundHistoryDataProvider" name="refund_history_grid_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <columns name="refund_history_columns">
+        <column name="id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Refund ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+
+        <column name="pairing_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Pairing</label>
+            </settings>
+        </column>
+
+        <column name="reversal_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Reversal ID</label>
+            </settings>
+        </column>
+
+        <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Amount</label>
+            </settings>
+        </column>
+
+        <column name="status">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+
+        <column name="refunded_by">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Refunded By</label>
+            </settings>
+        </column>
+
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <dataType>date</dataType>
+                <label translate="true">Transaction Date</label>
+            </settings>
+        </column>
+
+        <column name="actions" class="Twint\Magento\Block\Adminhtml\Listing\LogAction" component="Twint_Magento/js/grid/column/link">
+        </column>
+    </columns>
+</listing>

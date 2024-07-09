@@ -7,12 +7,18 @@
     <body>
         <referenceContainer name="content">
             <block class="Twint\Magento\Block\Adminhtml\Pairing\View" name="pairing.view">
+                <block class="Twint\Magento\Block\Adminhtml\RefundHistory\View" name="twint.grid.refund_history.container"/>
+
                 <block class="Twint\Magento\Block\Adminhtml\PairingHistory\View" name="twint.grid.pairing_history.container"/>
             </block>
         </referenceContainer>
 
         <referenceBlock name="twint.grid.pairing_history.container">
             <uiComponent name="pairing_history_grid"/>
+        </referenceBlock>
+
+        <referenceBlock name="twint.grid.refund_history.container">
+            <uiComponent name="refund_history_grid"/>
         </referenceBlock>
     </body>
 </page>

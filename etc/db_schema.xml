@@ -115,10 +115,9 @@
         <column xsi:type="varchar" length="128" name="reversal_id" nullable="false" comment="Reversal ID"/>
         <column xsi:type="decimal" name="amount"  unsigned="true" nullable="false" scale="4" precision="20" comment="Amount"/>
         <column xsi:type="varchar" name="currency" nullable="false" length="10" comment="Currency"/>
-        <column xsi:type="text" name="reason" nullable="false" comment="Refund reason"/>
         <column xsi:type="varchar" name="status" length="32" nullable="true" comment="Status"/>
         <column xsi:type="varchar" length="40" name="refunded_by"  nullable="false" comment="Refund by (admin username)"/>
-        <column xsi:type="varchar" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column xsi:type="int" name="request_id" nullable="true"  unsigned="true" comment="Request ID"/>
 
         <constraint xsi:type="primary" referenceId="PRIMARY">

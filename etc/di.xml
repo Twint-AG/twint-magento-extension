@@ -6,6 +6,7 @@
     <preference for="Twint\Magento\Api\PairingHistoryRepositoryInterface"
                 type="Twint\Magento\Model\PairingHistoryRepository"/>
     <preference for="Twint\Magento\Api\RequestLogRepositoryInterface" type="Twint\Magento\Model\RequestLogRepository"/>
+    <preference for="Twint\Magento\Api\RefundRepositoryInterface" type="Twint\Magento\Model\RefundRepository"/>
 
     <type name="Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation">
         <plugin name="twint_magento_authorize_plugin" type="Twint\Magento\Plugin\AuthorizeOperationPlugin" />
@@ -22,44 +23,12 @@
         </arguments>
     </type>
 
-    <type name="Magento\Sales\Model\ResourceModel\GridPool">
-        <arguments>
-            <argument name="grids" xsi:type="array">
-                <item name="twint_grid" xsi:type="object">Twint\Magento\Model\ResourceModel\Order\Pairing\Grid</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <virtualType name="Twint\Magento\Model\ResourceModel\Order\Pairing\Grid"
-                 type="Magento\Sales\Model\ResourceModel\Grid">
-        <arguments>
-            <argument name="mainTableName" xsi:type="string">twint_pairing</argument>
-            <argument name="gridTableName" xsi:type="string">twint_pairing_grid</argument>
-            <argument name="orderIdField" xsi:type="string">twint_pairing.order_id</argument>
-            <argument name="joins" xsi:type="array">
-                <item name="twint_pairing_history" xsi:type="array">
-                    <item name="table" xsi:type="string">twint_pairing_history</item>
-                    <item name="origin_column" xsi:type="string">id</item>
-                    <item name="target_column" xsi:type="string">parent_id</item>
-                </item>
-            </argument>
-            <argument name="columns" xsi:type="array">
-                <item name="id" xsi:type="string">twint_pairing.id</item>
-                <item name="amount" xsi:type="string">twint_pairing.amount</item>
-                <item name="status" xsi:type="string">twint_pairing.status</item>
-                <item name="pairing_status" xsi:type="string">twint_pairing.pairing_status</item>
-                <item name="transaction_status" xsi:type="string">twint_pairing.transaction_status</item>
-                <item name="created_at" xsi:type="string">twint_pairing.created_at</item>
-                <item name="updated_at" xsi:type="string">twint_pairing.updated_at</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="sales_order_view_pairing_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\Pairing\Grid\Collection</item>
                 <item name="pairing_history_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection</item>
+                <item name="refund_history_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\Refund\Grid\Collection</item>
             </argument>
         </arguments>
     </type>

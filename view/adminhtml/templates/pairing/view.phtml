@@ -1,1 +1,5 @@
-<?php echo $block->getChildHtml(); ?>
+<h2><?php echo __("Refund history") ?></h2>
+<?php echo $block->getChildHtml('twint.grid.refund_history.container'); ?>
+
+<h2><?php echo __("Transaction history") ?></h2>
+<?php echo $block->getChildHtml('twint.grid.pairing_history.container'); ?>

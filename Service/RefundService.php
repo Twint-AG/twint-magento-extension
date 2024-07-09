@@ -18,7 +18,6 @@ use Twint\Sdk\Value\Order;
 class RefundService
 {
     public function __construct(
-        private readonly OrderService $orderService,
         private readonly clientService $payment,
         private readonly PairingRepositoryInterface $pairingRepository,
         private readonly RefundRepositoryInterface $refundRepository,
@@ -30,7 +29,7 @@ class RefundService
     /**
      * @throws LocalizedException
      */
-    public function refund(int|Pairing $pairing, float $amount, string $reason = ''): bool
+    public function refund(int|Pairing $pairing, float $amount): bool
     {
         if (is_int($pairing)) {
             $pairing = $this->pairingRepository->getById($pairing);
@@ -38,19 +37,17 @@ class RefundService
 
         $reversalReference = 'R-' . $pairing->getOrderId() . '-' . time();
 
-        if ($this->validate($pairing, $amount)) {
-            return false;
-        }
-
-        $res = $this->payment->refund($pairing->getOrderId(), $reversalReference, $amount, $pairing->getStoreId());
+        $res = $this->payment->refund(
+            $pairing->getPairingId(),
+            $reversalReference,
+            $amount,
+            (int) $pairing->getStoreId()
+        );
 
         /** @var Refund $refund */
-        $refund = $this->create($res, $pairing, $reversalReference, $amount, $reason);
-        if ($refund->isSuccessful()) {
-            $this->orderService->updateRefundedAmount($pairing->getOrderId(), $amount);
-        }
+        $refund = $this->create($res, $pairing, $reversalReference, $amount);
 
-        return true;
+        return $refund->isSuccessful();
     }
 
     /**
@@ -84,7 +81,7 @@ class RefundService
         return max($remaining, 0);
     }
 
-    protected function create(ApiResponse $res, Pairing $pairing, string $reversalId, float $amount, string $reason)
+    protected function create(ApiResponse $res, Pairing $pairing, string $reversalId, float $amount)
     {
         /** @var Order $order */
         $order = $res->getReturn();
@@ -96,7 +93,6 @@ class RefundService
         $entity->setData('reversal_id', $reversalId);
         $entity->setData('amount', $amount);
         $entity->setData('currency', TwintConstant::CURRENCY);
-        $entity->setData('reason', $reason);
         $entity->setData('status', (string) $order->status());
         $entity->setData('refunded_by', $this->getLoggedAdmin());
         $entity->setData('request_id', $res->getRequest()->getId());
