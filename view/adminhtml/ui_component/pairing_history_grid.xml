@@ -18,30 +18,21 @@
                 <param name="id">*</param>
             </filterUrlParams>
             <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
         </settings>
         <aclResource>Twint_Magento::twint_pairing</aclResource>
         <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_history_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
-                <primaryFieldName>parent_id</primaryFieldName>
+                <primaryFieldName>id</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
 
     <columns name="pairing_history_columns">
-        <settings>
-            <childDefaults>
-                <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">pairing_history_grid.pairing_history_grid.pairing_history_columns.actions</item>
-                    <item name="target" xsi:type="string">applyAction</item>
-                    <item name="params" xsi:type="array">
-                        <item name="0" xsi:type="string">view</item>
-                        <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
-                    </item>
-                </param>
-            </childDefaults>
-        </settings>
-
         <column name="id">
             <settings>
                 <filter>text</filter>
@@ -98,17 +89,7 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\LogAction" component="Twint_Magento/js/grid/column/link">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
-                    <item name="urlEntityParamName" xsi:type="string">id</item>
-                    <item name="additionalClasses" xsi:type="string">custom-css-class</item>
-                </item>
-            </argument>
-            <settings>
-                <indexField>request_id</indexField>
-            </settings>
-        </actionsColumn>
+        <column name="actions" class="Twint\Magento\Block\Adminhtml\Listing\LogAction" component="Twint_Magento/js/grid/column/link">
+        </column>
     </columns>
 </listing>

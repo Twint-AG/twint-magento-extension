@@ -41,12 +41,15 @@ class ApiService
         $log = $this->factory->create();
 
         try {
-            list($request, $response, $soapRequests, $soapResponses, $exception) = $this->parse($invocation);
+            list($request, $response, $soapRequests, $soapResponses, $soapActions, $exception) = $this->parse(
+                $invocation
+            );
 
             /** @var RequestLog $log */
             $log->setData('method', $method);
             $log->setData('request', $request);
             $log->setData('response', $response);
+            $log->setData('soap_action', json_encode($soapActions));
             $log->setData('soap_request', json_encode($soapRequests));
             $log->setData('soap_response', json_encode($soapResponses));
             $log->setData('exception', empty($exception) ? null : $exception);
@@ -76,12 +79,14 @@ class ApiService
         $soapMessages = $invocations[0]->messages();
         $soapRequests = [];
         $soapResponses = [];
+        $soapActions = [];
         foreach ($soapMessages as $soapMessage) {
             $soapRequests[] = $soapMessage->request()->body();
             $soapResponses[] = $soapMessage->response()->body();
+            $soapActions[] = $soapMessage->request()->action();
         }
 
-        return [$request, $response, $soapRequests, $soapResponses, $exception];
+        return [$request, $response, $soapRequests, $soapResponses, $soapActions, $exception];
     }
 
     /**

@@ -12,6 +12,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 class PairingHistory extends AbstractDb
 {
     public const TABLE_NAME = 'twint_pairing_history';
+
     /**
      * Resource initialization
      */

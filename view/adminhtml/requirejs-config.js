@@ -1,7 +1,6 @@
 var config = {
     paths: {
-        'twintCertificateUpload': 'Twint_Magento/js/certificate_upload',
-        'twintLogModal': 'Twint_Magento/js/log_modal',
+        'twintCertificateUpload': 'Twint_Magento/js/certificate_upload'
     },
     map: {
         '*': {

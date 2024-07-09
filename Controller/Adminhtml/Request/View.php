@@ -2,37 +2,50 @@
 
 declare(strict_types=1);
 
-namespace Twint\Magento\Controller\Adminhtml\Pairing;
+namespace Twint\Magento\Controller\Adminhtml\Request;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
-use Twint\Magento\Model\PairingFactory;
+use Twint\Magento\Api\RequestLogRepositoryInterface;
 
 class View extends Action
 {
     public function __construct(
         Context $context,
         private readonly PageFactory $resultPageFactory,
-        private readonly PairingFactory $pairingFactory
+        private readonly RequestLogRepositoryInterface $repository
     ) {
         parent::__construct($context);
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function execute(): Page|ResultInterface|ResponseInterface
     {
         $id = $this->getRequest()
             ->getParam('id');
-        $this->pairingFactory->create()
-            ->load($id);
+        $request = $this->repository->getById($id);
+
+        if (!$request) {
+            throw new LocalizedException(__("Request #{$id} not found"));
+        }
 
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()
             ->getTitle()
-            ->prepend(__('Transaction history'));
+            ->prepend(__("TWINT Request #{$id}"));
+
+        // Pass the request data to the block
+        /** @var \Twint\Magento\Block\Adminhtml\Request\View $block */
+        $block = $resultPage->getLayout()
+            ->getBlock('twint_request_view');
+        $block?->setEntity($request);
 
         return $resultPage;
     }

@@ -91,7 +91,9 @@ class ScanQrModal extends Template
                     data-link="' . htmlentities($link['link']) . '"
                     alt="' . htmlentities($link['name']) . '">';
                 } else {
-                    $else .= '<option value="' . htmlentities($link['link']) . '">' . htmlentities($link['name']) . '</option>';
+                    $else .= '<option value="' . htmlentities($link['link']) . '">' . htmlentities(
+                        $link['name']
+                    ) . '</option>';
                 }
             }
 

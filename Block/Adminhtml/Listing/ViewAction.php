@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Block\Adminhtml\Listing;
 
 use Magento\Sales\Ui\Component\Listing\Column\ViewAction as MagentoViewAction;
@@ -10,19 +12,16 @@ class ViewAction extends MagentoViewAction
     {
         if (isset($dataSource['data']['items'])) {
             $viewUrlPath = $this->getData('config/viewUrlPath') ?: '#';
-            $label =  __('View');
+            $label = __('View');
 
-            foreach ($dataSource['data']['items'] as & $item) {
+            foreach ($dataSource['data']['items'] as &$item) {
                 $item[$this->getData('name')] = [
                     'view' => [
-                        'href' => $this->urlBuilder->getUrl(
-                            $viewUrlPath,
-                            [
-                                'id' => $item['id']
-                            ]
-                        ),
-                        'label' => $label
-                    ]
+                        'href' => $this->urlBuilder->getUrl($viewUrlPath, [
+                            'id' => $item['id'],
+                        ]),
+                        'label' => $label,
+                    ],
                 ];
             }
         }

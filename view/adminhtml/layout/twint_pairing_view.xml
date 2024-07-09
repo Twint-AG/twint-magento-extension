@@ -9,7 +9,6 @@
             <block class="Twint\Magento\Block\Adminhtml\Pairing\View" name="pairing.view">
                 <block class="Twint\Magento\Block\Adminhtml\PairingHistory\View" name="twint.grid.pairing_history.container"/>
             </block>
-            <block name="twint.log.modal" class="Twint\Magento\Block\Adminhtml\Request\View"/>
         </referenceContainer>
 
         <referenceBlock name="twint.grid.pairing_history.container">

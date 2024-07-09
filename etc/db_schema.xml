@@ -54,6 +54,7 @@
         <column xsi:type="text" name="request" nullable="false" comment="Request"/>
         <column xsi:type="text" name="response" nullable="true" comment="Response"/>
         <column xsi:type="json" name="soap_request" nullable="true" comment="SOAP Request"/>
+        <column xsi:type="json" name="soap_action" nullable="true" comment="SOAP Action"/>
         <column xsi:type="json" name="soap_response" nullable="true" comment="SOAP Response"/>
         <column xsi:type="text" name="exception" nullable="true" comment="Exception"/>
 

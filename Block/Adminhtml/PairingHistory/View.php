@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Block\Adminhtml\PairingHistory;
 
 use Magento\Backend\Block\Template\Context;

@@ -15,12 +15,6 @@ use Twint\Magento\Model\ResourceModel\PairingHistory;
 class Collection extends SearchResult
 {
     /**
-     * @param EntityFactory $entityFactory
-     * @param Logger $logger
-     * @param FetchStrategy $fetchStrategy
-     * @param EventManager $eventManager
-     * @param $mainTable
-     * @param $resourceModel
      * @throws LocalizedException
      */
     public function __construct(

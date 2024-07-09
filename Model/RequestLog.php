@@ -61,4 +61,9 @@ class RequestLog extends AbstractModel implements IdentityInterface
     {
         return $this->getData('method');
     }
+
+    public function getActions(): string
+    {
+        return $this->getData('soap_action');
+    }
 }

@@ -15,9 +15,6 @@ class Collection extends SearchResult
 {
     /**
      * Initialize dependencies.
-     *
-     * @param string $mainTable
-     * @param string $resourceModel
      */
     public function __construct(
         EntityFactory $entityFactory,
