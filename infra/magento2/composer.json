@@ -8,7 +8,7 @@
     ],
     "config": {
         "platform": {
-            "php": "8.1.19"
+            "php": "8.1.29"
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -42,11 +42,9 @@
         "magento/module-theme-sample-data": "100.4.*",
         "magento/module-widget-sample-data": "100.4.*",
         "magento/module-wishlist-sample-data": "100.4.*",
-        "magento/product-community-edition": "2.4.4",
+        "magento/product-community-edition": "2.4.6",
         "magento/sample-data-media": "100.4.*",
-        "magefan/theme-frontend-optimized": "^2.0",
-        "allure-framework/allure-phpunit": "^2 || ^3", 
-        "symfony/event-dispatcher": "<6.4.8",
+        "symfony/event-dispatcher" : "^5.4 || ^6.0",
         "twint/magento-2": "dev-master",
         "mageplaza/magento-2-german-language-pack": "dev-master"
     },
@@ -71,18 +69,18 @@
     },
     "require-dev": {
         "allure-framework/allure-phpunit": "^2",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7 || ^1.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
         "dg/bypass-finals": "^1.4",
-        "friendsofphp/php-cs-fixer": "^3.22",
+        "friendsofphp/php-cs-fixer": "^3.8",
         "lusitanian/oauth": "^0.8",
         "magento/magento-coding-standard": "*",
-        "magento/magento2-functional-testing-framework": "^4.7",
+        "magento/magento2-functional-testing-framework": "^4.2.1",
         "pdepend/pdepend": "^2.10",
-        "phpmd/phpmd": "^2.12",
+        "phpmd/phpmd": "^2.12.0",
         "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5",
         "sebastian/phpcpd": "^6.0",
-        "symfony/finder": "^6.4"
+        "symfony/finder": "^5.4"
     },
     "conflict": {
         "gene/bluefoot": "*"
