@@ -45,6 +45,8 @@
         "magento/product-community-edition": "2.4.4",
         "magento/sample-data-media": "100.4.*",
         "magefan/theme-frontend-optimized": "^2.0",
+        "allure-framework/allure-phpunit": "^2 || ^3", 
+        "symfony/event-dispatcher": "<6.4.8",
         "twint/magento-2": "dev-master",
         "mageplaza/magento-2-german-language-pack": "dev-master"
     },
