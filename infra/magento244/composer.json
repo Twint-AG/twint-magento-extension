@@ -19,7 +19,7 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "version": "2.4.7",
+    "version": "2.4.4",
     "require": {
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "^2.0.4",
@@ -42,7 +42,7 @@
         "magento/module-theme-sample-data": "100.4.*",
         "magento/module-widget-sample-data": "100.4.*",
         "magento/module-wishlist-sample-data": "100.4.*",
-        "magento/product-community-edition": "2.4.7",
+        "magento/product-community-edition": "2.4.4",
         "magento/sample-data-media": "100.4.*",
         "magefan/theme-frontend-optimized": "^2.0",
         "twint/magento-2": "dev-master",
