@@ -1,39 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">sales_order_view_pairing_grid.sales_order_view_pairing_grid_data_source</item>
+            <item name="provider" xsi:type="string">pairing_history_grid.pairing_history_grid_data_source</item>
         </item>
     </argument>
     <settings>
-        <spinner>sales_order_pairing_columns</spinner>
+        <spinner>pairing_history_columns</spinner>
         <deps>
-            <dep>sales_order_view_pairing_grid.sales_order_view_pairing_grid_data_source</dep>
+            <dep>pairing_history_grid.pairing_history_grid_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="sales_order_view_pairing_grid_data_source" component="Magento_Ui/js/grid/provider">
+
+    <dataSource name="pairing_history_grid_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <filterUrlParams>
-                <param name="order_id">*</param>
+                <param name="id">*</param>
             </filterUrlParams>
             <updateUrl path="mui/index/render"/>
         </settings>
         <aclResource>Twint_Magento::twint_pairing</aclResource>
-        <dataProvider class="Twint\Magento\Provider\Data\PairingGridDataProvider" name="sales_order_view_pairing_grid_data_source">
+        <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_history_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
-                <primaryFieldName>id</primaryFieldName>
+                <primaryFieldName>parent_id</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
-    <listingToolbar name="listing_bottom">
-        <paging name="listing_paging"/>
-    </listingToolbar>
-    <columns name="sales_order_pairing_columns">
+
+    <columns name="pairing_history_columns">
         <settings>
             <childDefaults>
                 <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">sales_order_view_pairing_grid.sales_order_view_pairing_grid.sales_order_pairing_columns.actions</item>
+                    <item name="provider" xsi:type="string">pairing_history_grid.pairing_history_grid.pairing_history_columns.actions</item>
                     <item name="target" xsi:type="string">applyAction</item>
                     <item name="params" xsi:type="array">
                         <item name="0" xsi:type="string">view</item>
@@ -42,17 +41,32 @@
                 </param>
             </childDefaults>
         </settings>
+
         <column name="id">
             <settings>
                 <filter>text</filter>
-                <label translate="true">ID</label>
-                <sorting>asc</sorting>
+                <label translate="true">History ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+
+        <column name="order_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Order</label>
+            </settings>
+        </column>
+
+        <column name="store_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Store</label>
             </settings>
         </column>
 
         <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
             <settings>
-                <label translate="true">Amount (CHF)</label>
+                <label translate="true">Amount</label>
             </settings>
         </column>
 
@@ -84,15 +98,16 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction">
+        <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\LogAction" component="Twint_Magento/js/grid/column/link">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="viewUrlPath" xsi:type="string">twint/pairing/view</item>
+                    <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
                     <item name="urlEntityParamName" xsi:type="string">id</item>
+                    <item name="additionalClasses" xsi:type="string">custom-css-class</item>
                 </item>
             </argument>
             <settings>
-                <indexField>id</indexField>
+                <indexField>request_id</indexField>
             </settings>
         </actionsColumn>
     </columns>

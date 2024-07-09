@@ -3,8 +3,7 @@ composer update twint/magento-2 --no-progress --no-interaction
 
 # Avoid di compile issue when running setup:di:compile
 rm -rf /var/www/html/vendor/twint/magento-2/zinfra
-bin/magento cache:clean
-bin/magento cache:flush
+
 bin/magento module:enable Twint_Magento
 
 # Update Database schema and classes prototype

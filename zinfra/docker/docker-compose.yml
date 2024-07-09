@@ -6,36 +6,10 @@
 #
 
 services:
-  manager:
-    container_name: manager247
-    platform: linux/amd64
-    build: ./manager/magento2
-    hostname: manager
-    domainname: "${APPDOMAIN}"
-    volumes:
-      # UNCOMMENT FOR PERSISTANT WWW DATA
-      #- "${CONTAINERDATA}/${PROJECT_NAME}/www:/var/www"
-      - "${CONTAINERDATA}/${PROJECT_NAME}/data:/home/data"
-      - "${MANAGERDEV}:/var/www/dev"
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./varnish/varnish.secret:/etc/varnish/secret
-    networks:
-      - wwwserver
-      - database
-      #- proxy_server
-    environment:
-      SCALE_MANAGER_PROJECTNAME: "${PROJECT_NAME}"
-      SCALE_CONTAINER_NAME: "${SCALE_CONTAINER_NAME}"
-      PROXY_NETWORK_NAME: "${PROXY_NETWORK_NAME}"
-      PROXY_TYPE: "${PROXY_TYPE}"
-      APPDOMAIN: "${APPDOMAIN}"
-
   memcached:
     image: memcached:latest
     networks:
       - wwwserver
-    depends_on:
-      - manager
 
   php-apache:
     container_name: magento247
@@ -56,7 +30,6 @@ services:
       - 3001
     ports:
        - "80:80"
-    #   - "3001:3001"
     volumes:
       # UNCOMMENT FOR PERSISTANT WWW DATA
       - "${CONTAINERDATA}/${PROJECT_NAME}/data:/home/data"
@@ -68,14 +41,8 @@ services:
       - "./../..:/var/www/plugin"
       - "/var/www/plugin/zinfra/"
     networks:
-      - database
       - wwwserver
-    healthcheck:
-      test: "curl --fail -sS ${MAGENTO_URL}:/pub/health_check.php || exit 1"
-      interval: 2m
-      timeout: 60s
-      retries: 5
-    depends_on:80
+    depends_on:
       - mysql
     env_file: .env
 
@@ -96,26 +63,6 @@ services:
       - 15672
       - 5672
       - 5673
-
-  #consumer1:
-  #    hostname: devshop_consumer1
-  #    build:
-  #        context: ./consumer/
-  #        args:
-  #            SMTP: "${SMTP}"
-  #            APPDOMAIN: "${APPDOMAIN}"
-  #    volumes:
-  #        - "${CONTAINERDATA}/${PROJECT_NAME}/dev1/www/dev/magento2:/var/www/dev/magento2"
-  #    networks:
-  #        - wwwserver
-  #        - database
-  #    depends_on:
-  #        - mysql
-  #        - rabbitmq
-  #    restart: always
-  #    entrypoint: ["/usr/local/start_consumer.sh"]
-  #    environment:
-  #      - CONSUMER_WHITELIST=true
 
   redis_session:
     build: ./redis/session/
@@ -159,19 +106,15 @@ services:
     build: ./elasticsearch
     environment:
       - discovery.type=single-node
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - ELASTIC_PASSWORD=your_password
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-#      - logger.org.elasticsearch=DEBUG
     networks:
       - wwwserver
-      #- proxy_server
     expose:
       - 9200
     depends_on:
       - php-apache
     volumes:
-      #- "${CONTAINERDATA}/${PROJECT_NAME}/elasticsearch/data1:/usr/share/elasticsearch/data"
       - "${CONTAINERDATA}/${PROJECT_NAME}/data:/home/data"
 
   mysql:
@@ -188,7 +131,7 @@ services:
       - "${CONTAINERDATA}/${PROJECT_NAME}/mysql:/var/lib/mysql"
       - "${CONTAINERDATA}/${PROJECT_NAME}/data:/home/data"
     networks:
-      - database
+      - wwwserver
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
@@ -198,7 +141,4 @@ services:
 
 
 networks:
-  database:
   wwwserver:
-  #proxy_server:
-  #external: true

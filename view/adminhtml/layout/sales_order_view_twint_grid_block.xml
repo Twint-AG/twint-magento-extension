@@ -12,6 +12,13 @@
                     <argument name="grid_url" xsi:type="url" path="sales/order/pairings">
                         <param name="_current">1</param>
                     </argument>
+                    <argument name="rowUrl" xsi:type="array">
+                        <item name="path" xsi:type="string">twint/pairing/view</item>
+                        <item name="extraParamsTemplate" xsi:type="array">
+                            <item name="id" xsi:type="string">getId</item>
+                            <item name="order_id" xsi:type="string">getOrderId</item>
+                        </item>
+                    </argument>
                 </arguments>
                 <block class="Magento\Backend\Block\Widget\Grid\ColumnSet" as="grid.columnSet" name="sales.order_twint.grid.columnSet">
                     <arguments>
