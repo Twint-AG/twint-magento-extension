@@ -23,7 +23,7 @@
                 <param name="indexField" xsi:type="string">id</param>
             </storageConfig>
         </settings>
-        <aclResource>Twint_Magento::twint_pairing</aclResource>
+        <aclResource>Magento_Sales::sales_order</aclResource>
         <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_history_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>

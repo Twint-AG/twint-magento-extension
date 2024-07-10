@@ -3,10 +3,17 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Twint_Magento::core" title="core" sortOrder="500">
-                    <resource id="Twint_Magento::core_configuration" title="Configuration" sortOrder="20">
-                        <resource id="Twint_Magento::configuration_credential" title="Credentials" sortOrder="10" />
-                        <resource id="Twint_Magento::configuration_express_checkout" title="Express Checkout" sortOrder="10" />
+                <resource id="Magento_Backend::stores" title="core" sortOrder="500">
+                    <resource id="Magento_Backend::stores_settings" title="Configuration" sortOrder="20">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magento_Payment::payment">
+                                <resource id="Twint_Magento::payment" title="TWINT payment">
+                                    <resource id="Twint_Magento::configuration_credential" title="TWINT Credentials" sortOrder="10" />
+                                    <resource id="Twint_Magento::configuration_regular_checkout" title="TWINT Regular Checkout" sortOrder="20" />
+                                    <resource id="Twint_Magento::configuration_express_checkout" title="TWINT Express Checkout" sortOrder="30" />
+                                </resource>
+                            </resource>
+                        </resource>
                     </resource>
                 </resource>
             </resource>

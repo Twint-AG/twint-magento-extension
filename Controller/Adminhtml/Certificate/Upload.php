@@ -45,9 +45,9 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface
         $this->crypto = $crypto;
     }
 
-    protected function _isAllowed()
+    public function _isAllowed(): bool
     {
-        return true;
+        return $this->_authorization->isAllowed('Twint_Magento::payment');
     }
 
     public function dispatch(RequestInterface $request)

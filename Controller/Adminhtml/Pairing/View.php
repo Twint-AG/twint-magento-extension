@@ -24,6 +24,11 @@ class View extends Action
         parent::__construct($context);
     }
 
+    public function _isAllowed(): bool
+    {
+        return $this->_authorization->isAllowed('Magento_Sales::actions');
+    }
+
     /**
      * @throws LocalizedException
      */

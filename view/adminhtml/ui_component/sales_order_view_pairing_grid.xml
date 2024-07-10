@@ -18,7 +18,7 @@
             </filterUrlParams>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>Twint_Magento::twint_pairing</aclResource>
+        <aclResource>Magento_Sales::sales_order</aclResource>
         <dataProvider class="Twint\Magento\Provider\Data\PairingGridDataProvider" name="sales_order_view_pairing_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>

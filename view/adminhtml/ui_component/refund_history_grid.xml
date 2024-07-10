@@ -23,7 +23,7 @@
                 <param name="indexField" xsi:type="string">id</param>
             </storageConfig>
         </settings>
-        <aclResource>Twint_Magento::twint_pairing</aclResource>
+        <aclResource>Magento_Sales::sales_order</aclResource>
         <dataProvider class="Twint\Magento\Provider\Data\RefundHistoryDataProvider" name="refund_history_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
@@ -78,7 +78,7 @@
         <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
             <settings>
                 <dataType>date</dataType>
-                <label translate="true">Transaction Date</label>
+                <label translate="true">Refund Date</label>
             </settings>
         </column>
 

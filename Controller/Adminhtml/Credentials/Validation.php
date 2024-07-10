@@ -9,7 +9,10 @@ use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Validator\CredentialValidator;
 
 class Validation extends Action implements ActionInterface, HttpPostActionInterface
@@ -32,7 +35,12 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
         $this->validator = $validator;
     }
 
-    public function execute()
+    public function _isAllowed(): bool
+    {
+        return $this->_authorization->isAllowed('Twint_Magento::payment');
+    }
+
+    public function execute(): Json|ResultInterface|ResponseInterface
     {
         $resultJson = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
