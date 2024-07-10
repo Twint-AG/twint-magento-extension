@@ -23,4 +23,10 @@ class TwintConstant
     public const REGULAR_ENABLED = 'twint/regular/enabled';
 
     public const EXPRESS_ENABLED = 'twint/regular/enabled';
+    public const EXPRESS_SCREENS = 'twint/express/screens';
+
+    public const SCREEN_PLP = 'PLP';
+    public const SCREEN_PDP = 'PDP';
+    public const SCREEN_CART = 'CART';
+    public const SCREEN_CART_FLYOUT = 'CART_FLYOUT';
 }
