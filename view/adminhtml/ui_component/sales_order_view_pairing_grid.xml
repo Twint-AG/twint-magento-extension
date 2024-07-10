@@ -49,10 +49,16 @@
                 <sorting>asc</sorting>
             </settings>
         </column>
+        <column name="token">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Token</label>
+            </settings>
+        </column>
 
         <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
             <settings>
-                <label translate="true">Amount (CHF)</label>
+                <label translate="true">Amount</label>
             </settings>
         </column>
 

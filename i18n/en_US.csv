@@ -1,6 +1,3 @@
-TWINT,TWINT
-"Credentials","Credentials"
-
 "ERROR_INVALID_INPUT","Certificate file and password are required"
 "ERROR_INVALID_UNKNOWN","Certificate cannot be validated. Please try again"
 "ERROR_INVALID_CERTIFICATE_FORMAT","Invalid certificate format"
@@ -11,7 +8,9 @@ TWINT,TWINT
 "ERROR_CERTIFICATE_EXPIRED","Certificate expired"
 "ERROR_CERTIFICATE_NOT_YET_VALID","Certificate is not yet valid"
 
-"TWINT Tab Title","TWINT Tab Title"
+Details,Details
+History,History
+TWINT,TWINT
 "Switch to TWINT app now","Switch to TWINT app now"
 "Select your TWINT app:","Select your TWINT app:"
 "Other banks","Other banks"
@@ -20,6 +19,9 @@ or,or
 "Certificate validation successful","Certificate validation successful"
 "Something went wrong while processing the data.","Something went wrong while processing the data."
 "Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)","Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)"
+"Pairing #%1 not found","Pairing #%1 not found"
+"Order #%1 - Transaction #%2","Order #%1 - Transaction #%2"
+"Request Log #%1","Request Log #%1"
 "Dont have needed order to pay","Dont have needed order to pay"
 "This order did not provided by TWINT","This order did not provided by TWINT"
 "This order did not processed by TWINT","This order did not processed by TWINT"
@@ -31,7 +33,6 @@ or,or
 "upload a new","upload a new"
 "Unable to handle payment","Unable to handle payment"
 "Cannot get Pairing record to refund","Cannot get Pairing record to refund"
-R-%1-%2,R-%1-%2
 "Requested item doesn't exist","Requested item doesn't exist"
 "Database connection error","Database connection error"
 "Unable to save item","Unable to save item"
@@ -46,6 +47,11 @@ R-%1-%2,R-%1-%2
 "Refund amount has to greater than 0","Refund amount has to greater than 0"
 "Refund amount is exceed the transaction amount","Refund amount is exceed the transaction amount"
 "Custom Information for new tab","Custom Information for new tab"
+"Refund history","Refund history"
+"Transaction history","Transaction history"
+"API method","API method"
+Request,Request
+Response,Response
 "Copy code","Copy code"
 "Open your bank's TWINT app on your smartphone.","Open your bank's TWINT app on your smartphone."
 "Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
@@ -73,11 +79,20 @@ Enabled,Enabled
 "TWINT Express Checkout","TWINT Express Checkout"
 "Display screens","Display screens"
 "Users can see TWINT checkout buttons","Users can see TWINT checkout buttons"
-"TWINT express checkout","TWINT express checkout"
-Pairing,Pairing
-ID,ID
-"Amount (CHF)","Amount (CHF)"
+"TWINT express","TWINT express"
+"History ID","History ID"
+Order,Order
+Store,Store
+Amount,Amount
 Status,Status
 "Pairing Status","Pairing Status"
 "Transaction Status","Transaction Status"
 "Transaction Date","Transaction Date"
+"Refund ID","Refund ID"
+Pairing,Pairing
+"Reversal ID","Reversal ID"
+"Refunded By","Refunded By"
+"Refund Date","Refund Date"
+ID,ID
+"Amount (CHF)","Amount (CHF)"
+"Amount","Amount"

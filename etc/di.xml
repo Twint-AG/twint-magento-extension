@@ -12,6 +12,10 @@
         <plugin name="twint_magento_authorize_plugin" type="Twint\Magento\Plugin\AuthorizeOperationPlugin" />
     </type>
 
+    <type name="Magento\Payment\Block\Form\Container">
+        <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin" />
+    </type>
+
     <type name="Magento\Framework\App\RouterList">
         <arguments>
             <argument name="routers" xsi:type="array">

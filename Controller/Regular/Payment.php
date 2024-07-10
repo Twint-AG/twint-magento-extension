@@ -67,7 +67,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         $order = $orderId === 0 ? $this->session->getLastRealOrder() : $this->orderRepository->get($orderId);
 
         if ((!$order instanceof Order)) {
-            throw new LocalizedException(__('Order not found'));
+            throw new LocalizedException(__('Order #%1 not found', $orderId ?? null));
         }
 
         return $order;

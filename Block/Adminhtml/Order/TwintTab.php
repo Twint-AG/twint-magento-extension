@@ -33,9 +33,9 @@ class TwintTab extends ListText implements TabInterface
         return __('TWINT');
     }
 
-    public function getTabTitle(): Phrase
+    public function getTabTitle(): string
     {
-        return __('TWINT Tab Title');
+        return '';
     }
 
     public function canShowTab(): bool

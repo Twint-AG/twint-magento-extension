@@ -23,7 +23,7 @@
                 <payment_action>authorize</payment_action>
                 <model>Twint\Magento\Model\Method\TwintExpressMethod</model>
                 <order_status>pending</order_status>
-                <title>TWINT express checkout</title>
+                <title>TWINT express</title>
                 <currency>CHF</currency>
                 <allowspecific>0</allowspecific>
                 <can_athorize>1</can_athorize>
