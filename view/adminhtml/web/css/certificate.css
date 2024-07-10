@@ -20,6 +20,11 @@
     display: inline-block;
 }
 
+#twint-upload-new.disabled{
+    cursor: not-allowed;
+    color: #adadad;
+}
+
 #certificate-file{
     padding-left: 0;
 }
@@ -79,4 +84,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#certificate-file:disabled{
+    display: none;
 }

@@ -4,7 +4,7 @@ TWINT,TWINT
 "ERROR_INVALID_INPUT","Certificate file and password are required"
 "ERROR_INVALID_UNKNOWN","Certificate cannot be validated. Please try again"
 "ERROR_INVALID_CERTIFICATE_FORMAT","Invalid certificate format"
-"ERROR_INVALID_PASSPHRASE","Invalid passphrase"
+"ERROR_INVALID_PASSPHRASE","Invalid certificate password"
 "ERROR_INVALID_ISSUER_COUNTRY","Invalid issuer country"
 "ERROR_INVALID_ISSUER_ORGANIZATION","Invalid issuer organization"
 "ERROR_INVALID_EXPIRY_DATE","Invalid expiry date"
