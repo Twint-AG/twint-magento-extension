@@ -84,3 +84,12 @@
     background-size: 1em;
     text-align-last: center;
 }
+
+@media (min-width: 1024px) {
+    .modal-inner-wrap.twint{
+        margin-left: -400px;
+        width: 800px;
+        left: 50%;
+    }
+}
+

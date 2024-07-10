@@ -157,7 +157,24 @@ class QrGenerator {
     };
   }
 
+  getElements(){
+    this.guideApp = document.getElementById('twint-guide-app');
+    this.guideContact = document.getElementById('twint-guide-contact');
+  }
+
+  hideGuide(){
+    if(this.values.mode === 'regular'){
+      this.guideApp.classList.remove('hidden');
+      this.guideContact.classList.add('hidden');
+    }else {
+      this.guideContact.classList.remove('hidden');
+      this.guideApp.classList.add('hidden');
+    }
+  }
+
   init() {
+    this.getElements();
+    this.hideGuide();
     this.$target = this.$('#qr-modal-content');
 
     let qr = document.getElementById("qrcode");
@@ -174,6 +191,7 @@ class QrGenerator {
 
     this.$('#twint-amount').html(this.values.amount);
     this.$('#qr-token').val(this.values.token);
+
 
     this.$target.modal(this.options());
   }

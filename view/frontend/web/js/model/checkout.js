@@ -29,7 +29,8 @@ define(
             {
               id: response.id,
               token: response.token,
-              amount: response.amount
+              amount: response.amount,
+              mode: 'regular'
             }
           );
           QrModal.open();

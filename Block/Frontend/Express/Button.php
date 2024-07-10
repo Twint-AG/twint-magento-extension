@@ -37,8 +37,12 @@ class Button extends Template implements ShortcutInterface
         return $validated && $screen && $currency;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     */
     protected function _toHtml(): string
     {
+        file_put_contents(__DIR__.'/a.txt', get_class($this), FILE_APPEND);
         if (!$this->shouldRender()) {
             return '';
         }
