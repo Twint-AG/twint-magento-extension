@@ -66,7 +66,7 @@ class TwintConfigInherit extends TwintBase {
     }
 
     if (this.envCheckbox.checked) {
-      current['testMode'] = this.values.test_mode;
+      current['environment'] = this.values.environment;
     }
 
     return current;
@@ -140,6 +140,7 @@ class TwintCertificateHandler extends TwintBase {
   }
 
   uploadCertificate() {
+    this.hideSummaryError();
     let password = this.passwordInput.value;
     let file = this.fileInput.value;
     if (password.trim() === '' || file.trim() === '') {
@@ -224,7 +225,7 @@ class TwintCertificateHandler extends TwintBase {
   validateCredential() {
     let finalValues = this.inherit.getFinalValues({
       certificate: JSON.parse(this.hiddenInput.value),
-      testMode: this.envSelect.value,
+      environment: this.envSelect.value,
       merchantId: this.merchantInput.value,
       form_key: window.FORM_KEY
     });
@@ -279,9 +280,18 @@ class TwintCertificateHandler extends TwintBase {
       containerDiv.insertBefore(errorSummary, table);
       this.errorSummary = errorSummary;
     }
+
+    this.errorSummary.style.display = 'block';
+  }
+
+  hideSummaryError(){
+    if(this.errorSummary){
+      this.errorSummary.style.display = 'none';
+    }
   }
 
   onFileChanged(event) {
+    this.hideSummaryError();
     this.updateFileLabel(event);
 
     this.uploadCertificate();
@@ -291,12 +301,14 @@ class TwintCertificateHandler extends TwintBase {
     event.preventDefault();
     event.stopImmediatePropagation();
 
+    this.hideSummaryError();
     this.validateCredential();
 
     return false;
   }
 
   onChangeCertificate() {
+    this.hideSummaryError();
     if (this.inherit.isCertificateInherited())
       return;
 

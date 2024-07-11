@@ -29,8 +29,8 @@ or,or
 "Chose File","Chose File"
 "Only .p12 files are allowed.","Only .p12 files are allowed."
 "Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
-"Certificate are loaded and encrypted successfully,","Certificate are loaded and encrypted successfully,"
-"upload a new","upload a new"
+"Certificate encrypted and stored,","Certificate encrypted and stored,"
+"Upload new certificate","Upload new certificate"
 "Unable to handle payment","Unable to handle payment"
 "Cannot get Pairing record to refund","Cannot get Pairing record to refund"
 "Requested item doesn't exist","Requested item doesn't exist"
@@ -69,7 +69,7 @@ Configuration,Configuration
 Credentials,Credentials
 "Regular Checkout","Regular Checkout"
 "Express Checkout","Express Checkout"
-Merchant-ID,Merchant-ID
+Merchant ID,Merchant ID
 "Switch to test environment","Switch to test environment"
 Certificate,Certificate
 twint,twint

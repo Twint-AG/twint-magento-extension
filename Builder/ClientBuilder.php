@@ -50,7 +50,7 @@ class ClientBuilder
 
         $merchantId = $credentials->getMerchantId();
         $certificate = $credentials->getCertificate();
-        $environment = $credentials->getTestMode() ? Environment::TESTING() : Environment::PRODUCTION();
+        $environment = new Environment($credentials->getEnvironment());
         if ($merchantId === '') {
             throw new InvalidConfigException(InvalidConfigException::ERROR_INVALID_MERCHANT_ID);
         }

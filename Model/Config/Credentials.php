@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model\Config;
 
+use Twint\Sdk\Value\Environment;
+
 class Credentials extends AbstractConfig
 {
     public function getCertificate(): array
@@ -16,9 +18,9 @@ class Credentials extends AbstractConfig
         return $this->data['merchant_id'] ?? '';
     }
 
-    public function getTestMode(): bool
+    public function getEnvironment(): string
     {
-        return (bool) $this->data['test_mode'] ?? false;
+        return $this->data['environment'] ?? Environment::TESTING;
     }
 
     public function getValidated(): bool

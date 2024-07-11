@@ -1,0 +1,48 @@
+.twint-button {
+  margin-top: 5px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none !important;
+  border-radius: 6px;
+  height: 50px;
+  background-color: #262626 !important;
+  transition: background-color 0.3s ease;
+  color: white !important;
+
+  &:disabled {
+    background-color: #9E9E9E !important;
+  }
+
+  &:hover{
+    background-color: #3d3d3d !important;
+  }
+
+  .icon-block {
+    border-radius: 4px;
+    margin-right: 6px;
+    padding: 4px;
+  }
+
+  &:disabled .icon-block {
+    background-color: #9E9E9E;
+  }
+
+  .twint-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .twint-label {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 19px;
+    letter-spacing: 0.43px;
+    text-align: center;
+    color: #ffffff !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

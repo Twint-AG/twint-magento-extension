@@ -29,8 +29,8 @@ or,oder
 "Chose File","Datei auswählen"
 "Only .p12 files are allowed.","Nur .p12-Dateien sind erlaubt."
 "Password is required for all TWINT certificates.","Für alle TWINT-Zertifikate ist ein Passwort erforderlich."
-"Certificate are loaded and encrypted successfully,","Zertifikat wurde erfolgreich geladen und verschlüsselt,"
-"upload a new","eine neue hochladen"
+"Certificate encrypted and stored,","Zertifikat wurde erfolgreich geladen und verschlüsselt,"
+"Upload new certificate","eine neue hochladen"
 "Unable to handle payment","Zahlung kann nicht bearbeitet werden"
 "Cannot get Pairing record to refund","Pairing-Datensatz für Rückerstattung kann nicht abgerufen werden"
 "Requested item doesn't exist","Angeforderter Artikel existiert nicht"
@@ -69,7 +69,7 @@ Configuration,Konfiguration
 Credentials,Anmeldedaten
 "Regular Checkout","Regulärer Checkout"
 "Express Checkout","Express Checkout"
-Merchant-ID,Händler-ID
+Merchant ID,Händler-ID
 "Switch to test environment","Zur Testumgebung wechseln"
 Certificate,Zertifikat
 twint,twint

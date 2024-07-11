@@ -26,20 +26,22 @@
             <!--/ko-->
         </div>
         <div class="actions-toolbar">
-            <button class="twint-button" type="submit"
-                    data-bind="
-                     click: placeOrder,
-                     attr: {title: $t('Place Order')},
-                     css: {disabled: !isPlaceOrderActionAllowed()},
-                     enable: (getCode() == isChecked())
-                     "
-                    disabled
-                    >
-                <span class="twint-button_icon_block">
-                    <img class="twint-button_icon" data-bind="attr: {src: getExpressUrl()}" alt="TWINT Checkout">
-                </span>
-                <span class="twint-button_label" data-bind="i18n: 'TWINT Checkout'"></span>
-            </button>
+            <div class="primary">
+                <button class="twint-button action checkout" type="submit"
+                        data-bind="
+                         click: placeOrder,
+                         attr: {title: $t('Place Order')},
+                         css: {disabled: !isPlaceOrderActionAllowed()},
+                         enable: (getCode() == isChecked())
+                         "
+                        disabled
+                        >
+                    <span class="icon-block">
+                        <img class="twint-icon" data-bind="attr: {src: getExpressUrl()}" alt="TWINT Checkout">
+                    </span>
+                    <span class="twint-label" data-bind="i18n: 'TWINT Checkout'"></span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

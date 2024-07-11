@@ -20,7 +20,7 @@ class CredentialValidator
     {
     }
 
-    public function validate(array $certificate, string $merchantId, bool $testMode): bool
+    public function validate(array $certificate, string $merchantId, string $environment): bool
     {
         try {
             $cert = $this->crypto->decrypt($certificate['certificate']);
@@ -34,7 +34,7 @@ class CredentialValidator
                 CertificateContainer::fromPkcs12(new Pkcs12Certificate(new InMemoryStream($cert), $passphrase)),
                 MerchantId::fromString($merchantId),
                 Version::latest(),
-                $testMode ? Environment::TESTING() : Environment::PRODUCTION(),
+                new Environment($environment),
             );
             $status = $client->checkSystemStatus();
         } catch (Exception $e) {

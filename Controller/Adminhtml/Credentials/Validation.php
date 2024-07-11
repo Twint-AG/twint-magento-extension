@@ -14,6 +14,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Validator\CredentialValidator;
+use Twint\Sdk\Value\Environment;
 
 class Validation extends Action implements ActionInterface, HttpPostActionInterface
 {
@@ -44,11 +45,11 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
     {
         $resultJson = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
-        $testMode = (bool) $this->request->get('testMode') ?? false;
+        $environment = (string) $this->request->get('environment') ?? Environment::TESTING;
         $merchantId = $this->request->get('merchantId') ?? '';
 
         try {
-            $valid = $this->validator->validate($cert, $merchantId, $testMode);
+            $valid = $this->validator->validate($cert, $merchantId, $environment);
             return $resultJson->setData([
                 'success' => $valid,
                 'message' => $valid ? '' : __('Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)'),

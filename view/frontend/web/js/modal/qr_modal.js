@@ -249,7 +249,7 @@ define([
 ], function ($, template, Clipboard, storage, redirectOnSuccess) {
 
   return {
-    copier: new CopyToken($, 'qr-token', 'btn-copy-token', Clipboard),
+    copier: new CopyToken($, 'qr-token', 'twint-copy', Clipboard),
     androidConnector: new AndroidConnector($),
     iosConnector: new IosConnector($),
     modal: new QrGenerator($, template),

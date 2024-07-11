@@ -37,5 +37,8 @@ define([
 ], function ($, modal) {
   'use strict';
 
-  (new ExpressCheckout($, modal)).init();
+  console.log("loaded");
+  $(document).ready(function () {
+    (new ExpressCheckout($, modal)).init();
+  });
 });

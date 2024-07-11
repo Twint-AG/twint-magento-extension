@@ -1,22 +1,23 @@
 .modal-inner-wrap.twint {
-    background-color: rgb(243 244 246);
-    padding: 0 !important;
+  background-color: rgb(243 244 246);
+  padding: 0 !important;
 }
 
-.twint header {
+.twint {
+  header {
     padding-left: 0 !important;
     padding-right: 0 !important;
     border-bottom: solid 1px rgba(0, 0, 0, 0.25);
     padding-bottom: 1.2rem;
     padding-top: 1.2rem;
-}
+  }
 
-.twint-logo {
+  &-logo {
     width: 139px;
     height: 53px;
-}
+  }
 
-#twint-close {
+  #twint-close {
     border: none;
     background-color: inherit;
     color: #262626;
@@ -24,32 +25,32 @@
     align-items: center;
     vertical-align: middle;
     font-weight: 400;
-}
 
-#twint-close svg {
-    margin: 0 8px 0 0;
-}
+    svg {
+      margin: 0 8px 0 0;
+    }
 
-#twint-close span {
-    display: inline-block;
-}
+    span {
+      display: inline-block;
+    }
 
-#twint-close:active {
-    box-shadow: none;
-}
+    &:active {
+      box-shadow: none;
+    }
 
-#twint-close:hover, #twint-close:focus {
-    background-color: inherit;
-    border: none;
-    color: #262626;
-    font-weight: 400;
-}
+    &:hover, &:focus {
+      background-color: inherit;
+      border: none;
+      color: #262626;
+      font-weight: 400;
+    }
+  }
 
-.twint-modal-slide {
+  &-modal-slide {
     left: 0 !important;
-}
+  }
 
-#qr-token {
+  #qr-token {
     text-align: center;
     font-weight: 600;
     font-size: 30px;
@@ -58,23 +59,17 @@
     color: black;
     border: none;
     opacity: 1;
-}
+  }
 
-.separator:before, .separator:before {
-    content: '';
-    flex-grow: 1;
-    border-bottom: 1px solid #CCCCCC;
-}
-
-.twint #btn-copy-token{
+  #twint-copy {
     color: #262626;
-}
 
-.twint #btn-copy-token.copied{
-    color: rgb(34 197 94 / var(--tw-text-opacity));
-}
+    &.copied {
+      color: rgb(34 197 94 / var(--tw-text-opacity));
+    }
+  }
 
-.twint-select {
+  &-select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -83,13 +78,13 @@
     background-position: right 1rem center;
     background-size: 1em;
     text-align-last: center;
+  }
 }
 
 @media (min-width: 1024px) {
-    .modal-inner-wrap.twint{
-        margin-left: -400px;
-        width: 800px;
-        left: 50%;
-    }
+  .modal-inner-wrap.twint {
+    margin-left: -400px;
+    width: 800px;
+    left: 50%;
+  }
 }
-

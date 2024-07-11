@@ -16,9 +16,10 @@ use Twint\Sdk\InvocationRecorder\Value\Invocation;
 class ApiService
 {
     public function __construct(
-        private readonly RequestLogFactory $factory,
+        private readonly RequestLogFactory             $factory,
         private readonly RequestLogRepositoryInterface $repository,
-    ) {
+    )
+    {
     }
 
     public function call(InvocationRecordingClient $client, string $method, array $args, bool $save = true): ApiResponse
@@ -30,7 +31,7 @@ class ApiService
             $log = $this->log($method, $invocations, $save);
         }
 
-        return new ApiResponse($returnValue ?? null, $log ?? null);
+        return new ApiResponse($returnValue ?? null, $log);
     }
 
     /**
@@ -52,7 +53,7 @@ class ApiService
             $log->setData('soap_action', json_encode($soapActions));
             $log->setData('soap_request', json_encode($soapRequests));
             $log->setData('soap_response', json_encode($soapResponses));
-            $log->setData('exception', empty($exception) ? null : $exception);
+            $log->setData('exception', $exception ?? null);
 
             if (!$save) {
                 return $log;

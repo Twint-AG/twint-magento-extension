@@ -1,6 +1,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd">
     <head>
-        <css src="Twint_Magento::css/tailwind/twint.css"/>
+        <css src="Twint_Magento::css/twint.css"/>
     </head>
     <body>
         <referenceContainer name="main">
@@ -10,7 +10,7 @@
         <referenceBlock name="minicart.addons">
             <block class="Twint\Magento\Block\Frontend\Express\Screen\Flyout\Button"
                    name="twint.express.button.flyout"
-                   template="Twint_Magento::express/button-flyout.phtml"
+                   template="Twint_Magento::express/button.phtml"
                    after="minicart.proceed.to.checkout"/>
         </referenceBlock>
     </body>
