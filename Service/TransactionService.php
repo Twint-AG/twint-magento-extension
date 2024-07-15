@@ -36,8 +36,6 @@ class TransactionService
         $transaction->setTxnType(TransactionInterface::TYPE_CAPTURE);
         $transaction->setIsClosed(1);
 
-        //        return $transaction;
-
         return $this->repository->save($transaction);
     }
 

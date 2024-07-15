@@ -8,10 +8,6 @@
     <preference for="Twint\Magento\Api\RequestLogRepositoryInterface" type="Twint\Magento\Model\RequestLogRepository"/>
     <preference for="Twint\Magento\Api\RefundRepositoryInterface" type="Twint\Magento\Model\RefundRepository"/>
 
-    <type name="Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation">
-        <plugin name="twint_magento_authorize_plugin" type="Twint\Magento\Plugin\AuthorizeOperationPlugin" />
-    </type>
-
     <type name="Magento\Payment\Block\Form\Container">
         <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin" />
     </type>

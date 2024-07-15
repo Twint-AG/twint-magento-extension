@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model\Method;
 
-use Magento\Checkout\Model\Session;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -37,23 +36,23 @@ abstract class TwintMethod extends AbstractMethod
     protected $_code = self::CODE;
 
     public function __construct(
-        Context $context,
-        Registry $registry,
-        ExtensionAttributesFactory $extensionFactory,
-        AttributeValueFactory $customAttributeFactory,
-        Data $paymentData,
-        ScopeConfigInterface $scopeConfig,
-        Logger $logger,
-        protected ClientService $clientService,
-        protected RefundService $refundService,
-        protected Session $checkoutSession,
-        protected PriceCurrencyInterface $priceCurrency,
+        Context                              $context,
+        Registry                             $registry,
+        ExtensionAttributesFactory           $extensionFactory,
+        AttributeValueFactory                $customAttributeFactory,
+        Data                                 $paymentData,
+        ScopeConfigInterface                 $scopeConfig,
+        Logger                               $logger,
+        protected ClientService              $clientService,
+        protected RefundService              $refundService,
+        protected PriceCurrencyInterface     $priceCurrency,
         protected PairingRepositoryInterface $pairingRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = [],
-        DirectoryHelper $directory = null
-    ) {
+        AbstractResource                     $resource = null,
+        AbstractDb                           $resourceCollection = null,
+        array                                $data = [],
+        DirectoryHelper                      $directory = null
+    )
+    {
         parent::__construct(
             $context,
             $registry,
@@ -72,7 +71,7 @@ abstract class TwintMethod extends AbstractMethod
     public function isAvailable(CartInterface $quote = null): bool
     {
         return $quote->getCurrency()
-            ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
+                ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
             && $this->_scopeConfig->getValue(
                 TwintConstant::CONFIG_VALIDATED,
                 ScopeInterface::SCOPE_STORE,
@@ -122,13 +121,20 @@ abstract class TwintMethod extends AbstractMethod
     public function authorize(InfoInterface $payment, $amount): self
     {
         $amount = $this->priceCurrency->convertAndRound($amount);
+
         /** @var Pairing $pairing */
         list($order, $pairing, $history) = $this->clientService->createOrder($payment, $amount);
         if (!$order) {
             throw new LocalizedException(__('Unable to handle payment'));
         }
 
-        $this->checkoutSession->setPairingId($pairing->getPairingId() . '-' . $history->getId());
+        $transactionId = $pairing->getPairingId() . '-' . $history->getId();
+
+        if ($payment instanceof Order\Payment) {
+            $payment->setTransactionId($transactionId);
+            $payment->setIsTransactionClosed(true);
+        }
+        $payment->setAdditionalInformation('pairing', $pairing->getPairingId());
 
         return parent::authorize($payment, $amount);
     }
@@ -150,7 +156,10 @@ abstract class TwintMethod extends AbstractMethod
         }
 
         try {
-            $this->refundService->refund($pairing, $amount);
+            $refund = $this->refundService->refund($pairing, $amount);
+            if($payment instanceof Order\Payment){
+                $payment->setTransactionId("R-{$pairing->getPairingId()}-{$refund->getId()}");
+            }
         } catch (Throwable $e) {
             $this->logger->debug([$order->getIncrementId(), $amount, $order->getStoreId()]);
             throw $e;
