@@ -86,9 +86,12 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
-                    <item name="label" xsi:type="string">Details</item>
+                    <item name="text" xsi:type="string">Details</item>
                 </item>
             </argument>
+            <settings>
+                <label translate="true">Actions</label>
+            </settings>
         </actionsColumn>
     </columns>
 </listing>

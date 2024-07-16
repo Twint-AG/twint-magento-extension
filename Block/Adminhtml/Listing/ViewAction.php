@@ -12,7 +12,7 @@ class ViewAction extends MagentoViewAction
     {
         if (isset($dataSource['data']['items'])) {
             $viewUrlPath = $this->getData('config/viewUrlPath') ?: '#';
-            $label = __($this->getData('config/label') ?: 'View');
+            $label = __($this->getData('config/text') ?: 'View');
 
             foreach ($dataSource['data']['items'] as &$item) {
                 $item[$this->getData('name')] = [

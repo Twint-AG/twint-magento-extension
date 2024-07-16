@@ -95,11 +95,12 @@
                 <item name="config" xsi:type="array">
                     <item name="viewUrlPath" xsi:type="string">twint/pairing/view</item>
                     <item name="urlEntityParamName" xsi:type="string">id</item>
-                    <item name="label" xsi:type="string">History</item>
+                    <item name="text" xsi:type="string">History</item>
                 </item>
             </argument>
             <settings>
                 <indexField>id</indexField>
+                <label translate="true">Actions</label>
             </settings>
         </actionsColumn>
     </columns>
