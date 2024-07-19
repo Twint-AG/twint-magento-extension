@@ -3,8 +3,8 @@ define([
   'Magento_Checkout/js/view/payment/default',
   'Magento_Checkout/js/model/payment/additional-validators',
   'ko',
-  'qr-modal',
-  'twint-checkout'
+  'Twint_Magento/js/modal/qr_modal',
+  'Twint_Magento/js/model/checkout'
 ], function ($, Component, additionalValidators, ko, QrModal, TwintCheckout) {
   'use strict';
 

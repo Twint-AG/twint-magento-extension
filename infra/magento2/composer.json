@@ -45,7 +45,7 @@
         "magento/product-community-edition": "2.4.6",
         "magento/sample-data-media": "100.4.*",
         "symfony/event-dispatcher" : "^5.4 || ^6.0",
-        "twint/magento-2": "dev-master",
+        "twint-ag/twint-magento-extension": "dev-master",
         "mageplaza/magento-2-german-language-pack": "dev-master"
     },
     "autoload": {
@@ -104,11 +104,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.nfq.asia/twint-ag/magento-extension.git"
+            "url": "https://git.nfq.asia/twint-ag/twint-magento-extension.git"
         }
     ],
     "extra": {

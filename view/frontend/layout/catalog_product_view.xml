@@ -1,12 +1,19 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <!-- Simple Product -->
         <referenceBlock name="product.info.addtocart">
-            <block class="Twint\Magento\Block\Frontend\Express\Button"
-                   name="twint.express.button"
+            <block name="product.info.addtocart.twint"
+                   class="Twint\Magento\Block\Frontend\Express\Button"
                    template="Twint_Magento::express/button.phtml"
-                   after="-"/>
+                   before="-" />
+        </referenceBlock>
+        <!-- Configurable Products -->
+        <referenceBlock name="product.info.addtocart.additional">
+            <block name="product.info.addtocart.additional.twint"
+                   class="Twint\Magento\Block\Frontend\Express\Button"
+                   template="Twint_Magento::express/button.phtml"
+                   before="-" />
         </referenceBlock>
     </body>
 </page>

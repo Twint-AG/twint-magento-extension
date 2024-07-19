@@ -8,13 +8,4 @@
             </argument>
         </arguments>
     </type>
-
-    <type name="Twint\Magento\Block\Frontend\Express\Button">
-        <arguments>
-            <argument name="data" xsi:type="array">
-                <item name="alias" xsi:type="string">twint.express.button</item>
-                <item name="template" xsi:type="string">express/button.phtml</item>
-            </argument>
-        </arguments>
-    </type>
 </config>

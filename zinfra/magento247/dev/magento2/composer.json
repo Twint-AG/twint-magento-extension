@@ -97,19 +97,15 @@
             "url": "https://repo.magento.com/"
         },
         {
-            "name": "twint/magento-2",
+            "name": "twint-ag/twint-magento-extension",
             "type": "path",
             "url": "/var/www/plugin",
             "options": {
                 "symlink": true,
                 "versions": {
-                    "twint/magento-2": "1.0.0"
+                    "twint-ag/twint-magento-extension": "1.0.0"
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
         }
     ],
     "extra": {

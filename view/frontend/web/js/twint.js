@@ -33,7 +33,7 @@ class ExpressCheckout{
 }
 
 define([
-  'jquery', 'qr-modal',
+  'jquery', 'Twint_Magento/js/modal/qr_modal',
 ], function ($, modal) {
   'use strict';
 

@@ -243,7 +243,6 @@ define([
   'clipboard',
   'mage/storage',
   'Magento_Checkout/js/action/redirect-on-success',
-
   "Magento_Ui/js/modal/modal",
   'qrcodejs',
 ], function ($, template, Clipboard, storage, redirectOnSuccess) {

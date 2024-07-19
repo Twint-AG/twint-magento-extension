@@ -4,7 +4,7 @@ define(
     'Magento_Checkout/js/model/error-processor',
     'Magento_Checkout/js/model/full-screen-loader',
     'underscore',
-    'qr-modal'
+    'Twint_Magento/js/modal/qr_modal'
   ],
   function (storage, errorProcessor, fullScreenLoader, _, QrModal) {
     'use strict';

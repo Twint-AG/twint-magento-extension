@@ -1,54 +1,69 @@
 {
-    "name": "twint/magento-2",
-    "version": "1.0.0",
-    "description": "Twint payment power bt TWINT",
-    "type": "magento2-module",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "php": ">=8.1",
-        "magento/framework": ">=103.0.4",
-        "twint-ch/twint-sdk": "dev-dev/magento"
-    },
-    "require-dev": {
-        "symplify/easy-coding-standard": "^12.1",
-        "slevomat/coding-standard": "^8.15",
-        "rector/rector": "^1.2",
-        "phpspec/prophecy-phpunit": "^2.2"
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://repo.magento.com/"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
-        }
-    ],
-    "license": [
-        "Proprietary"
-    ],
-    "autoload": {
-        "files": [
-            "registration.php"
-        ],
-        "psr-4": {
-            "Twint\\Magento\\": ""
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "php-http/discovery": true,
-            "magento/composer-dependency-version-audit-plugin": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "magento/magento-composer-installer": true
-        }
-    },
-    "archive": {
-        "exclude": [
-            "/infra",
-            "/zinfra"
-        ]
+  "name": "twint-ag/twint-magento-extension",
+  "version": "1.0.0",
+  "description": "TWINT payment extension for Magento 2",
+  "homepage": "https://twint.ch",
+  "type": "magento2-module",
+  "license": [
+    "MIT"
+  ],
+  "authors": [
+    {
+      "name": "TWINT",
+      "email": "plugin@twint.ch",
+      "homepage": "https://twint.ch",
+      "role": "Maintainer"
     }
+  ],
+  "keywords": [
+    "twint",
+    "twint.ch",
+    "switzerland",
+    "checkout",
+    "express checkout",
+    "payment",
+    "magento",
+    "magento2"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.1",
+    "magento/framework": ">=103.0.4",
+    "twint-ag/sdk": "dev-develop"
+  },
+  "require-dev": {
+    "symplify/easy-coding-standard": "^12.1",
+    "slevomat/coding-standard": "^8.15",
+    "rector/rector": "^1.2",
+    "phpspec/prophecy-phpunit": "^2.2"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Twint\\Magento\\": ""
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true,
+      "magento/composer-dependency-version-audit-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "magento/magento-composer-installer": true
+    }
+  },
+  "archive": {
+    "exclude": [
+      "infra",
+      "zinfra"
+    ]
+  }
 }
