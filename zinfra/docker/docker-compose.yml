@@ -40,6 +40,7 @@ services:
       # prevent recursive binding volumes
       - "./../..:/var/www/plugin"
       - "/var/www/plugin/zinfra/"
+      - "/var/www/plugin/vendor/"
     networks:
       - wwwserver
     depends_on:

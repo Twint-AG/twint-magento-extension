@@ -3,9 +3,8 @@ define([
   'Magento_Checkout/js/view/payment/default',
   'Magento_Checkout/js/model/payment/additional-validators',
   'ko',
-  'Twint_Magento/js/modal/qr_modal',
   'Twint_Magento/js/model/checkout'
-], function ($, Component, additionalValidators, ko, QrModal, TwintCheckout) {
+], function ($, Component, additionalValidators, ko, TwintCheckout) {
   'use strict';
 
   return Component.extend({
@@ -15,22 +14,8 @@ define([
       template: 'Twint_Magento/payment/twint'
     },
 
-    initialize: function () {
-      this._super();
-    },
-
     afterPlaceOrder: function () {
       TwintCheckout(this.orderId);
-    },
-
-    showModal: function () {
-      QrModal.init(
-        {
-          token: 122342,
-          amount: 'CHF 23.92'
-        }
-      );
-      QrModal.open();
     },
 
     getCode: function () {
@@ -54,7 +39,7 @@ define([
     },
 
     placeOrder: function (data, event) {
-      var self = this;
+      const self = this;
 
       if (event) {
         event.preventDefault();
@@ -69,7 +54,6 @@ define([
         this.getPlaceOrderDeferredObject()
           .done(
             function (data) {
-              console.log(data);
               self.orderId = data;
               self.afterPlaceOrder();
 

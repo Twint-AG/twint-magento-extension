@@ -4,9 +4,10 @@ define(
     'Magento_Checkout/js/model/error-processor',
     'Magento_Checkout/js/model/full-screen-loader',
     'underscore',
-    'Twint_Magento/js/modal/qr_modal'
+    'Twint_Magento/js/modal/qr_modal',
+    'Magento_Checkout/js/action/redirect-on-success'
   ],
-  function (storage, errorProcessor, fullScreenLoader, _, QrModal) {
+  function (storage, errorProcessor, fullScreenLoader, _, TwintModal, RedirectOnSuccess) {
     'use strict';
 
     return function (order_id) {
@@ -25,7 +26,7 @@ define(
         }
       ).done(
         function (response) {
-          QrModal.init(
+          TwintModal.init(
             {
               id: response.id,
               token: response.token,
@@ -33,7 +34,8 @@ define(
               mode: 'regular'
             }
           );
-          QrModal.open();
+          TwintModal.setOnSuccess(RedirectOnSuccess);
+          TwintModal.open();
         }
       ).always(
         function () {

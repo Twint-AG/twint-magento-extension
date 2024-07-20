@@ -5,8 +5,8 @@ class ExpressCheckout{
   }
 
   init(){
-    this.getButtons();
-    this.registerEvents();
+    // this.getButtons();
+    // this.registerEvents();
   }
 
   showModal() {

@@ -202,12 +202,15 @@ class QrGenerator {
 }
 
 class StatusRefresher {
-  constructor($, storage, redirectOnSuccess) {
+  constructor($, storage) {
     this.$ = $;
     this.storage = storage;
-    this.redirectAction = redirectOnSuccess;
 
     this.count = 0;
+  }
+
+  setOnSuccess(onSuccess){
+    this.redirectAction = onSuccess;
   }
 
   setId(value) {
@@ -242,17 +245,19 @@ define([
   'text!Twint_Magento/template/modal/qr-modal-popup.html',
   'clipboard',
   'mage/storage',
-  'Magento_Checkout/js/action/redirect-on-success',
   "Magento_Ui/js/modal/modal",
   'qrcodejs',
-], function ($, template, Clipboard, storage, redirectOnSuccess) {
+], function ($, template, Clipboard, storage) {
 
   return {
     copier: new CopyToken($, 'qr-token', 'twint-copy', Clipboard),
     androidConnector: new AndroidConnector($),
     iosConnector: new IosConnector($),
     modal: new QrGenerator($, template),
-    statusRefresher: new StatusRefresher($, storage, redirectOnSuccess),
+    statusRefresher: new StatusRefresher($, storage),
+    setOnSuccess: function (onSuccess){
+      this.statusRefresher.setOnSuccess(onSuccess);
+    },
     init: function (config) {
       this.modal.setValues(config);
       this.modal.init();

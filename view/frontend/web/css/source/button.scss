@@ -45,4 +45,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  *:has(+ &)
+  {
+    margin-bottom: 0 !important;
+  }
 }
