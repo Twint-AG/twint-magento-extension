@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Simple Product -->
+        <referenceBlock name="category.product.addto">
+            <block class="Twint\Magento\Block\Frontend\Express\Screen\Category\Button"
+               name="category.product.addto.twint" as="express" after="compare"
+               template="Twint_Magento::express/button-in-box.phtml"/>
+        </referenceBlock>
+
+        <!-- Configurable Products -->
+        <referenceBlock name="category.product.list.additional">
+            <block class="Twint\Magento\Block\Frontend\Express\Screen\Category\Button"
+               name="category.product.addto.twint.additional" as="express" after="compare"
+               template="Twint_Magento::express/button-in-box.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

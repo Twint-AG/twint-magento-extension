@@ -8,4 +8,26 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Twint\Magento\Block\Frontend\Express\Screen\Flyout\Button">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="template" xsi:type="string">Twint_Magento::express/button-cart.phtml</item>
+                <item name="alias" xsi:type="string">twint.express.mini-cart</item>
+                <item name="button_id" xsi:type="string">twint-express-mini-cart</item>
+                <item name="link_data_action" xsi:type="string">twint-in-context-checkout</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Twint\Magento\Block\Frontend\Express\Screen\Cart\Button">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="template" xsi:type="string">Twint_Magento::express/button-cart.phtml</item>
+                <item name="alias" xsi:type="string">twint.express.cart</item>
+                <item name="button_id" xsi:type="string">twint-express-cart</item>
+                <item name="link_data_action" xsi:type="string">twint-in-context-checkout-cart</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

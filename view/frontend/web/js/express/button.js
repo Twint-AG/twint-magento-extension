@@ -27,7 +27,7 @@ define([
       TwintModal.init(
         {
           id: 'fake',
-          token: 'hsg27sg6sx',
+          token: 'hsg27sg6sx'.toUpperCase(),
           amount: "CHF 12.33",
           mode: 'express'
         }

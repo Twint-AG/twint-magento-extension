@@ -6,12 +6,5 @@
         <referenceContainer name="main">
             <block class="Twint\Magento\Block\Frontend\ScanQrModal" name="twint-qr-modal" template="qr.phtml" />
         </referenceContainer>
-
-        <referenceBlock name="minicart.addons">
-            <block class="Twint\Magento\Block\Frontend\Express\Screen\Flyout\Button"
-                   name="twint.express.button.flyout"
-                   template="Twint_Magento::express/button.phtml"
-                   after="minicart.proceed.to.checkout"/>
-        </referenceBlock>
     </body>
 </page>

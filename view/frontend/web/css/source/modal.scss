@@ -5,9 +5,7 @@
 
     @media (min-width: 1024px) {
       & {
-        margin-left: -400px;
         width: 800px;
-        left: 50%;
       }
     }
   }
@@ -33,6 +31,7 @@
     align-items: center;
     vertical-align: middle;
     font-weight: 400;
+    box-shadow: none !important;
 
     svg {
       margin: 0 8px 0 0;
@@ -40,10 +39,7 @@
 
     span {
       display: inline-block;
-    }
-
-    &:active {
-      box-shadow: none;
+      box-shadow: none !important;
     }
 
     &:hover, &:focus {

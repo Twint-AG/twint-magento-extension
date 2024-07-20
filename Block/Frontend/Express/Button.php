@@ -27,7 +27,7 @@ class Button extends Template implements ShortcutInterface
     /**
      * @throws NoSuchEntityException
      */
-    private function shouldRender(): bool
+    protected function shouldRender(): bool
     {
         $config = $this->configHelper->getConfigs();
         $validated = $config->getCredentials()->getValidated();
