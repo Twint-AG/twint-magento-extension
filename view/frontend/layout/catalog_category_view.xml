@@ -7,12 +7,5 @@
                name="category.product.addto.twint" as="express" after="compare"
                template="Twint_Magento::express/button-in-box.phtml"/>
         </referenceBlock>
-
-        <!-- Configurable Products -->
-        <referenceBlock name="category.product.list.additional">
-            <block class="Twint\Magento\Block\Frontend\Express\Screen\Category\Button"
-               name="category.product.addto.twint.additional" as="express" after="compare"
-               template="Twint_Magento::express/button-in-box.phtml"/>
-        </referenceBlock>
     </body>
 </page>

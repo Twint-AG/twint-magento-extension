@@ -1,5 +1,4 @@
 .twint-button {
-  margin-top: 5px;
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -34,7 +33,23 @@
     height: 35px;
   }
 
-  .twint-label {
+  &.box{
+    height: auto;
+    padding: 3px 10px;
+    font-size: inherit;
+
+    .icon-block {
+      height: 30px;
+      padding: 1px;
+    }
+
+    .twint-icon {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  span {
     font-size: 15px;
     font-weight: 600;
     line-height: 19px;
@@ -49,5 +64,9 @@
   *:has(+ &)
   {
     margin-bottom: 0 !important;
+  }
+
+  .actions-secondary:has(&) {
+    width: 100%;
   }
 }
