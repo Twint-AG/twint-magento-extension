@@ -76,11 +76,11 @@
     margin-bottom: 0 !important;
   }
 
-  .actions-secondary:has(> &) {
+  .actions-secondary:has(> &.express) {
     width: 100%;
   }
 
-  *:has(> &) {
+  *:has(> &.express) {
     container-type: inline-size;
   }
 }

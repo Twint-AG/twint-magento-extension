@@ -8,8 +8,7 @@
 "ERROR_CERTIFICATE_EXPIRED","Certificate expired"
 "ERROR_CERTIFICATE_NOT_YET_VALID","Certificate is not yet valid"
 
-Details,Details
-History,History
+View,View
 TWINT,TWINT
 "Switch to TWINT app now","Switch to TWINT app now"
 "Select your TWINT app:","Select your TWINT app:"
@@ -25,7 +24,7 @@ or,or
 "Dont have needed order to pay","Dont have needed order to pay"
 "This order did not provided by TWINT","This order did not provided by TWINT"
 "This order did not processed by TWINT","This order did not processed by TWINT"
-"Order not found","Order not found"
+"Order #%1 not found","Order #%1 not found"
 "Chose File","Chose File"
 "Only .p12 files are allowed.","Only .p12 files are allowed."
 "Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
@@ -36,6 +35,8 @@ or,or
 "Requested item doesn't exist","Requested item doesn't exist"
 "Database connection error","Database connection error"
 "Unable to save item","Unable to save item"
+Production,Production
+Test,Test
 "Product details page","Product details page"
 "Product listing page","Product listing page"
 "Cart page","Cart page"
@@ -52,6 +53,7 @@ or,or
 "API method","API method"
 Request,Request
 Response,Response
+"Express Checkout","Express Checkout"
 "Copy code","Copy code"
 "Open your bank's TWINT app on your smartphone.","Open your bank's TWINT app on your smartphone."
 "Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
@@ -68,9 +70,8 @@ Copied!,Copied!
 Configuration,Configuration
 Credentials,Credentials
 "Regular Checkout","Regular Checkout"
-"Express Checkout","Express Checkout"
-Merchant ID,Merchant ID
-"Switch to test environment","Switch to test environment"
+"Merchant ID","Merchant ID"
+Environment,Environment
 Certificate,Certificate
 twint,twint
 "TWINT Regular Checkout","TWINT Regular Checkout"
@@ -88,11 +89,11 @@ Status,Status
 "Pairing Status","Pairing Status"
 "Transaction Status","Transaction Status"
 "Transaction Date","Transaction Date"
+Actions,Actions
 "Refund ID","Refund ID"
 Pairing,Pairing
 "Reversal ID","Reversal ID"
 "Refunded By","Refunded By"
 "Refund Date","Refund Date"
 ID,ID
-"Amount (CHF)","Amount (CHF)"
-"Amount","Amount"
+Token,Token
