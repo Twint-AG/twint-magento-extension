@@ -47,9 +47,13 @@
       width: 30px;
       height: 30px;
     }
+
+    .twint-label{
+      font-size: inherit;
+    }
   }
 
-  span {
+  .twint-label {
     font-size: 15px;
     font-weight: 600;
     line-height: 19px;
@@ -59,6 +63,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    @container (width > 257px) {
+      &:before {
+        content: "TWINT ";
+      }
+    }
   }
 
   *:has(+ &)
@@ -66,7 +76,11 @@
     margin-bottom: 0 !important;
   }
 
-  .actions-secondary:has(&) {
+  .actions-secondary:has(> &) {
     width: 100%;
+  }
+
+  *:has(> &) {
+    container-type: inline-size;
   }
 }
