@@ -38,6 +38,14 @@
     padding: 3px 10px;
     font-size: inherit;
 
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    .products-list &{
+      width: auto;
+    }
+
     .icon-block {
       height: 30px;
       padding: 1px;
@@ -76,11 +84,13 @@
     margin-bottom: 0 !important;
   }
 
-  .actions-secondary:has(> &.express) {
-    width: 100%;
+  *:has(> &.express:not(.box)) {
+    container-type: inline-size;
   }
 
-  *:has(> &.express) {
+  .product-item-actions:has(&.express.box){
+    position: relative;
+    padding-bottom: 45px;
     container-type: inline-size;
   }
 }
