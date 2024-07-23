@@ -12,6 +12,10 @@
         <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin" />
     </type>
 
+    <type name="Magento\Checkout\Block\Cart\Sidebar">
+        <plugin name="express_checkout" type="Twint\Magento\Plugin\ExpressCheckoutPlugin"/>
+    </type>
+
     <type name="Magento\Framework\App\RouterList">
         <arguments>
             <argument name="routers" xsi:type="array">

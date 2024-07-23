@@ -7,6 +7,7 @@ namespace Twint\Magento\Service;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Quote\Model\Quote;
 use Throwable;
 use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
@@ -17,6 +18,7 @@ use Twint\Magento\Model\PairingFactory;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
+use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
 use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
 use Twint\Sdk\Value\Uuid;
@@ -25,16 +27,17 @@ use Twint\Sdk\Value\Version;
 class PairingService
 {
     public function __construct(
-        private readonly ClientBuilder $connector,
-        private readonly PairingFactory $pairingFactory,
-        private readonly PairingHistoryFactory $historyFactory,
-        private readonly PairingRepositoryInterface $pairingRepository,
+        private readonly ClientBuilder                     $connector,
+        private readonly PairingFactory                    $pairingFactory,
+        private readonly PairingHistoryFactory             $historyFactory,
+        private readonly PairingRepositoryInterface        $pairingRepository,
         private readonly PairingHistoryRepositoryInterface $historyRepository,
-        private readonly OrderService $orderService,
-        private readonly ApiService $api,
-        private readonly TransactionService $transactionService,
-        private readonly InvoiceService $invoiceService
-    ) {
+        private readonly OrderService                      $orderService,
+        private readonly ApiService                        $api,
+        private readonly TransactionService                $transactionService,
+        private readonly InvoiceService                    $invoiceService
+    )
+    {
     }
 
     /**
@@ -106,9 +109,9 @@ class PairingService
 
     public function update(Pairing $pairing, Order $order)
     {
-        $pairing->setData('status', (string) $order->status());
-        $pairing->setData('transaction_status', (string) $order->transactionStatus());
-        $pairing->setData('pairing_status', (string) $order->pairingStatus());
+        $pairing->setData('status', (string)$order->status());
+        $pairing->setData('transaction_status', (string)$order->transactionStatus());
+        $pairing->setData('pairing_status', (string)$order->pairingStatus());
 
         return $this->pairingRepository->save($pairing);
     }
@@ -120,15 +123,37 @@ class PairingService
 
         /** @var Pairing $pairing */
         $pairing = $this->pairingFactory->create();
-        $pairing->setData('pairing_id', (string) $twintOrder->id());
-        $pairing->setData('status', (string) $twintOrder->status());
-        $pairing->setData('token', (string) $twintOrder->pairingToken());
-        $pairing->setData('transaction_status', (string) $twintOrder->transactionStatus());
-        $pairing->setData('pairing_status', (string) $twintOrder->pairingStatus());
+        $pairing->setData('pairing_id', (string)$twintOrder->id());
+        $pairing->setData('status', (string)$twintOrder->status());
+        $pairing->setData('token', (string)$twintOrder->pairingToken());
+        $pairing->setData('transaction_status', (string)$twintOrder->transactionStatus());
+        $pairing->setData('pairing_status', (string)$twintOrder->pairingStatus());
         $pairing->setData('amount', $amount);
 
-        $pairing->setData('order_id', (string) $twintOrder->merchantTransactionReference());
+        $pairing->setData('order_id', (string)$twintOrder->merchantTransactionReference());
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
+
+        $pairing = $this->pairingRepository->save($pairing);
+
+        $history = $this->createHistory($pairing, $response->getRequest());
+
+        return [$pairing, $history];
+    }
+
+    public function createForExpress(ApiResponse $response, Quote $quote, Quote $orgQuote): array
+    {
+        /** @var InteractiveFastCheckoutCheckIn $checkIn */
+        $checkIn = $response->getReturn();
+
+        /** @var Pairing $pairing */
+        $pairing = $this->pairingFactory->create();
+        $pairing->setData('pairing_id', (string)$checkIn->pairingUuid());
+        $pairing->setData('token', (string)$checkIn->pairingToken());
+        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
+        $pairing->setData('amount', $quote->getGrandTotal());
+        $pairing->setData('store_id', $quote->getStoreId());
+        $pairing->setData('quote_id', $quote->getId());
+        $pairing->setData('org_quote_id', $orgQuote->getId());
 
         $pairing = $this->pairingRepository->save($pairing);
 
@@ -141,7 +166,7 @@ class PairingService
     {
         /** @var PairingHistory $history */
         $history = $this->historyFactory->create();
-        $history->setData('parent_id', (string) $pairing->getId());
+        $history->setData('parent_id', (string)$pairing->getId());
         $history->setData('status', $pairing->getStatus());
         $history->setData('transaction_status', $pairing->getTransactionStatus());
         $history->setData('pairing_status', $pairing->getPairingStatus());
@@ -149,6 +174,10 @@ class PairingService
         $history->setData('amount', $pairing->getAmount());
         $history->setData('store_id', $pairing->getStoreId());
         $history->setData('order_id', $pairing->getOrderId());
+        $history->setData('org_quote_id', $pairing->getOriginalQuoteId());
+        $history->setData('quote_id', $pairing->getQuoteId());
+        $history->setData('shipping_id', $pairing->getShippingId());
+        $history->setData('customer', $pairing->getCustomerData());
         $history->setData('request_id', $log->getId());
 
         return $this->historyRepository->save($history);

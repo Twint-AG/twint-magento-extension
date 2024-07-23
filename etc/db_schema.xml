@@ -13,6 +13,10 @@
         <column xsi:type="smallint" name="store_id"  unsigned="true" nullable="true" identity="false"
                 comment="Store ID"/>
         <column xsi:type="varchar" length="50" name="order_id"  nullable="true" comment="Order Increment ID"/>
+        <column xsi:type="int" name="quote_id" unsigned="true" nullable="true" comment="Quote ID" />
+        <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID" />
+        <column xsi:type="int" name="shipping_id" unsigned="true" nullable="true" comment="Shipping ID" />
+        <column xsi:type="json" name="customer" nullable="true" comment="Customer Data" />
 
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
@@ -76,6 +80,10 @@
         <column xsi:type="decimal" name="amount"  unsigned="true" nullable="false" scale="4" precision="20" comment="Amount"/>
         <column xsi:type="smallint" name="store_id"  unsigned="true" nullable="true" identity="false" comment="Store ID"/>
         <column xsi:type="varchar" length="50" name="order_id"  nullable="true" comment="Order Increment ID"/>
+        <column xsi:type="int" name="quote_id" unsigned="true" nullable="true" comment="Quote ID" />
+        <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID" />
+        <column xsi:type="int" name="shipping_id" unsigned="true" nullable="true" comment="Shipping ID" />
+        <column xsi:type="json" name="customer" nullable="true" comment="Customer Data" />
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="int" name="request_id" unsigned="true" nullable="true" comment="Request ID"/>

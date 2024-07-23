@@ -1,14 +1,14 @@
 define([
   'jquery',
   'Magento_Catalog/js/validate-product-original',
-  'Twint_Magento/js/express/button',
+  'catalogAddToCart',
 ], function ($) {
   'use strict';
 
   $.widget('mage.twintProductValidate', $.mage.productValidate, {
     options: {
       ...$.mage.productValidate.prototype.options,
-      expressButtonSelector: 'button.twint-button'
+      expressButtonSelector: 'button.twint-button.express'
     },
 
     _create: function (event) {

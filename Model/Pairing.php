@@ -80,12 +80,32 @@ class Pairing extends AbstractModel implements IdentityInterface
         return !in_array($this->getTransactionStatus(), $statuses, true);
     }
 
-    public function getOrderId(): string
+    public function getOrderId(): ?string
     {
         return $this->getData('order_id');
     }
 
-    public function getStatus(): string
+    public function getQuoteId(): ?string
+    {
+        return $this->getData('quote_id');
+    }
+
+    public function getOriginalQuoteId(): ?string
+    {
+        return $this->getData('org_quote_id');
+    }
+
+    public function getShippingId(): ?string
+    {
+        return $this->getData('shipping_id');
+    }
+
+    public function getCustomerData(): ?string
+    {
+        return $this->getData('customer');
+    }
+
+    public function getStatus(): ?string
     {
         return $this->getData('status');
     }
@@ -95,7 +115,7 @@ class Pairing extends AbstractModel implements IdentityInterface
         return $this->getData('pairing_id');
     }
 
-    public function getTransactionStatus(): string
+    public function getTransactionStatus(): ?string
     {
         return $this->getData('transaction_status');
     }
