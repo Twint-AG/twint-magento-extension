@@ -85,6 +85,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             return $json->setData([
                 'success' => true,
                 'id' => $pairing->getId(),
+                'pairingId' => $pairing->getPairingId(),
                 'token' => $pairing->getToken(),
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
             ]);

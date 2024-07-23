@@ -85,12 +85,12 @@
   }
 
   *:has(> &.express:not(.box)) {
-    container-type: inline-size;
+    container-type: normal;
   }
 
   .product-item-actions:has(&.express.box){
     position: relative;
     padding-bottom: 45px;
-    container-type: inline-size;
+    container-type: normal;
   }
 }

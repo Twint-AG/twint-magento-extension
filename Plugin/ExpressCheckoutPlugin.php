@@ -22,7 +22,8 @@ class ExpressCheckoutPlugin
 
     private function getConfig(): array{
         return [
-            'expressCheckoutUrl' => $this->urlBuilder->getUrl('twint/express/checkout')
+            'expressCheckoutUrl' => $this->urlBuilder->getUrl('twint/express/checkout'),
+            'expressStatusUrl' => $this->urlBuilder->getUrl('twint/express/status')
         ];
     }
 }

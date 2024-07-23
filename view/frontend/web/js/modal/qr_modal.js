@@ -255,6 +255,9 @@ define([
     iosConnector: new IosConnector($),
     modal: new QrGenerator($, template),
     statusRefresher: new StatusRefresher($, storage),
+    setStatusRefresher: function (refresher){
+      this.statusRefresher = refresher;
+    },
     setOnSuccess: function (onSuccess){
       this.statusRefresher.setOnSuccess(onSuccess);
     },

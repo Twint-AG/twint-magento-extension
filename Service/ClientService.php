@@ -7,9 +7,12 @@ namespace Twint\Magento\Service;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
+use Twint\Magento\Model\Pairing;
 use Twint\Sdk\Value\Money;
 use Twint\Sdk\Value\OrderId;
+use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
@@ -17,17 +20,35 @@ use Twint\Sdk\Value\Version;
 class ClientService
 {
     public function __construct(
-        private readonly ClientBuilder $connector,
+        private readonly ClientBuilder  $connector,
         private readonly PairingService $pairingService,
-        private readonly ApiService $api,
-        private readonly OrderService $orderService,
-    ) {
+        private readonly ApiService     $api,
+        private readonly OrderService   $orderService,
+    )
+    {
+    }
+
+    public function startFastCheckoutOrder(InfoInterface $payment, float $amount, Pairing $pairing): ApiResponse
+    {
+        $client = $this->connector->build($pairing->getStoreId());
+
+        $order = $payment->getOrder();
+        $orderId = $order->getIncrementId();
+
+        return $this->api->call($client, 'startFastCheckoutOrder', [
+            PairingUuid::fromString($pairing->getPairingId()),
+            new UnfiledMerchantTransactionReference($orderId),
+            new Money(TwintConstant::CURRENCY, $amount),
+        ]);
     }
 
     /**
+     * @param InfoInterface $payment
+     * @param $amount
      * @return array
+     *
      */
-    public function createOrder(InfoInterface $payment, $amount)
+    public function createOrder(InfoInterface $payment, $amount): array
     {
         /** @var Payment $payment */
         $storeCode = $payment->getOrder()

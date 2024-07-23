@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
+use Magento\Framework\Logger\Monolog;
+use Monolog\Logger;
 use Throwable;
 use Twint\Magento\Api\RequestLogRepositoryInterface;
 use Twint\Magento\Model\Api\ApiResponse;
@@ -18,6 +20,7 @@ class ApiService
     public function __construct(
         private readonly RequestLogFactory             $factory,
         private readonly RequestLogRepositoryInterface $repository,
+        private readonly Monolog $logger
     )
     {
     }
@@ -26,7 +29,10 @@ class ApiService
     {
         try {
             $returnValue = $client->{$method}(...$args);
-        } finally {
+        }catch (Throwable $e){
+            $this->logger->error("TWINT $method cannot handle success". $e->getMessage());
+        }
+        finally {
             $invocations = $client->flushInvocations();
             $log = $this->log($method, $invocations, $save);
         }
@@ -55,7 +61,7 @@ class ApiService
             $log->setData('soap_response', json_encode($soapResponses));
             $log->setData('exception', $exception ?? null);
 
-            if (!$save) {
+            if (!$save && !$exception) {
                 return $log;
             }
 

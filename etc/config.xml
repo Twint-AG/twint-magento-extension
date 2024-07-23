@@ -20,9 +20,9 @@
 
             <twint_express translate="title" module="Twint_Magento">
                 <active>1</active>
-                <payment_action>authorize</payment_action>
+                <payment_action>capture</payment_action>
                 <model>Twint\Magento\Model\Method\TwintExpressMethod</model>
-                <order_status>pending</order_status>
+                <order_status>processing</order_status>
                 <title>TWINT express</title>
                 <currency>CHF</currency>
                 <allowspecific>0</allowspecific>

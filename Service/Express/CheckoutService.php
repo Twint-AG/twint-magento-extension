@@ -10,15 +10,21 @@ use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
+use Twint\Core\Setting\Settings;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
+use Twint\Magento\Model\Pairing;
+use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\PairingService;
 use Twint\Sdk\Value\CustomerDataScopes;
 use Twint\Sdk\Value\Money;
+use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\ShippingMethod;
 use Twint\Sdk\Value\ShippingMethodId;
 use Twint\Sdk\Value\ShippingMethods;
+use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
 use Twint\Sdk\Value\Version;
 
 class CheckoutService
@@ -32,6 +38,19 @@ class CheckoutService
         private PairingService              $pairingService,
     )
     {
+    }
+
+    public function capture(Pairing $pairing){
+        $client = $this->connector->build($pairing->getStoreId());
+
+        /** @var non-empty-string $orderId */
+        $orderId = $order->getId();
+
+        return $this->api->call($client, 'startFastCheckoutOrder', [
+            PairingUuid::fromString($pairing->getId()),
+            new UnfiledMerchantTransactionReference($orderId),
+            new Money($order->getCurrency()?->getIsoCode() ?? TwintConstant::CURRENCY, $order->getAmountTotal()),
+        ], true);
     }
 
     /**

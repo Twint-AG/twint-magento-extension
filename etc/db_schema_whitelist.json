@@ -13,7 +13,11 @@
             "created_at": true,
             "updated_at": true,
             "order_status": true,
-            "pairing_status": true
+            "pairing_status": true,
+            "quote_id": true,
+            "org_quote_id": true,
+            "shipping_id": true,
+            "customer": true
         },
         "index": {
             "TWINT_PAIRING_ORDER_ID": true,
@@ -34,7 +38,8 @@
             "soap_request": true,
             "soap_response": true,
             "exception": true,
-            "created_at": true
+            "created_at": true,
+            "soap_action": true
         },
         "constraint": {
             "PRIMARY": true
@@ -53,7 +58,11 @@
             "created_at": true,
             "request_id": true,
             "order_status": true,
-            "pairing_status": true
+            "pairing_status": true,
+            "quote_id": true,
+            "org_quote_id": true,
+            "shipping_id": true,
+            "customer": true
         },
         "index": {
             "TWINT_PAIRING_HISTORY_ORDER_ID": true,

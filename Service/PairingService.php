@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Webapi\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Quote\Model\Quote;
 use Throwable;
@@ -18,9 +20,12 @@ use Twint\Magento\Model\PairingFactory;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
+use Twint\Magento\Service\Express\OrderConvertService;
+use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
 use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
+use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
 
@@ -35,7 +40,8 @@ class PairingService
         private readonly OrderService                      $orderService,
         private readonly ApiService                        $api,
         private readonly TransactionService                $transactionService,
-        private readonly InvoiceService                    $invoiceService
+        private readonly InvoiceService                    $invoiceService,
+        private readonly OrderConvertService               $convertService,
     )
     {
     }
@@ -47,19 +53,37 @@ class PairingService
      */
     public function monitor(string $id): bool
     {
-        $pairingOrg = $this->pairingRepository->getByPairingId($id);
-        if ($pairingOrg->isLocked()) {
+        $orgPairing = $this->pairingRepository->getByPairingId($id);
+
+        if ($orgPairing->isFinish()) {
+            return true;
+        }
+
+        if ($orgPairing->isLocked()) {
             return false;
         }
 
-        $this->pairingRepository->lock($pairingOrg);
+        $this->pairingRepository->lock($orgPairing);
+        $pairing = clone $orgPairing;
 
-        $pairing = clone $pairingOrg;
-        $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
-
-        if ($pairing->isFinish()) {
-            return true;
+        if ($orgPairing->isExpressCheckout()) {
+            $finish = $this->monitorExpress($orgPairing, $pairing);
+        } else {
+            $finish = $this->monitorRegular($orgPairing, $pairing);
         }
+
+        $this->pairingRepository->unlock($orgPairing);
+
+        return $finish;
+    }
+
+    /**
+     * @throws Throwable
+     * @throws LocalizedException
+     */
+    protected function monitorRegular(Pairing $orgPairing, Pairing $pairing): bool
+    {
+        $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
 
         try {
             $res = $this->api->call(
@@ -89,22 +113,66 @@ class PairingService
             return false;
         }
 
-        if ($tOrder->isSuccessful() && !$pairingOrg->isSuccessful()) {
+        if ($tOrder->isSuccessful() && !$orgPairing->isSuccessful()) {
             $order = $this->orderService->getOrder($pairing->getOrderId());
             $transaction = $this->transactionService->createCapture($order, $pairing, $history);
             $this->orderService->pay($pairing, $transaction);
-            $invoice = $this->invoiceService->create($order, $transaction);
+            $this->invoiceService->create($order, $transaction);
         }
 
-        if ($tOrder->isFailure() && !$pairingOrg->isFailure()) {
+        if ($tOrder->isFailure() && !$orgPairing->isFailure()) {
             $order = $this->orderService->getOrder($pairing->getOrderId());
             $transaction = $this->transactionService->createVoid($order, $pairing, $history);
             $this->orderService->cancel($pairing, $transaction);
         }
 
-        $this->pairingRepository->unlock($pairingOrg);
-
         return true;
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws Exception
+     */
+    protected function monitorExpress(Pairing $orgPairing, Pairing $pairing): bool
+    {
+        $client = $this->connector->build($pairing->getStoreId(), Version::NEXT);
+
+        $res = $this->api->call(
+            $client,
+            'monitorFastCheckOutCheckIn',
+            [PairingUuid::fromString($pairing->getPairingId())],
+            false
+        );
+
+        /** @var FastCheckoutCheckIn $checkIn */
+        $checkIn = $res->getReturn();
+
+        if ($orgPairing->getPairingStatus() !== $checkIn->pairingStatus()->__toString()
+        || $orgPairing->getShippingId() !== $checkIn->hasShippingMethodId() ? (string)$checkIn->shippingMethodId() : null
+            || !$orgPairing->isSameCustomerDataWith($checkIn)
+        ) {
+            $log = $this->api->saveLog($res->getRequest());
+            $pairing = $this->updateForExpress($pairing, $checkIn);
+            $history = $this->createHistory($pairing, $log);
+        }
+
+        if (empty($orgPairing->getCustomerData()) && $checkIn->hasCustomerData() && $checkIn->hasShippingMethodId()) {
+            $this->convertService->convert($pairing, $history);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn)
+    {
+        $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
+        $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
+        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
+
+        return $this->pairingRepository->save($pairing);
     }
 
     public function update(Pairing $pairing, Order $order)

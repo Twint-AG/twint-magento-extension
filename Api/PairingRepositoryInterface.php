@@ -23,5 +23,7 @@ interface PairingRepositoryInterface
 
     public function getByOrderId(string $id): ?Pairing;
 
+    public function getByQuoteId(string $id): ?Pairing;
+
     public function getUnFinishes();
 }

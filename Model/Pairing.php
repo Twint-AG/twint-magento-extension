@@ -6,7 +6,9 @@ namespace Twint\Magento\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\OrderStatus;
+use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\TransactionStatus;
 
 class Pairing extends AbstractModel implements IdentityInterface
@@ -71,6 +73,19 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isFinish(): bool
     {
+        if ($this->isExpressCheckout())
+            return $this->isExpressFinish();
+
+        return $this->isRegularFinish();
+    }
+
+    protected function isExpressFinish(): bool
+    {
+        return $this->getPairingStatus() == PairingStatus::NO_PAIRING;
+    }
+
+    protected function isRegularFinish(): bool
+    {
         $statuses = [
             TransactionStatus::ORDER_RECEIVED,
             TransactionStatus::ORDER_CONFIRMATION_PENDING,
@@ -122,6 +137,21 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getAmount(): float
     {
-        return (float) $this->getData('amount');
+        return (float)$this->getData('amount');
+    }
+
+    public function isExpressCheckout(): bool
+    {
+        return !empty($this->getQuoteId());
+    }
+
+    public function isSameCustomerDataWith(FastCheckoutCheckIn $checkIn): bool
+    {
+        $json = null;
+        if($checkIn->hasCustomerData()){
+            $json = json_encode($checkIn->hasCustomerData());
+        }
+
+        return $this->getCustomerData() === $json;
     }
 }

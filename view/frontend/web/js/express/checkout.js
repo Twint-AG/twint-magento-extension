@@ -1,37 +1,79 @@
 define([
   'jquery',
   'Twint_Magento/js/modal/qr_modal',
-], function ($, TwintModal) {
-  class TwintLoaderClass{
-    constructor($, container){
+  'mage/storage',
+], function ($, TwintModal, storage) {
+  class TwintLoaderClass {
+    constructor($, container) {
       this.$ = $;
 
       this.container = $(container);
     }
 
-    start(){
+    start() {
       this.container.trigger('processStart');
     }
 
-    stop(){
+    stop() {
       let stop = this.container.trigger.bind(this.container, 'processStop');
       stop();
     }
   }
 
-  class TwintExpressCheckoutClass{
-    constructor($, modal) {
+  class ExpressStatusRefresh {
+    constructor($, storage) {
+      this.$ = $;
+      this.storage = storage;
+
+      this.url = window.checkout.expressStatusUrl;
+      this.processing = false;
+    }
+
+    setId(value) {
+      this.id = value;
+    }
+
+    onProcessing() {
+      if (this.processing)
+        return;
+      setTimeout(this.check.bind(this), 5000);
+    }
+
+    onPaid() {
+      console.log("paid");
+    }
+
+    check() {
+      const self = this;
+      this.processing = true;
+
+      return this.storage.get(this.url + '?id=' + this.id).done(
+        function (response) {
+          self.processing = false;
+
+          if (response.finish === true)
+            return self.onPaid();
+
+          return self.onProcessing();
+        }
+      );
+    }
+  }
+
+  class TwintExpressCheckoutClass {
+    constructor($, modal, storage) {
       this.$ = $;
       this.url = window.checkout.expressCheckoutUrl;
       this.modal = modal;
+      this.storage = storage;
       this.loader = new TwintLoaderClass(this.$, 'body');
     }
 
-    openMiniCart(){
+    openMiniCart() {
       this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
     }
 
-    checkout(formData, onSuccess = null, onError= null){
+    checkout(formData, onSuccess = null, onError = null) {
       let self = this;
       this.$.ajax({
         url: self.url,
@@ -49,11 +91,11 @@ define([
         success: function (res) {
           self.loader.stop();
 
-          if(res.backUrl){
+          if (res.backUrl) {
             window.location = res.backUrl;
           }
 
-          if(res.reload){
+          if (res.reload) {
             window.location.reload();
           }
 
@@ -65,7 +107,7 @@ define([
             self.showQR(res);
           }
 
-          if(typeof onSuccess == 'function'){
+          if (typeof onSuccess == 'function') {
             onSuccess(res);
           }
         },
@@ -74,7 +116,7 @@ define([
           self.loader.stop();
           console.log("Express checkout error: " + res.responseText);
 
-          if(typeof onError == 'function'){
+          if (typeof onError == 'function') {
             onError(res);
           }
         },
@@ -88,9 +130,10 @@ define([
     }
 
     showQR(data) {
+      this.modal.setStatusRefresher(new ExpressStatusRefresh(this.$, this.storage))
       this.modal.init(
         {
-          id: data.id,
+          id: data.pairingId,
           token: data.token,
           amount: data.amount,
           mode: 'express'
@@ -100,5 +143,5 @@ define([
     }
   }
 
-  return new TwintExpressCheckoutClass($, TwintModal);
+  return new TwintExpressCheckoutClass($, TwintModal, storage);
 });

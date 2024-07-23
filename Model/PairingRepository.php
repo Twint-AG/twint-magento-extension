@@ -109,6 +109,25 @@ class PairingRepository implements PairingRepositoryInterface
         return null;
     }
 
+    public function getByQuoteId(string $id): ?Pairing
+    {
+        $criteria = $this->criteriaBuilder->addFilter('quote_id', $id)
+            ->create();
+        $items = $this->getList($criteria)
+            ->getItems();
+
+        if (!empty($items)) {
+            $item = reset($items);
+
+            $entity = $this->factory->create();
+            $entity->setData($item);
+
+            return $entity;
+        }
+
+        return null;
+    }
+
     public function getByOrderId(string $id): ?Pairing
     {
         $criteria = $this->criteriaBuilder->addFilter('order_id', $id)

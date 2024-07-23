@@ -16,6 +16,10 @@
         <plugin name="express_checkout" type="Twint\Magento\Plugin\ExpressCheckoutPlugin"/>
     </type>
 
+    <type name="Magento\Quote\Model\SubmitQuoteValidator">
+        <plugin name="disable_address_validation" type="Twint\Magento\Plugin\ExpressAddressValidationPlugin"/>
+    </type>
+
     <type name="Magento\Framework\App\RouterList">
         <arguments>
             <argument name="routers" xsi:type="array">

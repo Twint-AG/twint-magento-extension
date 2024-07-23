@@ -8,7 +8,6 @@ const config = {
       'Twint_Magento/js/model/checkout': 'Twint_Magento/js/model/checkout',
       'Magento_Catalog/js/validate-product-original': 'Magento_Catalog/js/validate-product',
       'Magento_Catalog/js/validate-product': 'Twint_Magento/js/express/validate-product',
-      'Twint_Magento/js/twint': 'Twint_Magento/js/twint',
       'catalogAddToCart-original': 'Magento_Catalog/js/catalog-add-to-cart',
       'catalogAddToCart': 'Twint_Magento/js/express/overidedAddToCart',
       'Twint_Magento/js/express/cart-checkout': 'Twint_Magento/js/express/cart-checkout',
