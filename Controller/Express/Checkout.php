@@ -72,34 +72,10 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 
         try {
             if (!$wholeCart) {
-//                if (isset($params['qty'])) {
-//                    $filter = new LocalizedToNormalized(
-//                        ['locale' => $this->_objectManager->get(
-//                            ResolverInterface::class
-//                        )->getLocale()]
-//                    );
-//                    $params['qty'] = $this->quantityProcessor->prepareQuantity($params['qty']);
-//                    $params['qty'] = $filter->filter($params['qty']);
-//                }
-//
-//                $product = $this->_initProduct();
-//                /** Check product availability */
-//                if (!$product) {
-//                    $this->messageManager->addErrorMessage(__("The product is not available"));
-//                    return $json->setData([
-//                        'success' => false
-//                    ]);
-//                }
-//
-//                $this->cart->addProduct($product, $params);
-//
-//                $related = $this->getRequest()->getParam('related_product');
-//                if (!empty($related)) {
-//                    $this->cart->addProductsByIds(explode(',', $related));
-//                }
+                $result = $this->parentCall();
 
-                $result = parent::execute();
-                dd($result);
+                if (isset($result['backUrl']) || isset($result['reload']))
+                    return $json->setData($result);
             }
 
             /** @var Pairing $pairing */
@@ -121,7 +97,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
         }
     }
 
-    public function parentCall()
+    public function parentCall(): array
     {
         if (!$this->_formKeyValidator->validate($this->getRequest())) {
             $this->messageManager->addErrorMessage(

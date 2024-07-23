@@ -28,7 +28,7 @@ define([
     }
 
     openMiniCart(){
-      $('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
+      this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
     }
 
     checkout(formData, onSuccess = null, onError= null){
@@ -51,6 +51,10 @@ define([
 
           if(res.backUrl){
             window.location = res.backUrl;
+          }
+
+          if(res.reload){
+            window.location.reload();
           }
 
           if (res.showMiniCart) {
