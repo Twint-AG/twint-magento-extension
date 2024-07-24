@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Plugin;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
-use Magento\Framework\Validator\Exception;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\SubmitQuoteValidator;
 use Twint\Magento\Model\Method\TwintExpressMethod;
@@ -19,15 +17,18 @@ class ExpressAddressValidationPlugin
     {
     }
 
-    /**
-     * @throws Exception
-     * @throws LocalizedException
-     */
-    public function aroundValidateQuote(SubmitQuoteValidator $validator, callable $process, Quote $quote): void
-    {
+    public function aroundValidateQuote(
+        SubmitQuoteValidator $subject,
+        \Closure $proceed,
+        Quote $quote
+    ): void {
         $payment = $quote->getPayment();
-        if ($payment->getMethod() !== TwintExpressMethod::CODE) {
-            $validator->validateQuote($quote);
+        if ($payment->getMethod() === TwintExpressMethod::CODE) {
+            // Skip validation for TWINT Express methods
+            return;
         }
+
+        // Call the original method for TWINT Express
+        $proceed($quote);
     }
 }

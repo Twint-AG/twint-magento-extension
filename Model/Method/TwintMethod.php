@@ -136,7 +136,7 @@ abstract class TwintMethod extends AbstractMethod
         }
         $payment->setAdditionalInformation('pairing', $pairing->getPairingId());
 
-        return parent::authorize($payment, $amount);
+        return $this;
     }
 
     /**
