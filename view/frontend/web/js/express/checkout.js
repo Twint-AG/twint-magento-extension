@@ -2,24 +2,8 @@ define([
   'jquery',
   'Twint_Magento/js/modal/qr_modal',
   'mage/storage',
-], function ($, TwintModal, storage) {
-  class TwintLoaderClass {
-    constructor($, container) {
-      this.$ = $;
-
-      this.container = $(container);
-    }
-
-    start() {
-      this.container.trigger('processStart');
-    }
-
-    stop() {
-      let stop = this.container.trigger.bind(this.container, 'processStop');
-      stop();
-    }
-  }
-
+  'Twint_Magento/js/express/loader'
+], function ($, TwintModal, storage, loader) {
   class ExpressStatusRefresh {
     constructor($, storage) {
       this.$ = $;
@@ -66,7 +50,7 @@ define([
       this.url = window.checkout.expressCheckoutUrl;
       this.modal = modal;
       this.storage = storage;
-      this.loader = new TwintLoaderClass(this.$, 'body');
+      this.loader = loader;
     }
 
     openMiniCart() {

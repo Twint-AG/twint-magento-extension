@@ -1,5 +1,6 @@
 @import './modal.css';
 @import './button.css';
+@import './loader.css';
 
 @tailwind utilities;
 

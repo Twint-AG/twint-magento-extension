@@ -33,7 +33,7 @@ class TwintExpressMethod extends TwintMethod
         return MethodInterface::ACTION_AUTHORIZE_CAPTURE;
     }
 
-    public function capture(InfoInterface $payment, $amount)
+    public function capture(InfoInterface $payment, $amount): TwintExpressMethod|static
     {
         $amount = $this->priceCurrency->convertAndRound($amount);
 

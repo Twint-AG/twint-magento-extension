@@ -75,10 +75,12 @@ class OrderConvertService
         $this->saveAddress($shipping, $quote);
         $this->setPaymentMethod($quote);
 
-        return $this->quoteManagement->placeOrder($quote->getId());
+        $orderId =  $this->quoteManagement->placeOrder($quote->getId());
+
     }
 
-    private function setPaymentMethod(Quote $quote){
+    private function setPaymentMethod(Quote $quote): void
+    {
         $payment = $quote->getPayment();
         $payment->setMethod(TwintExpressMethod::CODE);
 

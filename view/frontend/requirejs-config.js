@@ -12,6 +12,7 @@ const config = {
       'catalogAddToCart': 'Twint_Magento/js/express/overidedAddToCart',
       'Twint_Magento/js/express/cart-checkout': 'Twint_Magento/js/express/cart-checkout',
       'Twint_Magento/js/express/checkout': 'Twint_Magento/js/express/checkout',
+      'Twint_Magento/js/express/loader': 'Twint_Magento/js/express/loader',
     }
   }
 };
