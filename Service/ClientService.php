@@ -39,7 +39,7 @@ class ClientService
         $res = $this->api->call($client, 'startFastCheckoutOrder', [
             PairingUuid::fromString($pairing->getPairingId()),
             new UnfiledMerchantTransactionReference($orderId),
-            new Money(TwintConstant::CURRENCY, $amount/100),
+            new Money(TwintConstant::CURRENCY, $amount),
         ]);
 
         /** @var Order $twintOrder */

@@ -11,6 +11,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
+use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\ConnectionException;
@@ -34,6 +35,7 @@ class PairingRepository implements PairingRepositoryInterface
         private CollectionFactory              $collectionFactory,
         private SearchResultsFactory           $searchResultsFactory,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
+        private readonly SortOrderBuilder      $sortOrderBuilder,
         private readonly FilterGroupBuilder    $filterGroupBuilder,
         private readonly FilterBuilder         $filterBuilder,
         private readonly ResourceConnection    $resource,
@@ -133,6 +135,12 @@ class PairingRepository implements PairingRepositoryInterface
     public function getByOrderId(string $id): ?Pairing
     {
         $criteria = $this->criteriaBuilder->addFilter('order_id', $id)
+            ->addSortOrder(
+                $this->sortOrderBuilder
+                    ->setField('id')
+                    ->setDescendingDirection()
+                    ->create()
+            )
             ->create();
         $items = $this->getList($criteria)
             ->getItems();
