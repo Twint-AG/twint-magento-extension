@@ -54,33 +54,36 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $params = $this->getRequest()->getParams();
 
-        $wholeCart = (bool)($params['whole_cart'] ?? false);
-        $items = $this->cart->getItems();
-        $count = is_array($items) ? count($items) : $items->count();
-
-        if ($count > 0 && !$wholeCart) {
-            $result = $this->parentCall();
-            if (array_keys($result) == ['backUrl'])
-                return $json->setData($result);
-
-            $this->messageManager->addSuccessMessage(__("You have existing products in the shopping cart. Please review your shopping cart before continue."));
-
-            return $json->setData(array_merge($result, [
-                'showMiniCart' => true
-            ]));
-        }
-
         try {
+            $wholeCart = (bool)($params['whole_cart'] ?? false);
+
+            $items = $this->cart->getItems();
+            $count = is_array($items) ? count($items) : $items->count();
+
             if (!$wholeCart) {
                 $result = $this->parentCall();
 
                 if (isset($result['backUrl']) || isset($result['reload']))
                     return $json->setData($result);
+
+                if ($count > 0) {
+                    $this->messageManager->addSuccessMessage(__("You have existing products in the shopping cart. Please review your shopping cart before continue."));
+
+                    return $json->setData(array_merge($result, [
+                        'showMiniCart' => true
+                    ]));
+                }
+            }
+
+            // Checkout in cart but don't have item
+            if ($wholeCart && $count == 0) {
+                return $json->setData([
+                    'reload' => true
+                ]);
             }
 
             /** @var Pairing $pairing */
             $pairing = $this->checkoutService->checkout();
-
 
             return $json->setData([
                 'success' => true,
@@ -90,6 +93,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
             ]);
         } catch (\Throwable $e) {
+            dd($e);
             $this->_objectManager->get(LoggerInterface::class)->critical($e);
 
             return $json->setData([

@@ -7,15 +7,16 @@ namespace Twint\Magento\Cron;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
-use Twint\Magento\Service\PairingService;
+use Twint\Magento\Service\MonitorService;
 
 class UpdatePairingStatus
 {
     public function __construct(
         private readonly PairingRepositoryInterface $repository,
-        private readonly PairingService $pairingService,
-        private readonly LoggerInterface $logger
-    ) {
+        private readonly MonitorService             $monitorService,
+        private readonly LoggerInterface            $logger
+    )
+    {
     }
 
     public function execute(): void
@@ -25,7 +26,7 @@ class UpdatePairingStatus
         /** @var array $pairing */
         foreach ($pairings->getItems() as $pairing) {
             try {
-                $this->pairingService->monitor($pairing['pairing_id']);
+                $this->monitorService->monitor($pairing['pairing_id']);
             } catch (Throwable $e) {
                 $this->logger->error('Cron UpdatePairingStatus: ' . $e->getMessage());
             }

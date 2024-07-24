@@ -30,7 +30,7 @@ use Twint\Sdk\Value\Version;
 class CheckoutService
 {
     public function __construct(
-        private CartService                 $cartService,
+        private QuoteService                $cartService,
         private readonly ClientBuilder      $connector,
         private ApiService                  $api,
         private ShipmentEstimationInterface $shipmentEstimation,

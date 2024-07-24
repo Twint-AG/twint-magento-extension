@@ -100,14 +100,14 @@ class Pairing extends AbstractModel implements IdentityInterface
         return $this->getData('order_id');
     }
 
-    public function getQuoteId(): ?string
+    public function getQuoteId(): ?int
     {
-        return $this->getData('quote_id');
+        return (int) $this->getData('quote_id');
     }
 
-    public function getOriginalQuoteId(): ?string
+    public function getOriginalQuoteId(): ?int
     {
-        return $this->getData('org_quote_id');
+        return (int) $this->getData('org_quote_id');
     }
 
     public function getShippingId(): ?string
@@ -138,6 +138,11 @@ class Pairing extends AbstractModel implements IdentityInterface
     public function getAmount(): float
     {
         return (float)$this->getData('amount');
+    }
+
+    public function getCaptured(): bool
+    {
+        return (bool)$this->getData('captured');
     }
 
     public function isExpressCheckout(): bool

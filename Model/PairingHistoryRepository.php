@@ -9,6 +9,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\ConnectionException;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -22,12 +23,14 @@ use Twint\Magento\Model\ResourceModel\PairingHistory\CollectionFactory;
 class PairingHistoryRepository implements PairingHistoryRepositoryInterface
 {
     public function __construct(
-        private PairingHistoryFactory $factory,
-        private readonly ResourceModel $resourceModel,
-        private CollectionFactory $collectionFactory,
-        private SearchResultsFactory $searchResultsFactory,
+        private PairingHistoryFactory         $factory,
+        private readonly ResourceModel        $resourceModel,
+        private CollectionFactory             $collectionFactory,
+        private SearchResultsFactory          $searchResultsFactory,
+        private readonly ResourceConnection   $resource,
         private ?CollectionProcessorInterface $collectionProcessor = null
-    ) {
+    )
+    {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -78,5 +81,26 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
         $results->setItems($collection->getData());
 
         return $results;
+    }
+
+    public function updateOrderId(string $orderId, int|string $quoteId): void
+    {
+        // Get the connection
+        $connection = $this->resource->getConnection();
+
+        // Define the table name
+        $tableName = ResourceModel::TABLE_NAME;
+
+        // Write the SQL update query
+        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id";
+
+        // Bind parameters
+        $bind = [
+            'order_id' => $orderId,
+            'quote_id' => $quoteId
+        ];
+
+        // Execute the query
+        $connection->query($sql, $bind);
     }
 }

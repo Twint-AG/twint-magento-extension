@@ -10,7 +10,7 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Model\QuoteRepository;
 
-class CartService
+class QuoteService
 {
     public function __construct(
         private QuoteFactory    $quoteFactory,
@@ -73,5 +73,14 @@ class CartService
         $this->quoteRepository->save($quote);
 
         return [$currentQuote, $quote];
+    }
+
+    public function removeAllItems(Quote $quote): Quote
+    {
+        $quote->removeAllItems();
+        $quote->collectTotals();
+        $this->quoteRepository->save($quote);
+
+        return $quote;
     }
 }

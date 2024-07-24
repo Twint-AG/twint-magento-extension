@@ -11,6 +11,7 @@ use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Model\Pairing;
 use Twint\Sdk\Value\Money;
+use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
 use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
@@ -28,18 +29,25 @@ class ClientService
     {
     }
 
-    public function startFastCheckoutOrder(InfoInterface $payment, float $amount, Pairing $pairing): ApiResponse
+    public function startFastCheckoutOrder(InfoInterface $payment, float $amount, Pairing $pairing): array
     {
         $client = $this->connector->build($pairing->getStoreId());
 
         $order = $payment->getOrder();
         $orderId = $order->getIncrementId();
 
-        return $this->api->call($client, 'startFastCheckoutOrder', [
+        $res = $this->api->call($client, 'startFastCheckoutOrder', [
             PairingUuid::fromString($pairing->getPairingId()),
             new UnfiledMerchantTransactionReference($orderId),
-            new Money(TwintConstant::CURRENCY, $amount),
+            new Money(TwintConstant::CURRENCY, $amount/100),
         ]);
+
+        /** @var Order $twintOrder */
+        $twintOrder = $res->getReturn();
+
+        list($pairing, $history) = $this->pairingService->create($amount, $res, $payment, true);
+
+        return [$twintOrder, $pairing, $history];
     }
 
     /**

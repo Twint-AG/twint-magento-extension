@@ -39,9 +39,9 @@ class TwintExpressMethod extends TwintMethod
 
         $pairing = $this->getPairing($payment);
 
-        $this->clientService->startFastCheckoutOrder($payment, $amount, $pairing);
+        list($twintOrder, $pairing, $history) = $this->clientService->startFastCheckoutOrder($payment, $amount, $pairing);
 
-        $transactionId = $pairing->getPairingId() . '-' . time();
+        $transactionId = $pairing->getPairingId() . '-' . $history->getId();
 
         if ($payment instanceof Payment) {
             $payment->setTransactionId($transactionId);

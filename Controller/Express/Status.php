@@ -15,13 +15,13 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Twint\Magento\Controller\Regular\BaseAction;
-use Twint\Magento\Service\PairingService;
+use Twint\Magento\Service\MonitorService;
 
 class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
 {
     public function __construct(
         Context                         $context,
-        private readonly PairingService $pairingService
+        private readonly MonitorService $monitorService
     )
     {
         parent::__construct($context);
@@ -41,6 +41,6 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
             throw new UnexpectedValueException("Pairing Id is required");
         }
 
-        return $json->setData(['finish' => $this->pairingService->monitor($id)]);
+        return $json->setData(['finish' => $this->monitorService->monitor($id)]);
     }
 }

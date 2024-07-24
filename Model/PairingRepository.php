@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model;
 
-use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
@@ -13,6 +12,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsFactory;
 use Magento\Framework\Api\searchResultsInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\ConnectionException;
 use Magento\Framework\DB\Sql\Expression;
 use Magento\Framework\Exception\AlreadyExistsException;
@@ -29,15 +29,17 @@ use Zend_Db_Expr;
 class PairingRepository implements PairingRepositoryInterface
 {
     public function __construct(
-        private PairingFactory $factory,
-        private readonly ResourceModel $resourceModel,
-        private CollectionFactory $collectionFactory,
-        private SearchResultsFactory $searchResultsFactory,
+        private PairingFactory                 $factory,
+        private readonly ResourceModel         $resourceModel,
+        private CollectionFactory              $collectionFactory,
+        private SearchResultsFactory           $searchResultsFactory,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
-        private readonly FilterGroupBuilder $filterGroupBuilder,
-        private readonly FilterBuilder $filterBuilder,
-        private ?CollectionProcessorInterface $collectionProcessor = null
-    ) {
+        private readonly FilterGroupBuilder    $filterGroupBuilder,
+        private readonly FilterBuilder         $filterBuilder,
+        private readonly ResourceConnection    $resource,
+        private ?CollectionProcessorInterface  $collectionProcessor = null
+    )
+    {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -59,7 +61,7 @@ class PairingRepository implements PairingRepositoryInterface
      * @throws CouldNotSaveException
      * @throws AlreadyExistsException
      */
-    public function save(Pairing $pairing)
+    public function save(Pairing $pairing): Pairing
     {
         try {
             $this->resourceModel->save($pairing);
@@ -223,5 +225,26 @@ class PairingRepository implements PairingRepositoryInterface
             ->create();
 
         return $this->getList($criteria);
+    }
+
+    public function updateOrderId(string $orderId, int|string $quoteId): void
+    {
+        // Get the connection
+        $connection = $this->resource->getConnection();
+
+        // Define the table name
+        $tableName = ResourceModel::TABLE_NAME;
+
+        // Write the SQL update query
+        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id";
+
+        // Bind parameters
+        $bind = [
+            'order_id' => $orderId,
+            'quote_id' => $quoteId
+        ];
+
+        // Execute the query
+        $connection->query($sql, $bind);
     }
 }

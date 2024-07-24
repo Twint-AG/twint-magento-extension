@@ -24,7 +24,7 @@ define([
     }
 
     onPaid() {
-      console.log("paid");
+      alert("Order is created success. Check in admin")
     }
 
     check() {

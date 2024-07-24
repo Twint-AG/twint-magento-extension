@@ -18,6 +18,7 @@
         <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID"/>
         <column xsi:type="varchar" name="shipping_id" length="255" nullable="true" comment="Shipping ID"/>
         <column xsi:type="json" name="customer" nullable="true" comment="Customer Data"/>
+        <column xsi:type="smallint" name="captured" unsigned="true" nullable="false" identity="false" default="0" comment="Captured"/>
 
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
@@ -88,6 +89,7 @@
         <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID"/>
         <column xsi:type="varchar" name="shipping_id" length="255" nullable="true" comment="Shipping ID"/>
         <column xsi:type="json" name="customer" nullable="true" comment="Customer Data"/>
+        <column xsi:type="smallint" name="captured" unsigned="true" nullable="false" identity="false" default="0" comment="Captured"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="int" name="request_id" unsigned="true" nullable="true" comment="Request ID"/>

@@ -17,6 +17,10 @@
                 <param name="order_id">*</param>
             </filterUrlParams>
             <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
         </settings>
         <aclResource>Magento_Sales::sales_order</aclResource>
         <dataProvider class="Twint\Magento\Provider\Data\PairingGridDataProvider" name="sales_order_view_pairing_grid_data_source">
@@ -46,7 +50,7 @@
             <settings>
                 <filter>text</filter>
                 <label translate="true">ID</label>
-                <sorting>asc</sorting>
+                <sorting>desc</sorting>
             </settings>
         </column>
         <column name="token">

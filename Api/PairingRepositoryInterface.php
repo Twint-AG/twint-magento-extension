@@ -11,7 +11,7 @@ interface PairingRepositoryInterface
 {
     public function getById($id);
 
-    public function save(Pairing $pairing);
+    public function save(Pairing $pairing): Pairing;
 
     public function lock(Pairing $pairing);
 
@@ -26,4 +26,6 @@ interface PairingRepositoryInterface
     public function getByQuoteId(string $id): ?Pairing;
 
     public function getUnFinishes();
+
+    public function updateOrderId(string $orderId, int|string $quoteId): void;
 }

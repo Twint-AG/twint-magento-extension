@@ -14,4 +14,6 @@ interface PairingHistoryRepositoryInterface
     public function save(PairingHistory $pairing);
 
     public function getList(SearchCriteriaInterface $criteria);
+
+    public function updateOrderId(string $orderId, int|string $quoteId): void;
 }
