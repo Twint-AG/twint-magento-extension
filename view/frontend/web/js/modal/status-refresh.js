@@ -39,6 +39,10 @@ define([
     onProcessing() {
       setTimeout(this.check.bind(this), 5000);
     }
+
+    setModal(){
+
+    }
   }
 
 

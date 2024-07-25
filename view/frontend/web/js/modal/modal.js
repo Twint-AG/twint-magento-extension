@@ -28,10 +28,14 @@ define([
       this.iosConnector.init(config);
 
       this.statusRefresher.setId(config.id);
+      this.statusRefresher.setModal(this.modal);
       this.statusRefresher.onProcessing();
     },
     open: function () {
       this.modal.open();
+    },
+    close: function (){
+      this.modal.close();
     }
   };
 });

@@ -48,7 +48,8 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
 
         return $json->setData([
             'finish' => $monitorStatus->getFinished(),
-            'order' => $monitorStatus->getOrderIncrement()
+            'status' => $monitorStatus->getStatus(),
+            'order' => $monitorStatus->getAdditionalInformation('order')
         ]);
     }
 }

@@ -12,6 +12,7 @@ use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Model\Api\ApiResponse;
+use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingFactory;
 use Twint\Magento\Model\PairingHistory;
@@ -21,6 +22,7 @@ use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
 use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
+use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
@@ -46,7 +48,7 @@ class PairingService
      * @throws Throwable
      * @throws LocalizedException
      */
-    public function monitorRegular(Pairing $orgPairing, Pairing $pairing): bool
+    public function monitorRegular(Pairing $orgPairing, Pairing $pairing): MonitorStatus
     {
         $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
 
@@ -75,7 +77,7 @@ class PairingService
         }
 
         if ($tOrder->isPending()) {
-            return false;
+            return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
         /**
@@ -89,15 +91,19 @@ class PairingService
             $this->orderService->pay($pairing, $transaction);
             $this->invoiceService->create($order, $transaction);
             $pairing = $this->markAsCaptured($pairing);
+            
+            return MonitorStatus::fromValues(true, MonitorStatus::STATUS_PAID);
         }
 
         if ($tOrder->isFailure() && !$orgPairing->isFailure()) {
             $order = $this->orderService->getOrder($pairing->getOrderId());
             $transaction = $this->transactionService->createVoid($order, $pairing, $history);
             $this->orderService->cancel($pairing, $transaction);
+
+            return MonitorStatus::fromValues(true, MonitorStatus::STATUS_CANCELLED);
         }
 
-        return true;
+        return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
     }
 
     private function markAsCaptured(Pairing $pairing): Pairing
@@ -110,9 +116,9 @@ class PairingService
     /**
      * @param Pairing $orgPairing
      * @param Pairing $pairing
-     * @return array
+     * @return MonitorStatus
      */
-    public function monitorExpress(Pairing $orgPairing, Pairing $pairing): array
+    public function monitorExpress(Pairing $orgPairing, Pairing $pairing): MonitorStatus
     {
         $client = $this->connector->build($pairing->getStoreId(), Version::NEXT);
 
@@ -126,8 +132,11 @@ class PairingService
         /** @var FastCheckoutCheckIn $checkIn */
         $checkIn = $res->getReturn();
 
+        $status = MonitorStatus::STATUS_IN_PROGRESS;
+        $finished = false;
+
         if ($orgPairing->getPairingStatus() !== $checkIn->pairingStatus()->__toString()
-        || $orgPairing->getShippingId() !== $checkIn->hasShippingMethodId() ? (string)$checkIn->shippingMethodId() : null
+            || $orgPairing->getShippingId() !== ($checkIn->hasShippingMethodId() ? (string)$checkIn->shippingMethodId() : null)
             || !$orgPairing->isSameCustomerDataWith($checkIn)
         ) {
             $log = $this->api->saveLog($res->getRequest());
@@ -136,10 +145,20 @@ class PairingService
         }
 
         if (empty($orgPairing->getCustomerData()) && $checkIn->hasCustomerData() && $checkIn->hasShippingMethodId()) {
-            return [true, $pairing, $history];
+            $status = MonitorStatus::STATUS_PAID;
+
+            return MonitorStatus::fromValues(true, $status, [
+                'pairing' => $pairing,
+                'history' => $history
+            ]);
         }
 
-        return [false, null, null];
+        if($pairing->getPairingStatus() == PairingStatus::NO_PAIRING){
+            $finished = true;
+            $status = MonitorStatus::STATUS_CANCELLED;
+        }
+
+        return MonitorStatus::fromValues($finished, $status);
     }
 
     public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn): Pairing
@@ -178,7 +197,7 @@ class PairingService
         $pairing->setData('order_id', (string)$twintOrder->merchantTransactionReference());
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 
-        $pairing->setData('captured', (int) $captured);
+        $pairing->setData('captured', (int)$captured);
 
         $pairing = $this->pairingRepository->save($pairing);
 

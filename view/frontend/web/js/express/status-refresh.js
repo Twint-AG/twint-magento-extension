@@ -23,11 +23,29 @@ define([
       }
 
       onPaid(response) {
+        this.showSuccess(response.order);
+      }
+
+      setModal(modal){
+        this.modal = modal;
+      }
+
+      onCancelled(){
+        this.modal.close();
+      }
+
+      onFinish(response){
         let sections = ['cart'];
         this.customerData.invalidate(sections);
         this.customerData.reload(sections, true);
 
-        this.showSuccess(response.order);
+        if(response.finish && response.status > 0){
+          return this.onPaid(response);
+        }
+
+        if(response.finish && response.status < 0){
+          return this.onCancelled();
+        }
       }
 
       check() {
@@ -39,7 +57,7 @@ define([
             self.processing = false;
 
             if (response.finish === true)
-              return self.onPaid(response);
+              return self.onFinish(response);
 
             return self.onProcessing();
           }

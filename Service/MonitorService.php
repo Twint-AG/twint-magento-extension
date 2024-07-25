@@ -10,7 +10,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Exception;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
-use Twint\Magento\Model\MonitorStatus;
+use Twint\Magento\Model\Monitor\ExpressMonitorStatus;
+use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Service\Express\OrderConvertService;
 
 class MonitorService
@@ -37,27 +38,31 @@ class MonitorService
         $orgPairing = $this->pairingRepository->getByPairingId($id);
 
         if ($orgPairing->isFinish()) {
-            return MonitorStatus::fromBool(true);
+            return MonitorStatus::fromValues(true, MonitorStatus::extractStatus($orgPairing));
         }
 
         if ($orgPairing->isLocked()) {
-            return MonitorStatus::fromBool(false);
+            return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
         $this->pairingRepository->lock($orgPairing);
         $pairing = clone $orgPairing;
 
         if ($orgPairing->isExpressCheckout()) {
-            list($finished, $pairing, $history) = $this->pairingService->monitorExpress($orgPairing, $pairing);
-            if ($finished) {
-                $orderIncrement = $this->convertService->convert($pairing, $history);
+            $status = $this->pairingService->monitorExpress($orgPairing, $pairing);
+            if ($status->paid()) {
+                $orderIncrement = $this->convertService->convert(
+                    $status->getAdditionalInformation('pairing'),
+                    $status->getAdditionalInformation('history'),
+                );
+                $status->setAdditionalInformation('order', $orderIncrement);
             }
         } else {
-            $finished = $this->pairingService->monitorRegular($orgPairing, $pairing);
+            $status = $this->pairingService->monitorRegular($orgPairing, $pairing);
         }
 
         $this->pairingRepository->unlock($orgPairing);
 
-        return new MonitorStatus($finished, $orderIncrement ?? '');
+        return $status;
     }
 }

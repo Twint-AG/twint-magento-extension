@@ -83,6 +83,10 @@ define([
     open() {
       this.$target.modal('openModal');
     }
+
+    close() {
+      this.$target.modal('closeModal');
+    }
   }
 
   return QrGenerator;
