@@ -16,12 +16,14 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Twint\Magento\Controller\Regular\BaseAction;
 use Twint\Magento\Service\MonitorService;
+use Twint\Magento\Util\CryptoHandler;
 
 class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
 {
     public function __construct(
         Context                         $context,
-        private readonly MonitorService $monitorService
+        private readonly MonitorService $monitorService,
+        private readonly CryptoHandler $cryptoHandler
     )
     {
         parent::__construct($context);
@@ -41,6 +43,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
             throw new UnexpectedValueException("Pairing Id is required");
         }
 
+        $id = $this->cryptoHandler->unHash($id);
         $monitorStatus = $this->monitorService->monitor($id);
 
         return $json->setData([

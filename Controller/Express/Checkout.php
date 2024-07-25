@@ -27,6 +27,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
+use Twint\Magento\Util\CryptoHandler;
 
 class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 {
@@ -38,6 +39,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
         private Session                     $checkoutSession,
         private StoreManagerInterface       $storeManager,
         private Validator                   $formKeyValidator,
+        private CryptoHandler   $cryptoHandler,
         Cart                                $cart,
         ProductRepositoryInterface          $productRepository,
         protected ?RequestQuantityProcessor $quantityProcessor = null
@@ -88,12 +90,11 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             return $json->setData([
                 'success' => true,
                 'id' => $pairing->getId(),
-                'pairingId' => $pairing->getPairingId(),
+                'pairingId' => $this->cryptoHandler->hash($pairing->getPairingId()),
                 'token' => $pairing->getToken(),
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
             ]);
         } catch (\Throwable $e) {
-            dd($e);
             $this->_objectManager->get(LoggerInterface::class)->critical($e);
 
             return $json->setData([
