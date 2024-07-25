@@ -6,6 +6,5 @@
         <referenceContainer name="main">
             <block class="Twint\Magento\Block\Frontend\ScanQrModal" name="twint-qr-modal" template="qr.phtml" />
         </referenceContainer>
-
     </body>
 </page>

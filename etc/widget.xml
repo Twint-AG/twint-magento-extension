@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="products_list">
+        <parameters>
+            <parameter name="template" xsi:type="select">
+                <options>
+                    <option name="express" value="Twint_Magento::widget/product/express.phtml">
+                        <label translate="true">Products Grid Template - TWINT Express Checkout</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+        <containers>
+            <container name="content">
+                <template name="express" value="express" />
+            </container>
+            <container name="content.top">
+                <template name="express" value="express" />
+            </container>
+            <container name="content.bottom">
+                <template name="express" value="express" />
+            </container>
+        </containers>
+    </widget>
+</widgets>

@@ -30,4 +30,15 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Twint\Magento\Block\Frontend\Express\Screen\Category\Button">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="template" xsi:type="string">Twint_Magento::express/button-in-box.phtml</item>
+                <item name="alias" xsi:type="string">twint.express.box</item>
+                <item name="button_id" xsi:type="string">twint-express-in-box</item>
+                <item name="link_data_action" xsi:type="string">twint-in-context-box</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

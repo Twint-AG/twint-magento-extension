@@ -20,6 +20,8 @@
         <plugin name="disable_address_validation" type="Twint\Magento\Plugin\ExpressAddressValidationPlugin"/>
     </type>
 
+    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Twint\Magento\Block\Frontend\Product\ProductList" />
+
     <type name="Magento\Framework\App\RouterList">
         <arguments>
             <argument name="routers" xsi:type="array">
