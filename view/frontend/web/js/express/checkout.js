@@ -1,56 +1,17 @@
 define([
   'jquery',
-  'Twint_Magento/js/modal/qr_modal',
-  'mage/storage',
-  'Twint_Magento/js/express/loader'
-], function ($, TwintModal, storage, loader) {
-  class ExpressStatusRefresh {
-    constructor($, storage) {
-      this.$ = $;
-      this.storage = storage;
-
-      this.url = window.checkout.expressStatusUrl;
-      this.processing = false;
-    }
-
-    setId(value) {
-      this.id = value;
-    }
-
-    onProcessing() {
-      if (this.processing)
-        return;
-      setTimeout(this.check.bind(this), 5000);
-    }
-
-    onPaid() {
-      alert("Order is created success. Check in admin")
-    }
-
-    check() {
-      const self = this;
-      this.processing = true;
-
-      return this.storage.get(this.url + '?id=' + this.id).done(
-        function (response) {
-          self.processing = false;
-
-          if (response.finish === true)
-            return self.onPaid();
-
-          return self.onProcessing();
-        }
-      );
-    }
-  }
+  'Twint_Magento/js/modal/modal',
+  'Twint_Magento/js/express/loader',
+  'Twint_Magento/js/express/status-refresh'
+], function ($, TwintModal, loader, refresher) {
 
   class TwintExpressCheckoutClass {
-    constructor($, modal, storage) {
+    constructor($, modal, refresher) {
       this.$ = $;
       this.url = window.checkout.expressCheckoutUrl;
       this.modal = modal;
-      this.storage = storage;
       this.loader = loader;
+      this.refresher = refresher;
     }
 
     openMiniCart() {
@@ -114,7 +75,7 @@ define([
     }
 
     showQR(data) {
-      this.modal.setStatusRefresher(new ExpressStatusRefresh(this.$, this.storage))
+      this.modal.setStatusRefresher(this.refresher)
       this.modal.init(
         {
           id: data.pairingId,
@@ -127,5 +88,5 @@ define([
     }
   }
 
-  return new TwintExpressCheckoutClass($, TwintModal, storage);
+  return new TwintExpressCheckoutClass($, TwintModal, refresher);
 });

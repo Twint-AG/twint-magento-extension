@@ -41,6 +41,11 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
             throw new UnexpectedValueException("Pairing Id is required");
         }
 
-        return $json->setData(['finish' => $this->monitorService->monitor($id)]);
+        $monitorStatus = $this->monitorService->monitor($id);
+
+        return $json->setData([
+            'finish' => $monitorStatus->getFinished(),
+            'order' => $monitorStatus->getOrderIncrement()
+        ]);
     }
 }

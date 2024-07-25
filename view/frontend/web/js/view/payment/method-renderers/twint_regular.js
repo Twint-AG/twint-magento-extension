@@ -3,7 +3,7 @@ define([
   'Magento_Checkout/js/view/payment/default',
   'Magento_Checkout/js/model/payment/additional-validators',
   'ko',
-  'Twint_Magento/js/model/checkout'
+  'Twint_Magento/js/action/regular-checkout'
 ], function ($, Component, additionalValidators, ko, TwintCheckout) {
   'use strict';
 

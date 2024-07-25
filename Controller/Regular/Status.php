@@ -27,7 +27,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
                 ->getParam('id') ?? null;
 
         return $json->setData([
-            'finish' => $this->monitorService->monitor($id),
+            'finish' => $this->monitorService->monitor($id)->getFinished(),
         ]);
     }
 }

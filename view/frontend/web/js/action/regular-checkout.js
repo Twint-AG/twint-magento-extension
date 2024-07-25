@@ -4,7 +4,7 @@ define(
     'Magento_Checkout/js/model/error-processor',
     'Magento_Checkout/js/model/full-screen-loader',
     'underscore',
-    'Twint_Magento/js/modal/qr_modal',
+    'Twint_Magento/js/modal/modal',
     'Magento_Checkout/js/action/redirect-on-success'
   ],
   function (storage, errorProcessor, fullScreenLoader, _, TwintModal, RedirectOnSuccess) {

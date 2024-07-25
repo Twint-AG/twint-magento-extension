@@ -15,6 +15,7 @@ use Magento\Quote\Model\QuoteIdMaskFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Quote\Model\ShippingAssignmentFactory;
 use Magento\Quote\Model\ShippingFactory;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
@@ -40,7 +41,7 @@ class OrderConvertService
      * @throws CouldNotSaveException
      * @throws InputException
      */
-    public function convert(Pairing $pairing, PairingHistory $history)
+    public function convert(Pairing $pairing, PairingHistory $history): ?string
     {
         /** @var Quote $quote */
         $quote = $this->quoteRepository->get($pairing->getQuoteId());
@@ -50,24 +51,25 @@ class OrderConvertService
 
         // Convert to Order
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
+        $order = $this->orderRepository->get($orderId);
 
         //Update Pairing and History
-        $this->updateOrderIdForPairing($orderId, $quote->getId());
+        $this->updateOrderIdForPairing($order, $quote->getId());
 
         // Remove items or original Quote
         $org = $this->quoteRepository->get($pairing->getOriginalQuoteId());
         $this->quoteService->removeAllItems($org);
 
-        return $orderId;
+        return $order->getIncrementId();
     }
 
     /**
-     * @throws NoSuchEntityException
-     * @throws InputException
+     * @param Order $order
+     * @param string|int $quoteId
+     * @return void
      */
-    private function updateOrderIdForPairing(int $orderId, string|int $quoteId): void
+    private function updateOrderIdForPairing(Order $order, string|int $quoteId): void
     {
-        $order = $this->orderRepository->get($orderId);
         $incrementId = $order->getIncrementId();
 
         $this->pairingService->appendOrderId($quoteId, $incrementId);
