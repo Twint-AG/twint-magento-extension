@@ -15,7 +15,11 @@ define([
     }
 
     openMiniCart() {
-      this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
+      try {
+        this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
+      }catch (e) {
+        this.$('.showcart').click();
+      }
     }
 
     checkout(formData, onSuccess = null, onError = null) {
