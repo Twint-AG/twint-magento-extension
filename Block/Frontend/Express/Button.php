@@ -35,10 +35,11 @@ class Button extends Template implements ShortcutInterface
         if (is_null($this->shouldRender)) {
             $config = $this->configHelper->getConfigs();
             $validated = $config->getCredentials()->getValidated();
-            $screen = $config->getExpressConfig()->onScreen(self::SCREEN);
+            $enabled = $config->getExpressConfig()->getEnabled();
+            $screen = $config->getExpressConfig()->onScreen(static::SCREEN);
             $currency = $this->isAllowedCurrency();
 
-            $this->shouldRender = $validated && $screen && $currency;
+            $this->shouldRender = $enabled && $validated && $screen && $currency;
         }
 
         return $this->shouldRender;

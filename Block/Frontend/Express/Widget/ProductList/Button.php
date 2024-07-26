@@ -35,11 +35,12 @@ class Button extends Base implements ProductAwareInterface
     {
         if(is_null($this->shouldRender)) {
             $config = $this->configHelper->getConfigs();
+            $enabled = $config->getExpressConfig()->getEnabled();
             $validated = $config->getCredentials()->getValidated();
             $screen = $config->getExpressConfig()->onWidget(self::WIDGET);
             $currency = $this->isAllowedCurrency();
 
-            $this->shouldRender = $validated && (!$this->forced || $screen) && $currency;
+            $this->shouldRender = $enabled && $validated && (!$this->forced || $screen) && $currency;
         }
 
         if ($this->product instanceof Product) {

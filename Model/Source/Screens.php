@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model\Source;
 
+use Twint\Magento\Constant\TwintConstant;
+
 class Screens extends Base
 {
     /**
@@ -13,19 +15,19 @@ class Screens extends Base
     {
         return [
             [
-                'value' => 'PDP',
+                'value' => TwintConstant::SCREEN_PDP,
                 'label' => __('Product details page'),
             ],
             [
-                'value' => 'PLP',
+                'value' => TwintConstant::SCREEN_PLP,
                 'label' => __('Product listing page'),
             ],
             [
-                'value' => 'CART',
+                'value' => TwintConstant::SCREEN_CART,
                 'label' => __('Cart page'),
             ],
             [
-                'value' => 'CART_FLYOUT',
+                'value' => TwintConstant::SCREEN_CART_FLYOUT,
                 'label' => __('Cart flyout'),
             ],
         ];
