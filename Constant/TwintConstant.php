@@ -6,6 +6,8 @@ namespace Twint\Magento\Constant;
 
 class TwintConstant
 {
+    public const PLATFORM = 'Magento';
+
     public const SECTION = 'twint';
 
     public const CONFIG_CREDENTIALS = self::SECTION . '/credentials';

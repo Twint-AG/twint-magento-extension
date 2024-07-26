@@ -11,7 +11,6 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\CatalogWidget\Block\Product\ProductsList;
 use Magento\CatalogWidget\Model\Rule;
 use Magento\Framework\App\Http\Context as HttpContext;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Url\EncoderInterface;
 use Magento\Framework\View\LayoutFactory;
@@ -58,12 +57,9 @@ class ProductList extends ProductsList
         return $this->_getData('module_name');
     }
 
-    /**
-     * @throws NoSuchEntityException
-     */
     public function getTemplate()
     {
-        if($this->expressButton->shouldRender() && in_array($this->_template, self::TEMPLATE_DEFAULT)){
+        if($this->expressButton->isForceToUseExpressTemplate() && in_array($this->_template, self::TEMPLATE_DEFAULT)){
             $this->expressButton->forceUseExpressTemplate();
             $this->_template = self::TEMPLATE_EXPRESS;
         }

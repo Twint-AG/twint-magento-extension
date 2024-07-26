@@ -6,6 +6,7 @@ namespace Twint\Magento\Builder;
 
 use Soap\Engine\Transport;
 use Throwable;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Exception\InvalidConfigException;
 use Twint\Magento\Helper\ConfigHelper;
 use Twint\Magento\Util\CryptoHandler;
@@ -19,6 +20,7 @@ use Twint\Sdk\InvocationRecorder\Soap\RecordingTransport;
 use Twint\Sdk\Io\InMemoryStream;
 use Twint\Sdk\Value\Environment;
 use Twint\Sdk\Value\MerchantId;
+use Twint\Sdk\Value\PrefixedCashRegisterId;
 use Twint\Sdk\Value\Version;
 
 class ClientBuilder
@@ -71,7 +73,7 @@ class ClientBuilder
             $client = new InvocationRecordingClient(
                 new Client(
                     CertificateContainer::fromPkcs12(new Pkcs12Certificate(new InMemoryStream($cert), $passphrase)),
-                    MerchantId::fromString($merchantId),
+                    new PrefixedCashRegisterId(MerchantId::fromString($merchantId), TwintConstant::PLATFORM),
                     // @phpstan-ignore-next-line
                     new Version($version),
                     $environment,

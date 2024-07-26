@@ -24,6 +24,13 @@ class Button extends Base implements ProductAwareInterface
         $this->forced = true;
     }
 
+    public function isForceToUseExpressTemplate(): bool
+    {
+        $config = $this->configHelper->getConfigs();
+
+        return $config->getExpressConfig()->onWidget(self::WIDGET);
+    }
+
     public function shouldRender(): bool
     {
         if(is_null($this->shouldRender)) {
