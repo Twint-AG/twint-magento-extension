@@ -12,6 +12,8 @@ use Twint\Magento\Helper\ConfigHelper;
 
 class Button extends Template implements ShortcutInterface
 {
+    protected ?bool $shouldRender = null;
+
     const SCREEN = TwintConstant::SCREEN_PDP;
 
     public function __construct(
@@ -28,14 +30,18 @@ class Button extends Template implements ShortcutInterface
     /**
      * @throws NoSuchEntityException
      */
-    protected function shouldRender(): bool
+    public function shouldRender(): bool
     {
-        $config = $this->configHelper->getConfigs();
-        $validated = $config->getCredentials()->getValidated();
-        $screen = $config->getExpressConfig()->display(self::SCREEN);
-        $currency = $this->isAllowedCurrency();
+        if (is_null($this->shouldRender)) {
+            $config = $this->configHelper->getConfigs();
+            $validated = $config->getCredentials()->getValidated();
+            $screen = $config->getExpressConfig()->onScreen(self::SCREEN);
+            $currency = $this->isAllowedCurrency();
 
-        return $validated && $screen && $currency;
+            $this->shouldRender = $validated && $screen && $currency;
+        }
+
+        return $this->shouldRender;
     }
 
     /**

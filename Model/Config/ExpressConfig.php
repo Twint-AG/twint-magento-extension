@@ -11,8 +11,18 @@ class ExpressConfig extends BasePaymentConfig
         return explode(',', $this->data['screens'] ?? '');
     }
 
-    public function display(string $screen): bool
+    public function onScreen(string $screen): bool
     {
         return in_array($screen, $this->getScreens());
+    }
+
+    public function getWidgets(): array
+    {
+        return explode(',', $this->data['widgets'] ?? '');
+    }
+
+    public function onWidget(string $widget): bool
+    {
+        return in_array($widget, $this->getWidgets());
     }
 }

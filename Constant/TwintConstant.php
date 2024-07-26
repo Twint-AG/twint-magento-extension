@@ -29,4 +29,6 @@ class TwintConstant
     public const SCREEN_PDP = 'PDP';
     public const SCREEN_CART = 'cart';
     public const SCREEN_CART_FLYOUT = 'minicart';
+
+    public const WIDGET_CATALOG_PRODUCT_LIST = 'CPL';
 }

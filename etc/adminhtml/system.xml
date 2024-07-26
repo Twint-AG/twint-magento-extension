@@ -6,7 +6,7 @@
         <section id="twint" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <tab>twint</tab>
             <label>Credentials</label>
-            <resource>Twint_Magento::configuration_general</resource>
+            <resource>Twint_Magento::payment</resource>
             <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Credentials</label>
                 <field id="merchantID" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -31,7 +31,7 @@
         <section id="twint_regular" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Regular Checkout</label>
             <tab>twint</tab>
-            <resource>Twint_Magento::configuration_regular_checkout</resource>
+            <resource>Twint_Magento::payment</resource>
             <group id="regular" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>TWINT Regular Checkout</label>
 
@@ -52,11 +52,11 @@
         <section id="twint_express" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Express Checkout</label>
             <tab>twint</tab>
-            <resource>Twint_Magento::configuration_express_checkout</resource>
+            <resource>Twint_Magento::payment</resource>
             <group id="express" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>TWINT Express Checkout</label>
 
-                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <config_path>twint/express/enabled</config_path>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -67,6 +67,15 @@
                     <comment>Users can see TWINT checkout buttons</comment>
                     <source_model>Twint\Magento\Model\Source\Screens</source_model>
                     <config_path>twint/express/screens</config_path>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+
+                <field id="widgets" translate="label,comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display widgets</label>
+                    <comment>Widgets where can add Express Checkout button</comment>
+                    <source_model>Twint\Magento\Model\Source\Widgets</source_model>
+                    <config_path>twint/express/widgets</config_path>
+                    <can_be_empty>1</can_be_empty>
                 </field>
 
                 <field id="sort_order" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
