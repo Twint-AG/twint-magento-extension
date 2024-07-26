@@ -10,6 +10,8 @@ class TwintConstant
 
     public const SECTION = 'twint';
 
+    public const SECTION_EXPRESS = 'twint_express';
+
     public const CONFIG_CREDENTIALS = self::SECTION . '/credentials';
 
     public const CONFIG_MERCHANT_ID = self::CONFIG_CREDENTIALS . '/merchant_id';

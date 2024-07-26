@@ -15,14 +15,4 @@ class ExpressConfig extends BasePaymentConfig
     {
         return in_array($screen, $this->getScreens());
     }
-
-    public function getWidgets(): array
-    {
-        return explode(',', $this->data['widgets'] ?? '');
-    }
-
-    public function onWidget(string $widget): bool
-    {
-        return in_array($widget, $this->getWidgets());
-    }
 }

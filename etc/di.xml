@@ -9,18 +9,23 @@
     <preference for="Twint\Magento\Api\RefundRepositoryInterface" type="Twint\Magento\Model\RefundRepository"/>
 
     <type name="Magento\Payment\Block\Form\Container">
-        <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin" />
+        <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin"/>
     </type>
 
     <type name="Magento\Checkout\Block\Cart\Sidebar">
         <plugin name="express_checkout" type="Twint\Magento\Plugin\ExpressCheckoutPlugin"/>
     </type>
 
+    <type name="Magento\Config\Controller\Adminhtml\System\Config\Save">
+        <plugin name="unselect_options" type="Twint\Magento\Plugin\ExpressUnselectOptionsPlugin"/>
+    </type>
+
     <type name="Magento\Quote\Model\SubmitQuoteValidator">
         <plugin name="disable_address_validation" type="Twint\Magento\Plugin\ExpressAddressValidationPlugin"/>
     </type>
 
-    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Twint\Magento\Block\Frontend\Product\ProductList" />
+    <preference for="Magento\CatalogWidget\Block\Product\ProductsList"
+                type="Twint\Magento\Block\Frontend\Product\ProductList"/>
 
     <type name="Magento\Framework\App\RouterList">
         <arguments>
@@ -36,9 +41,15 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="sales_order_view_pairing_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\Pairing\Grid\Collection</item>
-                <item name="pairing_history_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection</item>
-                <item name="refund_history_grid_data_source" xsi:type="string">Twint\Magento\Model\ResourceModel\Refund\Grid\Collection</item>
+                <item name="sales_order_view_pairing_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\Pairing\Grid\Collection
+                </item>
+                <item name="pairing_history_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection
+                </item>
+                <item name="refund_history_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\Refund\Grid\Collection
+                </item>
             </argument>
         </arguments>
     </type>

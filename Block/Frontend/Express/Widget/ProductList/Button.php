@@ -13,7 +13,7 @@ class Button extends Base implements ProductAwareInterface
     private bool $forced = false;
 
     protected ?ProductInterface $product = null;
-    const WIDGET = TwintConstant::WIDGET_CATALOG_PRODUCT_LIST;
+    const SCREEN = TwintConstant::WIDGET_CATALOG_PRODUCT_LIST;
 
     public function setProduct(ProductInterface $product)
     {
@@ -28,7 +28,7 @@ class Button extends Base implements ProductAwareInterface
     {
         $config = $this->configHelper->getConfigs();
 
-        return $config->getExpressConfig()->onWidget(self::WIDGET);
+        return $config->getExpressConfig()->onScreen(static::SCREEN);
     }
 
     public function shouldRender(): bool
@@ -37,7 +37,7 @@ class Button extends Base implements ProductAwareInterface
             $config = $this->configHelper->getConfigs();
             $enabled = $config->getExpressConfig()->getEnabled();
             $validated = $config->getCredentials()->getValidated();
-            $screen = $config->getExpressConfig()->onWidget(self::WIDGET);
+            $screen = $config->getExpressConfig()->onScreen(self::SCREEN);
             $currency = $this->isAllowedCurrency();
 
             $this->shouldRender = $enabled && $validated && (!$this->forced || $screen) && $currency;

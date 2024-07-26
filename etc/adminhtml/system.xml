@@ -20,12 +20,11 @@
                     <config_path>twint/credentials/environment</config_path>
                 </field>
 
-                <field id="certificate" translate="label" type="Twint\Magento\Model\Form\CertificateUpload" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="certificate" translate="label" type="Twint\Magento\Block\Adminhtml\Form\CertificateUpload" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Certificate</label>
                     <config_path>twint/credentials/certificate</config_path>
                 </field>
             </group>
-
         </section>
 
         <section id="twint_regular" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -62,19 +61,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="screens" translate="label,comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="screens" translate="label,comment" type="Twint\Magento\Block\Adminhtml\Field\Checkboxes" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Display screens</label>
                     <comment>Users can see TWINT checkout buttons</comment>
                     <source_model>Twint\Magento\Model\Source\Screens</source_model>
                     <config_path>twint/express/screens</config_path>
-                    <can_be_empty>1</can_be_empty>
-                </field>
-
-                <field id="widgets" translate="label,comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Display widgets</label>
-                    <comment>Widgets where can add Express Checkout button</comment>
-                    <source_model>Twint\Magento\Model\Source\Widgets</source_model>
-                    <config_path>twint/express/widgets</config_path>
                     <can_be_empty>1</can_be_empty>
                 </field>
 

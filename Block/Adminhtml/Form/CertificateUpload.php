@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Twint\Magento\Model\Form;
+namespace Twint\Magento\Block\Adminhtml\Form;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
