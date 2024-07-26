@@ -64,6 +64,7 @@ class ProductList extends ProductsList
     public function getTemplate()
     {
         if($this->expressButton->shouldRender() && in_array($this->_template, self::TEMPLATE_DEFAULT)){
+            $this->expressButton->forceUseExpressTemplate();
             $this->_template = self::TEMPLATE_EXPRESS;
         }
 

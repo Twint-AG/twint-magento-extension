@@ -10,12 +10,18 @@ use Twint\Magento\Constant\TwintConstant;
 
 class Button extends Base implements ProductAwareInterface
 {
+    private bool $forced = false;
+
     protected ?ProductInterface $product = null;
     const WIDGET = TwintConstant::WIDGET_CATALOG_PRODUCT_LIST;
 
     public function setProduct(ProductInterface $product)
     {
         $this->product = $product;
+    }
+
+    public function forceUseExpressTemplate(){
+        $this->forced = true;
     }
 
     public function shouldRender(): bool
@@ -26,7 +32,7 @@ class Button extends Base implements ProductAwareInterface
             $screen = $config->getExpressConfig()->onWidget(self::WIDGET);
             $currency = $this->isAllowedCurrency();
 
-            $this->shouldRender = $validated && $screen && $currency;
+            $this->shouldRender = $validated && (!$this->forced || $screen) && $currency;
         }
 
         if ($this->product instanceof Product) {
