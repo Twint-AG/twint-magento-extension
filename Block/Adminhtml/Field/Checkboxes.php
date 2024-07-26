@@ -25,4 +25,11 @@ class Checkboxes extends BaseCheckboxes
 
         return in_array($value, $array) ? 'checked' : null;
     }
+
+    public function getDisabled($value)
+    {
+        $disabled = $this->getData('disabled');
+
+        return $disabled ? 'disabled' : '';
+    }
 }
