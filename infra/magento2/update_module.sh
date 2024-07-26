@@ -1,5 +1,6 @@
-rm -rf /var/www/html/vendor/twint-ag/twint-magento-extension
 composer update twint-ag/twint-magento-extension --no-progress --no-interaction
+
+bin/magento maintenance:enable
 
 # Avoid di compile issue when running setup:di:compile
 rm -rf /var/www/html/vendor/twint-ag/twint-magento-extension/zinfra
@@ -14,6 +15,8 @@ bin/magento setup:di:compile
 
 # Build client resources (JS, CSS ...)
 bin/magento setup:static-content:deploy -f
+
+bin/magento maintenance:disable
 
 # Clear cache again
 bin/magento cache:clean
