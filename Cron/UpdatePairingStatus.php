@@ -22,13 +22,16 @@ class UpdatePairingStatus
     public function execute(): void
     {
         $pairings = $this->repository->getUnFinishes();
+        $expressPairings = $this->repository->getUnFinishedExpresses();
 
-        /** @var array $pairing */
-        foreach ($pairings->getItems() as $pairing) {
-            try {
-                $this->monitorService->monitor($pairing['pairing_id']);
-            } catch (Throwable $e) {
-                $this->logger->error('Cron UpdatePairingStatus: ' . $e->getMessage());
+        foreach ([$pairings, $expressPairings] as $list) {
+            /** @var array $pairing */
+            foreach ($list->getItems() as $pairing) {
+                try {
+                    $this->monitorService->monitor($pairing['pairing_id']);
+                } catch (Throwable $e) {
+                    $this->logger->error('Cron UpdatePairingStatus: ' . $e->getMessage());
+                }
             }
         }
     }

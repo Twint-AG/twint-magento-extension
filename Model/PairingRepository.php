@@ -24,6 +24,7 @@ use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Model\ResourceModel\Pairing as ResourceModel;
 use Twint\Magento\Model\ResourceModel\Pairing\Collection;
 use Twint\Magento\Model\ResourceModel\Pairing\CollectionFactory;
+use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\TransactionStatus;
 use Zend_Db_Expr;
 
@@ -230,6 +231,50 @@ class PairingRepository implements PairingRepositoryInterface
         // Build the search criteria
         $criteria = $this->criteriaBuilder
             ->setFilterGroups([$mainFilterGroup, $lockFilterGroup])
+            ->create();
+
+        return $this->getList($criteria);
+    }
+
+    public function getUnFinishedExpresses(): SearchResultsInterface
+    {
+        $statusFilter = $this->filterBuilder
+            ->setField('pairing_status')
+            ->setValue(PairingStatus::NO_PAIRING)
+            ->setConditionType('neq')
+            ->create();
+
+        $quoteFilter = $this->filterBuilder
+            ->setField('quote_id')
+            ->setValue('NULL')
+            ->setConditionType('neq')
+            ->create();
+
+        // Create the first lock filter
+        $lockFilter1 = $this->filterBuilder
+            ->setField('lock')
+            ->setValue(null)
+            ->setConditionType('null')
+            ->create();
+
+        // Create the second lock filter
+        $lockFilter2 = $this->filterBuilder
+            ->setField('lock')
+            ->setValue(new Zend_Db_Expr('now()'))
+            ->setConditionType('lteq')
+            ->create();
+
+        // Create the first filter group for the lock filters (OR condition)
+        $lockFilterGroup = $this->filterGroupBuilder->setFilters([$lockFilter1, $lockFilter2])->create();
+
+        // Create the main filter group (AND condition)
+        $mainFilterGroup = $this->filterGroupBuilder->setFilters([$statusFilter])->create();
+
+        $quoteFilterGroup = $this->filterGroupBuilder->setFilters([$quoteFilter])->create();
+
+        // Build the search criteria
+        $criteria = $this->criteriaBuilder
+            ->setFilterGroups([$mainFilterGroup, $quoteFilterGroup, $lockFilterGroup])
             ->create();
 
         return $this->getList($criteria);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
 use Twint\Magento\Model\Pairing;
 
 interface PairingRepositoryInterface
@@ -26,6 +27,8 @@ interface PairingRepositoryInterface
     public function getByQuoteId(string $id): ?Pairing;
 
     public function getUnFinishes();
+
+    public function getUnFinishedExpresses(): SearchResultsInterface;
 
     public function updateOrderId(string $orderId, int|string $quoteId): void;
 }
