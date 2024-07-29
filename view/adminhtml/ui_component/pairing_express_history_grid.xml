@@ -2,17 +2,17 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">pairing_history_grid.pairing_history_grid_data_source</item>
+            <item name="provider" xsi:type="string">pairing_express_history_grid.pairing_express_history_grid_data_source</item>
         </item>
     </argument>
     <settings>
         <spinner>pairing_history_columns</spinner>
         <deps>
-            <dep>pairing_history_grid.pairing_history_grid_data_source</dep>
+            <dep>pairing_express_history_grid.pairing_express_history_grid_data_source</dep>
         </deps>
     </settings>
 
-    <dataSource name="pairing_history_grid_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="pairing_express_history_grid_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <filterUrlParams>
                 <param name="id">*</param>
@@ -24,7 +24,7 @@
             </storageConfig>
         </settings>
         <aclResource>Magento_Sales::sales_order</aclResource>
-        <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_history_grid_data_source">
+        <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_express_history_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
@@ -61,13 +61,6 @@
             </settings>
         </column>
 
-        <column name="status">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Status</label>
-            </settings>
-        </column>
-
         <column name="pairing_status">
             <settings>
                 <filter>text</filter>
@@ -75,10 +68,15 @@
             </settings>
         </column>
 
-        <column name="transaction_status">
+        <column name="shipping_id">
             <settings>
-                <filter>text</filter>
-                <label translate="true">Transaction Status</label>
+                <label translate="true">Shipping</label>
+            </settings>
+        </column>
+
+        <column name="customer" class="Twint\Magento\Block\Adminhtml\Listing\CustomAction">
+            <settings>
+                <label translate="true">Customer Data</label>
             </settings>
         </column>
 

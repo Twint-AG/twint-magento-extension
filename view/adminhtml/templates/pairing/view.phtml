@@ -1,5 +1,15 @@
-<h2><?php echo __("Refund history") ?></h2>
-<?php echo $block->getChildHtml('twint.grid.refund_history.container'); ?>
+<?php
+/** @var View $block */
 
-<h2><?php echo __("Transaction history") ?></h2>
-<?php echo $block->getChildHtml('twint.grid.pairing_history.container'); ?>
+use Twint\Magento\Block\Adminhtml\Pairing\View;
+
+if(!$block->isExpress()){
+    echo "<h2>" .__("Refund history") ."</h2>";
+    echo $block->getChildHtml('twint.grid.refund_history.container');
+
+    echo "<h2>" .__("Transaction history") ."</h2>";
+    echo $block->getChildHtml('twint.grid.pairing_history.container');
+}else{
+    echo "<h2>" .__("Transaction history") ."</h2>";
+    echo $block->getChildHtml('twint.grid.pairing_express_history.container');
+}

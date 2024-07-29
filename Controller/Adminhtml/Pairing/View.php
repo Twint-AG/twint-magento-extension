@@ -48,6 +48,11 @@ class View extends Action
             ->getTitle()
             ->prepend(__('Order #%1 - Transaction #%2', $pairing->getOrderId(), $pairing->getId()));
 
+        /** @var View $block */
+        $block = $resultPage->getLayout()
+            ->getBlock('pairing.view');
+        $block?->setEntity($pairing);
+
         return $resultPage;
     }
 }

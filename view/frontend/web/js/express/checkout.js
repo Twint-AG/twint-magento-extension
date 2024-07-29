@@ -2,8 +2,9 @@ define([
   'jquery',
   'Twint_Magento/js/modal/modal',
   'Twint_Magento/js/express/loader',
-  'Twint_Magento/js/express/status-refresh'
-], function ($, TwintModal, loader, refresher) {
+  'Twint_Magento/js/express/status-refresh',
+  'uiRegistry'
+], function ($, TwintModal, loader, refresher, uiRegistry) {
 
   class TwintExpressCheckoutClass {
     constructor($, modal, refresher) {
@@ -18,7 +19,7 @@ define([
       try {
         this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
       }catch (e) {
-        this.$('.showcart').click();
+        window.location.href = window.checkout.shoppingCartUrl;
       }
     }
 

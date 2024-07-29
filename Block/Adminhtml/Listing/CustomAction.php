@@ -12,8 +12,7 @@ class CustomAction extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $value = ($item['shipping_id'] ?? '') . '/' . (empty($item['customer']) ? '' : "{...customer}");
-                $value = $value == '/' ? '' : $value;
+                $value = empty($item['customer']) ? '' : substr($item['customer'], 0, 50) . '...';
 
                 $item['customer'] = $value;
             }

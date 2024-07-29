@@ -47,6 +47,9 @@
                 <item name="pairing_history_grid_data_source" xsi:type="string">
                     Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection
                 </item>
+                <item name="pairing_express_history_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection
+                </item>
                 <item name="refund_history_grid_data_source" xsi:type="string">
                     Twint\Magento\Model\ResourceModel\Refund\Grid\Collection
                 </item>

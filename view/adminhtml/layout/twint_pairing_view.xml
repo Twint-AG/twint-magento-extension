@@ -10,11 +10,16 @@
                 <block class="Twint\Magento\Block\Adminhtml\RefundHistory\View" name="twint.grid.refund_history.container"/>
 
                 <block class="Twint\Magento\Block\Adminhtml\PairingHistory\View" name="twint.grid.pairing_history.container"/>
+                <block class="Twint\Magento\Block\Adminhtml\PairingHistory\View" name="twint.grid.pairing_express_history.container"/>
             </block>
         </referenceContainer>
 
         <referenceBlock name="twint.grid.pairing_history.container">
             <uiComponent name="pairing_history_grid"/>
+        </referenceBlock>
+
+        <referenceBlock name="twint.grid.pairing_express_history.container">
+            <uiComponent name="pairing_express_history_grid"/>
         </referenceBlock>
 
         <referenceBlock name="twint.grid.refund_history.container">

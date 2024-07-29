@@ -9,7 +9,7 @@ use Magento\Framework\View\Element\Template;
 
 class View extends Template
 {
-    protected $_template = 'Twint_Magento::pairing_history/view.phtml';
+    protected $_template = 'Twint_Magento::refund_history/view.phtml';
 
     public function __construct(
         Context $context,
