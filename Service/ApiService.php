@@ -31,6 +31,7 @@ class ApiService
             $returnValue = $client->{$method}(...$args);
         }catch (Throwable $e){
             $this->logger->error("TWINT $method cannot handle success". $e->getMessage());
+            throw $e;
         }
         finally {
             $invocations = $client->flushInvocations();

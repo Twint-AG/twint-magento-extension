@@ -6,7 +6,6 @@
         </item>
     </argument>
     <settings>
-        <spinner>refund_history_columns</spinner>
         <deps>
             <dep>refund_history_grid.refund_history_grid_data_source</dep>
         </deps>
@@ -15,7 +14,7 @@
     <dataSource name="refund_history_grid_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <filterUrlParams>
-                <param name="id">*</param>
+                <param name="order_id">*</param>
             </filterUrlParams>
             <updateUrl path="mui/index/render"/>
             <storageConfig>

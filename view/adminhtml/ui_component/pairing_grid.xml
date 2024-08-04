@@ -2,16 +2,15 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">sales_order_view_pairing_grid.sales_order_view_pairing_grid_data_source</item>
+            <item name="provider" xsi:type="string">pairing_grid.pairing_grid_data_source</item>
         </item>
     </argument>
     <settings>
-        <spinner>sales_order_pairing_columns</spinner>
         <deps>
-            <dep>sales_order_view_pairing_grid.sales_order_view_pairing_grid_data_source</dep>
+            <dep>pairing_grid.pairing_grid_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="sales_order_view_pairing_grid_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="pairing_grid_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <filterUrlParams>
                 <param name="order_id">*</param>
@@ -23,36 +22,27 @@
             </storageConfig>
         </settings>
         <aclResource>Magento_Sales::sales_order</aclResource>
-        <dataProvider class="Twint\Magento\Provider\Data\PairingGridDataProvider" name="sales_order_view_pairing_grid_data_source">
+        <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_grid_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>
                 <primaryFieldName>id</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
-    <listingToolbar name="listing_bottom">
-        <paging name="listing_paging"/>
-    </listingToolbar>
     <columns name="sales_order_pairing_columns">
-        <settings>
-            <childDefaults>
-                <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">sales_order_view_pairing_grid.sales_order_view_pairing_grid.sales_order_pairing_columns.actions</item>
-                    <item name="target" xsi:type="string">applyAction</item>
-                    <item name="params" xsi:type="array">
-                        <item name="0" xsi:type="string">view</item>
-                        <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
-                    </item>
-                </param>
-            </childDefaults>
-        </settings>
-        <column name="id">
+        <column name="parent_id">
             <settings>
-                <filter>text</filter>
-                <label translate="true">ID</label>
-                <sorting>desc</sorting>
+                <label translate="true">Pairing ID</label>
+                <sortable>false</sortable>
             </settings>
         </column>
+
+        <column name="order_id">
+            <settings>
+                <label translate="true">Order</label>
+            </settings>
+        </column>
+
         <column name="token">
             <settings>
                 <filter>text</filter>
@@ -87,6 +77,18 @@
             </settings>
         </column>
 
+        <column name="shipping_id">
+            <settings>
+                <label translate="true">Shipping</label>
+            </settings>
+        </column>
+
+        <column name="customer" class="Twint\Magento\Block\Adminhtml\Listing\CustomAction">
+            <settings>
+                <label translate="true">Customer Data</label>
+            </settings>
+        </column>
+
         <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
             <settings>
                 <dataType>date</dataType>
@@ -97,13 +99,11 @@
         <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="viewUrlPath" xsi:type="string">twint/pairing/view</item>
-                    <item name="urlEntityParamName" xsi:type="string">id</item>
-                    <item name="text" xsi:type="string">History</item>
+                    <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
+                    <item name="text" xsi:type="string">Details</item>
                 </item>
             </argument>
             <settings>
-                <indexField>id</indexField>
                 <label translate="true">Actions</label>
             </settings>
         </actionsColumn>

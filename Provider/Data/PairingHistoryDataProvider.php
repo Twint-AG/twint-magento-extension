@@ -10,10 +10,12 @@ use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
+use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 
 class PairingHistoryDataProvider extends DataProvider
 {
     public function __construct(
+        private readonly PairingHistoryRepositoryInterface $repository,
         $name,
         $primaryFieldName,
         $requestFieldName,
@@ -29,10 +31,15 @@ class PairingHistoryDataProvider extends DataProvider
 
     public function addFilter(Filter $filter)
     {
-        if ($filter->getField() === 'id') {
+        if ($filter->getField() === 'order_id') {
             $filter->setField('parent_id');
+
+            $ids = $this->repository->getParentIdsByOrderId($filter->getValue());
+            $filter->setValue($ids);
+            $filter->setConditionType('in');
         }
 
         parent::addFilter($filter);
     }
+
 }

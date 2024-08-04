@@ -16,4 +16,6 @@ interface PairingHistoryRepositoryInterface
     public function getList(SearchCriteriaInterface $criteria);
 
     public function updateOrderId(string $orderId, int|string $quoteId): void;
+
+    public function getParentIdsByOrderId(string|int $orderId);
 }

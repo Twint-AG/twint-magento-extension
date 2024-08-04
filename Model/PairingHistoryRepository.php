@@ -19,9 +19,12 @@ use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Model\ResourceModel\PairingHistory as ResourceModel;
 use Twint\Magento\Model\ResourceModel\PairingHistory\Collection;
 use Twint\Magento\Model\ResourceModel\PairingHistory\CollectionFactory;
+use Twint\Magento\Model\ResourceModel\Pairing;
 
 class PairingHistoryRepository implements PairingHistoryRepositoryInterface
 {
+    private static array $cache = [];
+
     public function __construct(
         private PairingHistoryFactory         $factory,
         private readonly ResourceModel        $resourceModel,
@@ -92,7 +95,7 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id";
+        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id and status <> ''";
 
         // Bind parameters
         $bind = [
@@ -102,5 +105,30 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
 
         // Execute the query
         $connection->query($sql, $bind);
+    }
+
+    public function getParentIdsByOrderId(string|int $orderId): array
+    {
+        if (isset(static::$cache[$orderId])) {
+            return static::$cache[$orderId];
+        }
+
+        $connection = $this->resource->getConnection();
+
+        $select = $connection->select()
+            ->from(
+                ['a' => Pairing::TABLE_NAME],
+                ['id']
+            )
+            ->join(
+                ['b' => 'sales_order'],
+                'a.order_id = b.increment_id',
+                []
+            )
+            ->where('b.entity_id = ?', (int)$orderId);
+
+        static::$cache[$orderId] = $connection->fetchCol($select);
+
+        return static::$cache[$orderId];
     }
 }

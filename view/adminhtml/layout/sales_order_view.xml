@@ -10,7 +10,13 @@
             </action>
         </referenceBlock>
         <referenceBlock name="twint.grid.transaction.container">
-            <uiComponent name="sales_order_view_pairing_grid"/>
+            <block class="Twint\Magento\Block\Adminhtml\Order\TwoGridsBlock" name="two_grids_block">
+                <arguments>
+                    <argument name="template" xsi:type="string">Twint_Magento::two_grids.phtml</argument>
+                </arguments>
+                <uiComponent name="pairing_grid"/>
+                <uiComponent name="refund_history_grid"/>
+            </block>
         </referenceBlock>
     </body>
 </page>
