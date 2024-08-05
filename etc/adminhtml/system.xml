@@ -9,9 +9,9 @@
             <resource>Twint_Magento::payment</resource>
             <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Credentials</label>
-                <field id="merchantID" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant ID</label>
-                    <config_path>twint/credentials/merchant_id</config_path>
+                <field id="storeUuid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Store UUID</label>
+                    <config_path>twint/credentials/store_uuid</config_path>
                 </field>
 
                 <field id="environment" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

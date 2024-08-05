@@ -11,6 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 use Psr\Log\LoggerInterface as Logger;
 use Twint\Magento\Model\ResourceModel\PairingHistory;
+use Twint\Magento\Model\ResourceModel\RequestLog;
 
 class Collection extends SearchResult
 {
@@ -26,5 +27,21 @@ class Collection extends SearchResult
         string $resourceModel = PairingHistory::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
+
+        $this->addOrder('parent_id', 'desc');
+        $this->addOrder('created_at', 'desc');
+    }
+
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
+        $this->getSelect()->joinLeft(
+            ['request' => $this->getTable(RequestLog::TABLE_NAME)],
+            'main_table.request_id = request.id',
+            ['method', ]
+        );
+
+        return $this;
     }
 }

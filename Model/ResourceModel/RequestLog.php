@@ -11,11 +11,12 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class RequestLog extends AbstractDb
 {
+    public const TABLE_NAME = 'twint_request_log';
     /**
      * Resource initialization
      */
     protected function _construct()
     {
-        $this->_init('twint_request_log', 'id');
+        $this->_init(self::TABLE_NAME, 'id');
     }
 }

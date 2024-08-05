@@ -42,7 +42,7 @@
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="pairing_grid_data_source" xsi:type="string">
-                    Twint\Magento\Model\ResourceModel\Pairing\Grid\Collection
+                    Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection
                 </item>
                 <item name="pairing_history_grid_data_source" xsi:type="string">
                     Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection

@@ -25,7 +25,7 @@ class TwintBase {
 
 class TwintConfigInherit extends TwintBase {
   getElements() {
-    this.merchantIdCheckbox = document.getElementById('twint_credentials_merchantID_inherit');
+    this.storeUuidCheckbox = document.getElementById('twint_credentials_storeUuid_inherit');
     this.envCheckbox = document.getElementById('twint_credentials_environment_inherit');
     this.certCheckbox = document.getElementById('twint_credentials_certificate_inherit');
   }
@@ -37,7 +37,7 @@ class TwintConfigInherit extends TwintBase {
   }
 
   canInherit() {
-    return this.merchantIdCheckbox || this.envCheckbox || this.certCheckbox;
+    return this.storeUuidCheckbox || this.envCheckbox || this.certCheckbox;
   }
 
   isCertificateInherited() {
@@ -45,7 +45,7 @@ class TwintConfigInherit extends TwintBase {
   }
 
   getScope() {
-    let label = document.querySelector(`label[for="twint_credentials_merchantID_inherit"]`);
+    let label = document.querySelector(`label[for="twint_credentials_storeUuid_inherit"]`);
     if (label) {
       return label.innerText === this.$t("Use Default") ? '' : 'websites';
     }
@@ -57,8 +57,8 @@ class TwintConfigInherit extends TwintBase {
       return current;
     }
 
-    if (this.merchantIdCheckbox.checked) {
-      current['merchantId'] = this.values.merchant_id;
+    if (this.storeUuidCheckbox.checked) {
+      current['storeUuid'] = this.values.store_uuid;
     }
 
     if (this.certCheckbox.checked) {
@@ -100,7 +100,7 @@ class TwintCertificateHandler extends TwintBase {
     this.uploadNewLabel = document.getElementById('twint-upload-new');
     this.passwordInput = document.getElementById('certificate-password');
     this.errorContainer = document.getElementById('certificate-error-container');
-    this.merchantInput = document.getElementById('twint_credentials_merchantID');
+    this.storeInput = document.getElementById('twint_credentials_storeUuid');
     this.envSelect = document.getElementById('twint_credentials_environment');
 
     this.saveButton = document.getElementById('save');
@@ -111,7 +111,7 @@ class TwintCertificateHandler extends TwintBase {
     this.inherit = new TwintConfigInherit(this.$, this.$t, this.urlBuilder);
     this.inherit.init();
 
-    this.merchantInput.setAttribute('placeholder', 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
+    this.storeInput.setAttribute('placeholder', 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
     this.cloneSaveButton();
     this.registerEvents();
     this.showContainers();
@@ -196,19 +196,19 @@ class TwintCertificateHandler extends TwintBase {
     return uuidRegex.test(uuid);
   }
 
-  validateMerchantId(value) {
+  validateStoreUuid(value) {
     if (!this.merchantError) {
       const label = document.createElement('label');
 
       // Set the attributes
-      label.id = 'twint_credentials_merchantID-error';
+      label.id = 'twint_credentials_storeUUID-error';
       label.className = 'mage-error';
-      label.setAttribute('for', 'twint_credentials_merchantID');
+      label.setAttribute('for', 'twint_credentials_storeUUID');
 
       // Set the inner text
-      label.textContent = this.$t('Invalid Merchant ID. Merchant ID needs to be a UUIDv4');
+      label.textContent = this.$t('Invalid Store UUID. Store UUID needs to be a UUIDv4');
 
-      this.merchantInput.insertAdjacentElement('afterend', label);
+      this.storeInput.insertAdjacentElement('afterend', label);
       this.merchantError = label;
     }
 
@@ -226,11 +226,11 @@ class TwintCertificateHandler extends TwintBase {
     let finalValues = this.inherit.getFinalValues({
       certificate: JSON.parse(this.hiddenInput.value),
       environment: this.envSelect.value,
-      merchantId: this.merchantInput.value,
+      storeUuid: this.storeInput.value,
       form_key: window.FORM_KEY
     });
 
-    if (!this.validateMerchantId(finalValues.merchantId)) {
+    if (!this.validateStoreUuid(finalValues.storeUuid)) {
       return;
     }
 
@@ -341,7 +341,7 @@ class TwintCertificateHandler extends TwintBase {
     this.uploadNewLabel.addEventListener('click', this.onChangeCertificate.bind(this));
     this.clonedSaveButton.addEventListener('click', this.onStartValidate.bind(this), true);
     this.passwordInput.addEventListener('change', this.uploadCertificate.bind(this));
-    this.merchantInput.addEventListener('change', this.validateMerchantId.bind(this));
+    this.storeInput.addEventListener('change', this.validateStoreUuid.bind(this));
 
     if (this.inherit.certCheckbox)
       this.inherit.certCheckbox.addEventListener('change', this.disableInputs.bind(this));

@@ -6,6 +6,7 @@
         </item>
     </argument>
     <settings>
+        <spinner>refund_history_columns</spinner>
         <deps>
             <dep>refund_history_grid.refund_history_grid_data_source</dep>
         </deps>
@@ -37,40 +38,42 @@
                 <filter>text</filter>
                 <label translate="true">Refund ID</label>
                 <sorting>desc</sorting>
+                <sortable>false</sortable>
             </settings>
         </column>
 
         <column name="pairing_id">
             <settings>
-                <filter>text</filter>
                 <label translate="true">Pairing</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
         <column name="reversal_id">
             <settings>
-                <filter>text</filter>
                 <label translate="true">Reversal ID</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
         <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
             <settings>
                 <label translate="true">Amount</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
         <column name="status">
             <settings>
-                <filter>text</filter>
                 <label translate="true">Status</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
         <column name="refunded_by">
             <settings>
-                <filter>text</filter>
                 <label translate="true">Refunded By</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
@@ -78,6 +81,7 @@
             <settings>
                 <dataType>date</dataType>
                 <label translate="true">Refund Date</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
@@ -90,6 +94,7 @@
             </argument>
             <settings>
                 <label translate="true">Actions</label>
+                <sortable>false</sortable>
             </settings>
         </actionsColumn>
     </columns>

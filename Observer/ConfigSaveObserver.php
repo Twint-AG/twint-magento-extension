@@ -30,7 +30,7 @@ class ConfigSaveObserver implements ObserverInterface
                 $credentials = $this->getCurrentCredentials($data);
                 $validated = $this->validator->validate(
                     $credentials['certificate'],
-                    $credentials['merchant_id'],
+                    $credentials['store_uuid'],
                     (bool) $credentials['environment']
                 );
 
@@ -56,7 +56,7 @@ class ConfigSaveObserver implements ObserverInterface
             case 'default':
                 $fields = $data['groups']['credentials']['fields'] ?? [];
                 $credentials = [
-                    'merchant_id' => $fields['merchantID']['value'] ?? null,
+                    'store_uuid' => $fields['storeUuid']['value'] ?? null,
                     'environment' => $fields['environment']['value'] ?? null,
                     'certificate' => json_decode($fields['certificate']['value'] ?? '', true),
                 ];

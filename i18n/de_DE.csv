@@ -17,7 +17,7 @@ or,oder
 "Enter this code in your TWINT app:","Geben Sie diesen Code in Ihrer TWINT-App ein:"
 "Certificate validation successful","Zertifikatsvalidierung erfolgreich"
 "Something went wrong while processing the data.","Bei der Verarbeitung der Daten ist etwas schief gelaufen."
-"Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)","Ungültige Anmeldedaten. Bitte überprüfen Sie erneut: Händler-ID, Zertifikat und Umgebung (Modus)"
+"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Ungültige Anmeldedaten. Bitte überprüfen Sie erneut: Händler-ID, Zertifikat und Umgebung (Modus)"
 "Pairing #%1 not found","Pairing #%1 nicht gefunden"
 "Order #%1 - Transaction #%2","Bestellung #%1 - Transaktion #%2"
 "Request Log #%1","Anfrage-Log #%1"
@@ -61,7 +61,7 @@ Response,Antwort
 "TWINT Checkout","TWINT Checkout"
 "Place Order","Bestellung aufgeben"
 "Use Default","Standard verwenden"
-"Invalid Merchant ID. Merchant ID needs to be a UUIDv4","Ungültige Händler-ID. Händler-ID muss eine UUIDv4 sein"
+"Invalid Store UUID. Store UUID needs to be a UUIDv4","Ungültige Händler-ID. Händler-ID muss eine UUIDv4 sein"
 "Validating credentials","Anmeldedaten werden validiert"
 Saving...,Speichern...
 Copied!,Kopiert!
@@ -70,7 +70,7 @@ Copied!,Kopiert!
 Configuration,Konfiguration
 Credentials,Anmeldedaten
 "Regular Checkout","Regulärer Checkout"
-"Merchant ID","Händler-ID"
+"Store UUID","Händler-ID"
 Environment,Umgebung
 Certificate,Zertifikat
 twint,twint

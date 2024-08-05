@@ -10,7 +10,6 @@ use Magento\Framework\Event\ManagerInterface as EventManager;
 use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 use Psr\Log\LoggerInterface as Logger;
 use Twint\Magento\Model\ResourceModel\Pairing;
-use Twint\Magento\Model\ResourceModel\PairingHistory;
 
 class Collection extends SearchResult
 {
@@ -22,12 +21,9 @@ class Collection extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
-        string $mainTable = PairingHistory::TABLE_NAME,
-        string $resourceModel = PairingHistory::class
+        string $mainTable = Pairing::TABLE_NAME,
+        string $resourceModel = Pairing::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
-
-        $this->addOrder('parent_id', 'desc');
-        $this->addOrder('created_at', 'desc');
     }
 }

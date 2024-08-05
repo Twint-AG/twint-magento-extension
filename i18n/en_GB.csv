@@ -17,7 +17,7 @@ or,or
 "Enter this code in your TWINT app:","Enter this code in your TWINT app:"
 "Certificate validation successful","Certificate validation successful"
 "Something went wrong while processing the data.","Something went wrong while processing the data."
-"Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)","Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)"
+"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Invalid credentials. Please check again: Store UUID, certificate and environment (mode)"
 "Pairing #%1 not found","Pairing #%1 not found"
 "Order #%1 - Transaction #%2","Order #%1 - Transaction #%2"
 "Request Log #%1","Request Log #%1"
@@ -61,7 +61,7 @@ Response,Response
 "TWINT Checkout","TWINT Checkout"
 "Place Order","Place Order"
 "Use Default","Use Default"
-"Invalid Merchant ID. Merchant ID needs to be a UUIDv4","Invalid Merchant ID. Merchant ID needs to be a UUIDv4"
+"Invalid Store UUID. Store UUID needs to be a UUIDv4","Invalid Store UUID. Store UUID needs to be a UUIDv4"
 "Validating credentials","Validating credentials"
 Saving...,Saving...
 Copied!,Copied!
@@ -70,7 +70,7 @@ Copied!,Copied!
 Configuration,Configuration
 Credentials,Credentials
 "Regular Checkout","Regular Checkout"
-"Merchant ID","Merchant ID"
+"Store UUID","Store UUID"
 Environment,Environment
 Certificate,Certificate
 twint,twint

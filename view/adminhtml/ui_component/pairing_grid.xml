@@ -6,6 +6,7 @@
         </item>
     </argument>
     <settings>
+        <spinner>pairing_columns</spinner>
         <deps>
             <dep>pairing_grid.pairing_grid_data_source</dep>
         </deps>
@@ -29,17 +30,25 @@
             </settings>
         </dataProvider>
     </dataSource>
-    <columns name="sales_order_pairing_columns">
+    <columns name="pairing_columns">
         <column name="parent_id">
             <settings>
-                <label translate="true">Pairing ID</label>
+                <label translate="true">ID</label>
                 <sortable>false</sortable>
             </settings>
         </column>
 
-        <column name="order_id">
+        <column name="method" component="Twint_Magento/js/grid/column/tag">
             <settings>
-                <label translate="true">Order</label>
+                <label translate="true">Method</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Amount</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
@@ -47,45 +56,14 @@
             <settings>
                 <filter>text</filter>
                 <label translate="true">Token</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
-        <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+        <column name="status" component="Twint_Magento/js/grid/column/status">
             <settings>
-                <label translate="true">Amount</label>
-            </settings>
-        </column>
-
-        <column name="status">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Status</label>
-            </settings>
-        </column>
-
-        <column name="pairing_status">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Pairing Status</label>
-            </settings>
-        </column>
-
-        <column name="transaction_status">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Transaction Status</label>
-            </settings>
-        </column>
-
-        <column name="shipping_id">
-            <settings>
-                <label translate="true">Shipping</label>
-            </settings>
-        </column>
-
-        <column name="customer" class="Twint\Magento\Block\Adminhtml\Listing\CustomAction">
-            <settings>
-                <label translate="true">Customer Data</label>
+                <label translate="true">Statuses</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
@@ -93,10 +71,11 @@
             <settings>
                 <dataType>date</dataType>
                 <label translate="true">Transaction Date</label>
+                <sortable>false</sortable>
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction">
+        <column name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction" component="Twint_Magento/js/grid/column/link">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
@@ -105,7 +84,8 @@
             </argument>
             <settings>
                 <label translate="true">Actions</label>
+                <sortable>false</sortable>
             </settings>
-        </actionsColumn>
+        </column>
     </columns>
 </listing>

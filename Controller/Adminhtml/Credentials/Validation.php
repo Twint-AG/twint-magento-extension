@@ -46,13 +46,13 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
         $resultJson = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
         $environment = (string) $this->request->get('environment') ?? Environment::TESTING;
-        $merchantId = $this->request->get('merchantId') ?? '';
+        $storeUuid = $this->request->get('storeUuid') ?? '';
 
         try {
-            $valid = $this->validator->validate($cert, $merchantId, $environment);
+            $valid = $this->validator->validate($cert, $storeUuid, $environment);
             return $resultJson->setData([
                 'success' => $valid,
-                'message' => $valid ? '' : __('Invalid credentials. Please check again: Merchant ID, certificate and environment (mode)'),
+                'message' => $valid ? '' : __('Invalid credentials. Please check again: Store UUID, certificate and environment (mode)'),
             ]);
         } catch (Exception $e) {
             return $resultJson->setData([

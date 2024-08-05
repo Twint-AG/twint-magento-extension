@@ -96,3 +96,24 @@
 #certificate-file:disabled {
     display: none;
 }
+
+.twint-method{
+    border: 1px solid #dddddd;
+    padding: 5px
+}
+
+.twint-status{
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.field-block{
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #f6f6f6;
+}
+.full-width{
+    width:100%;
+}

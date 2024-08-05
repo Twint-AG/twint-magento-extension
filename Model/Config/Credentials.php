@@ -13,9 +13,9 @@ class Credentials extends AbstractConfig
         return json_decode($this->data['certificate'] ?? '', true);
     }
 
-    public function getMerchantId(): string
+    public function getStoreUuid(): string
     {
-        return $this->data['merchant_id'] ?? '';
+        return $this->data['store_uuid'] ?? '';
     }
 
     public function getEnvironment(): string

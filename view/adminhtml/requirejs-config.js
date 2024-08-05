@@ -4,7 +4,9 @@ var config = {
     },
     map: {
         '*': {
-            'Twint_Magento/js/grid/column/link': 'Twint_Magento/js/grid/column/link'
+            'Twint_Magento/js/grid/column/tag': 'Twint_Magento/js/grid/column/tag',
+            'Twint_Magento/js/grid/column/status': 'Twint_Magento/js/grid/column/status',
+            'Twint_Magento/js/grid/column/link': 'Twint_Magento/js/grid/column/link',
         }
     }
 };

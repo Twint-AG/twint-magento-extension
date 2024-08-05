@@ -14,7 +14,7 @@ class TwintConstant
 
     public const CONFIG_CREDENTIALS = self::SECTION . '/credentials';
 
-    public const CONFIG_MERCHANT_ID = self::CONFIG_CREDENTIALS . '/merchant_id';
+    public const CONFIG_MERCHANT_ID = self::CONFIG_CREDENTIALS . '/store_uuid';
 
     public const CONFIG_TEST_MODE = self::CONFIG_CREDENTIALS . '/environment';
 
