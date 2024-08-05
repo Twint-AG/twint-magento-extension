@@ -85,7 +85,7 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction">
+        <column name="actions" class="Twint\Magento\Block\Adminhtml\Listing\ViewAction" component="Twint_Magento/js/grid/column/link">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
@@ -96,6 +96,6 @@
                 <label translate="true">Actions</label>
                 <sortable>false</sortable>
             </settings>
-        </actionsColumn>
+        </column>
     </columns>
 </listing>

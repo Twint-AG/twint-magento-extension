@@ -23,7 +23,7 @@
                 <payment_action>capture</payment_action>
                 <model>Twint\Magento\Model\Method\TwintExpressMethod</model>
                 <order_status>processing</order_status>
-                <title>TWINT Express</title>
+                <title>TWINT Express Checkout</title>
                 <currency>CHF</currency>
                 <allowspecific>0</allowspecific>
                 <can_athorize>1</can_athorize>
