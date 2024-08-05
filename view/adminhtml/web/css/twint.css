@@ -102,6 +102,11 @@
     padding: 5px
 }
 
+.twint-method.bg-white{
+    background-color: white;
+    margin-left: 10px;
+}
+
 .twint-status{
     display: inline-block;
     white-space: nowrap;

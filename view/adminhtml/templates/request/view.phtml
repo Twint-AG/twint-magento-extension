@@ -9,28 +9,28 @@ $invocations = $block->getInvocations();
 ?>
 <div class="request-view">
     <div class="field-block">
-        <label for="method"><b><?php echo __("API method"); ?></b></label>
-        <div id="method" name="method" class="full-width"><?php echo htmlspecialchars($request->getMethod()); ?></div>
+        <label for="method"><b><?=  __("API method"); ?></b></label>
+        <span class="twint-method bg-white"><?= htmlspecialchars($request->getMethod()); ?><span></span>
     </div>
 
     <div class="field-block">
-        <label for="request"><b><?php echo __("Request"); ?></b></label>
-        <textarea id="request" name="request" class="full-width" rows="4"><?php echo htmlspecialchars($request->getRequest()); ?></textarea>
+        <label for="request"><b><?=  __("Request"); ?></b></label>
+        <textarea id="request" name="request" class="full-width" rows="4"><?= htmlspecialchars($request->getRequest()); ?></textarea>
     </div>
 
     <div class="field-block">
-        <label for="response"><b><?php echo __("Response"); ?></b></label>
-        <textarea id="response" name="response" class="full-width" rows="4"><?php echo htmlspecialchars($request->getResponse()); ?></textarea>
+        <label for="response"><b><?=  __("Response"); ?></b></label>
+        <textarea id="response" name="response" class="full-width" rows="4"><?= htmlspecialchars($request->getResponse()); ?></textarea>
     </div>
 
         <?php foreach ($invocations as $invocation) { ?>
         <div class="field-block">
-            <h3><?php echo $invocation['action'] ?></h3>
-            <label><b><?php echo __("Request"); ?></b></label>
-            <textarea class="full-width" rows="4"><?php echo htmlspecialchars($invocation['req']); ?></textarea>
+            <h3><?=  $invocation['action'] ?></h3>
+            <label><b><?=  __("Request"); ?></b></label>
+            <textarea class="full-width" rows="4"><?= htmlspecialchars($invocation['req']); ?></textarea>
 
-            <label><b><?php echo __("Response"); ?></b></label>
-            <textarea class="full-width" rows="4"><?php echo htmlspecialchars($invocation['res']); ?></textarea>
+            <label><b><?=  __("Response"); ?></b></label>
+            <textarea class="full-width" rows="4"><?= htmlspecialchars($invocation['res']); ?></textarea>
         </div>
 
         <?php } ?>
