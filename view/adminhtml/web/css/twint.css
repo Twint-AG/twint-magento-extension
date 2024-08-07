@@ -97,12 +97,13 @@
     display: none;
 }
 
-.twint-method{
+.twint-tag{
     border: 1px solid #dddddd;
-    padding: 5px
+    padding: 5px;
+    margin-right: 5px;
 }
 
-.twint-method.bg-white{
+.twint-tag.bg-white{
     background-color: white;
     margin-left: 10px;
 }

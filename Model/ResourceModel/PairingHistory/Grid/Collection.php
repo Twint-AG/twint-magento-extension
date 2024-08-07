@@ -39,7 +39,7 @@ class Collection extends SearchResult
         $this->getSelect()->joinLeft(
             ['request' => $this->getTable(RequestLog::TABLE_NAME)],
             'main_table.request_id = request.id',
-            ['method', ]
+            ['method', 'soap_action' ]
         );
 
         return $this;

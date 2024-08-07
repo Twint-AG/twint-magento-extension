@@ -30,11 +30,32 @@
             </settings>
         </dataProvider>
     </dataSource>
+
+    <listingToolbar name="listing_top">
+        <columnsControls name="columns_controls"/>
+    </listingToolbar>
+
     <columns name="pairing_columns">
         <column name="parent_id">
             <settings>
                 <label translate="true">ID</label>
                 <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="order_id">
+            <settings>
+                <label translate="true">Order ID</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
+            <settings>
+                <label translate="true">Purchase Point</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+                <visible>false</visible>
             </settings>
         </column>
 
@@ -45,10 +66,26 @@
             </settings>
         </column>
 
+        <column name="soap_action" component="Twint_Magento/js/grid/column/tags">
+            <settings>
+                <label translate="true">SOAP action</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="status" component="Twint_Magento/js/grid/column/status">
+            <settings>
+                <label translate="true">TWINT statuses</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
         <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
             <settings>
                 <label translate="true">Amount</label>
                 <sortable>false</sortable>
+                <visible>false</visible>
             </settings>
         </column>
 
@@ -57,13 +94,25 @@
                 <filter>text</filter>
                 <label translate="true">Token</label>
                 <sortable>false</sortable>
+                <visible>false</visible>
             </settings>
         </column>
 
-        <column name="status" component="Twint_Magento/js/grid/column/status">
+        <column name="shipping_id">
             <settings>
-                <label translate="true">Statuses</label>
+                <filter>text</filter>
+                <label translate="true">Shipping Method</label>
                 <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="customer">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Data</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
             </settings>
         </column>
 
