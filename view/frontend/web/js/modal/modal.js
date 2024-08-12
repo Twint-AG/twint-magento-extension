@@ -15,7 +15,6 @@ define([
     statusRefresher: new StatusRefresher(),
     setStatusRefresher: function (refresher){
       this.statusRefresher = refresher;
-      this.modal.setRefresher(refresher);
     },
     setOnSuccess: function (onSuccess){
       this.statusRefresher.setOnSuccess(onSuccess);
@@ -31,6 +30,8 @@ define([
       this.statusRefresher.setId(config.id);
       this.statusRefresher.setModal(this.modal);
       this.statusRefresher.onProcessing();
+
+      this.modal.setRefresher(this.statusRefresher);
     },
     open: function () {
       this.modal.open();
