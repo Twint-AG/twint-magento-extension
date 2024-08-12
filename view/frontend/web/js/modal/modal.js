@@ -29,6 +29,7 @@ define([
 
       this.statusRefresher.setId(config.id);
       this.statusRefresher.setModal(this.modal);
+      this.statusRefresher.start();
       this.statusRefresher.onProcessing();
 
       this.modal.setRefresher(this.statusRefresher);

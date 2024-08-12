@@ -1,8 +1,9 @@
 define([
   'jquery',
   'mage/storage',
-  'Magento_Customer/js/customer-data'
-], function ($, storage, customerData) {
+  'Magento_Customer/js/customer-data',
+  'Twint_Magento/js/modal/interval'
+], function ($, storage, customerData, clock) {
   class StatusRefresher {
     constructor() {
       this.$ = $;
@@ -12,7 +13,11 @@ define([
       this.stopped = false;
     }
 
-    setOnSuccess(onSuccess){
+    start(){
+      clock.begin();
+    }
+
+    setOnSuccess(onSuccess) {
       this.redirectAction = onSuccess;
     }
 
@@ -21,7 +26,7 @@ define([
     }
 
     check() {
-      if(this.stopped)
+      if (this.stopped)
         return;
 
       const self = this;
@@ -46,14 +51,18 @@ define([
     }
 
     onProcessing() {
-      setTimeout(this.check.bind(this), 5000);
+      let interval = clock.interval();
+
+      if (interval > 0) {
+        setTimeout(this.check.bind(this), interval);
+      }
     }
 
-    setModal(){
+    setModal() {
 
     }
 
-    stop(){
+    stop() {
       this.stopped = true;
     }
   }

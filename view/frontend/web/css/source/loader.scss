@@ -17,34 +17,6 @@
   }
 
   svg {
-    width: 100px;
-  }
-
-  polygon {
-    fill: white;
-    stroke: #9E9E9E;
-    stroke-width: 0.3px;
-    stroke-dasharray: 0, 0, 0, 200;
-    stroke-dashoffset: 0;
-    animation: hexagonLoader 4s linear infinite;
-  }
-}
-
-@keyframes hexagonLoader {
-  0% {
-    stroke-dasharray: 0, 0, 0, 80;
-  }
-  25% {
-    stroke-dasharray: 0, 15, 20, 40;
-  }
-  50% {
-    stroke: #262626;
-    stroke-dasharray: 0, 30, 40, 0;
-  }
-  75% {
-    stroke-dasharray: 0, 45, 60, 0;
-  }
-  100% {
-    stroke-dasharray: 90, 0, 0, 0;
+    width: 50px;
   }
 }

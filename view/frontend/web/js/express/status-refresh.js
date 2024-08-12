@@ -1,8 +1,9 @@
 define([
   'jquery',
   'mage/storage',
-  'Magento_Customer/js/customer-data'
-], function ($, storage, customerData) {
+  'Magento_Customer/js/customer-data',
+  'Twint_Magento/js/modal/interval'
+], function ($, storage, customerData, clock) {
   class ExpressStatusRefresh {
     constructor(storage) {
       this.storage = storage;
@@ -17,11 +18,18 @@ define([
       this.id = value;
     }
 
+    start(){
+      clock.begin();
+    }
+
     onProcessing() {
       if (this.processing)
         return;
 
-      setTimeout(this.check.bind(this), 5000);
+      let interval = clock.interval();
+      if (interval > 0) {
+        setTimeout(this.check.bind(this), interval);
+      }
     }
 
     onPaid(response) {
