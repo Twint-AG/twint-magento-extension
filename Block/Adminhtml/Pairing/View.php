@@ -29,6 +29,6 @@ class View extends Template
 
     public function isExpress(): ?bool
     {
-        return $this?->entity->isExpressCheckout();
+        return $this?->entity->isExpress();
     }
 }

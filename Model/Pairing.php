@@ -33,7 +33,7 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isSuccessful(): bool
     {
-        if(!$this->isExpressCheckout())
+        if(!$this->isExpress())
             return $this->getStatus() === OrderStatus::SUCCESS;
 
         return !empty($this->getShippingId()) && !empty($this->getCustomerData());
@@ -41,7 +41,7 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isFailure(): bool
     {
-        if($this->isExpressCheckout())
+        if($this->isExpress())
             return $this->getPairingStatus() == PairingStatus::NO_PAIRING;
 
         return $this->getStatus() === OrderStatus::FAILURE;
@@ -79,7 +79,7 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isFinish(): bool
     {
-        if ($this->isExpressCheckout())
+        if ($this->isExpress())
             return $this->isExpressFinish();
 
         return $this->isRegularFinish();
@@ -151,9 +151,9 @@ class Pairing extends AbstractModel implements IdentityInterface
         return (bool)$this->getData('captured');
     }
 
-    public function isExpressCheckout(): bool
+    public function isExpress(): bool
     {
-        return !empty($this->getQuoteId());
+        return (bool) $this->getData('is_express');
     }
 
     public function isSameCustomerDataWith(FastCheckoutCheckIn $checkIn): bool

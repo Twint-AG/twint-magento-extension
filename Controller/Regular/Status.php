@@ -13,6 +13,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Exception;
 use Throwable;
+use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Service\MonitorService;
 
 class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
@@ -38,8 +39,11 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
         $id = $this->getRequest()
                 ->getParam('id') ?? null;
 
+        $status = $this->monitorService->monitor($id);
+
         return $json->setData([
-            'finish' => $this->monitorService->monitor($id)->getFinished(),
+            'finish' => $status->getFinished(),
+            'paid' => $status->getStatus() == MonitorStatus::STATUS_PAID,
         ]);
     }
 }

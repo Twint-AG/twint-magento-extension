@@ -25,11 +25,6 @@ class MonitorStatus
         return $this->finished;
     }
 
-    public function getAdditionalInformations(): array
-    {
-        return $this->args;
-    }
-
     public function getAdditionalInformation(string $key): mixed
     {
         return $this->args[$key] ?? null;

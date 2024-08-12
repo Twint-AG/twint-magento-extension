@@ -18,6 +18,7 @@ use Twint\Magento\Model\PairingFactory;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
+use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
 use Twint\Sdk\Value\Order;
@@ -39,7 +40,7 @@ class PairingService
         private readonly ApiService                        $api,
         private readonly TransactionService                $transactionService,
         private readonly InvoiceService                    $invoiceService,
-
+        private readonly CartService                    $cartService
     )
     {
     }
@@ -91,6 +92,7 @@ class PairingService
             $this->orderService->pay($pairing, $transaction);
             $this->invoiceService->create($order, $transaction);
             $pairing = $this->markAsCaptured($pairing);
+            $this->cartService->removeAllItems($pairing->getOriginalQuoteId());
             
             return MonitorStatus::fromValues(true, MonitorStatus::STATUS_PAID);
         }
@@ -184,7 +186,6 @@ class PairingService
         /** @var Order $twintOrder */
         $twintOrder = $response->getReturn();
 
-
         /** @var Pairing $pairing */
         $pairing = $this->pairingFactory->create();
         $pairing->setData('pairing_id', (string)$twintOrder->id());
@@ -198,6 +199,11 @@ class PairingService
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 
         $pairing->setData('captured', (int)$captured);
+
+        if($pair = SubmitClonedQuotePlugin::$pair){
+            $pairing->setData('org_quote_id', $pair[0]->getId());
+            $pairing->setData('quote_id', $pair[1]->getId());
+        }
 
         $pairing = $this->pairingRepository->save($pairing);
 
@@ -220,6 +226,7 @@ class PairingService
         $pairing->setData('store_id', $quote->getStoreId());
         $pairing->setData('quote_id', $quote->getId());
         $pairing->setData('org_quote_id', $orgQuote->getId());
+        $pairing->setData('is_express', true);
 
         $pairing = $this->pairingRepository->save($pairing);
 

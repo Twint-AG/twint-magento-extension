@@ -15,6 +15,7 @@ define([
     statusRefresher: new StatusRefresher(),
     setStatusRefresher: function (refresher){
       this.statusRefresher = refresher;
+      this.modal.setRefresher(refresher);
     },
     setOnSuccess: function (onSuccess){
       this.statusRefresher.setOnSuccess(onSuccess);

@@ -15,6 +15,8 @@ define([
     }
 
     options() {
+      let self = this;
+
       return {
         type: 'popup',
         innerScroll: true,
@@ -25,21 +27,21 @@ define([
         modalClass: 'twint-modal-slide',
         closeText: this.$.mage.__('Cancel checkout'),
         closed: function () {
-          console.log("Closed");
+          self.refresher.stop();
         }
       };
     }
 
-    getElements(){
+    getElements() {
       this.guideApp = document.getElementById('twint-guide-app');
       this.guideContact = document.getElementById('twint-guide-contact');
     }
 
-    hideGuide(){
-      if(this.values.mode === 'regular'){
+    hideGuide() {
+      if (this.values.mode === 'regular') {
         this.guideApp.classList.remove('hidden');
         this.guideContact.classList.add('hidden');
-      }else {
+      } else {
         this.guideContact.classList.remove('hidden');
         this.guideApp.classList.add('hidden');
       }
@@ -69,7 +71,7 @@ define([
       this.$target.modal(this.options());
     }
 
-    showPaySection(){
+    showPaySection() {
       let pay = this.$target.find('.to-pay');
       let success = this.$target.find('.on-success');
 
@@ -86,6 +88,10 @@ define([
 
     close() {
       this.$target.modal('closeModal');
+    }
+
+    setRefresher(refresher) {
+      this.refresher = refresher;
     }
   }
 

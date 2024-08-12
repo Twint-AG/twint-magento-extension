@@ -48,7 +48,7 @@ class MonitorService
         $this->pairingRepository->lock($orgPairing);
         $pairing = clone $orgPairing;
 
-        if ($orgPairing->isExpressCheckout()) {
+        if ($orgPairing->isExpress()) {
             $status = $this->pairingService->monitorExpress($orgPairing, $pairing);
             if ($status->paid()) {
                 $orderIncrement = $this->convertService->convert(

@@ -1,13 +1,15 @@
 define([
   'jquery',
   'mage/storage',
-], function ($, storage) {
+  'Magento_Customer/js/customer-data'
+], function ($, storage, customerData) {
   class StatusRefresher {
     constructor() {
       this.$ = $;
       this.storage = storage;
 
       this.count = 0;
+      this.stopped = false;
     }
 
     setOnSuccess(onSuccess){
@@ -19,6 +21,9 @@ define([
     }
 
     check() {
+      if(this.stopped)
+        return;
+
       const self = this;
       this.count++;
       let serviceUrl = window.checkoutConfig.payment.twint.getPairingStatusUrl + '?id=' + this.id;
@@ -33,6 +38,10 @@ define([
     }
 
     onPaid() {
+      let sections = ['cart'];
+      customerData.invalidate(sections);
+      customerData.reload(sections, true);
+
       this.redirectAction.execute();
     }
 
@@ -42,6 +51,10 @@ define([
 
     setModal(){
 
+    }
+
+    stop(){
+      this.stopped = true;
     }
   }
 

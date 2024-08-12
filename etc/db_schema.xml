@@ -19,6 +19,7 @@
         <column xsi:type="varchar" name="shipping_id" length="255" nullable="true" comment="Shipping ID"/>
         <column xsi:type="json" name="customer" nullable="true" comment="Customer Data"/>
         <column xsi:type="smallint" name="captured" unsigned="true" nullable="false" identity="false" default="0" comment="Captured"/>
+        <column xsi:type="smallint" name="is_express" unsigned="true" nullable="false" identity="false" default="0" comment="Is Express Pairing"/>
 
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
