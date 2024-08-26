@@ -46,7 +46,9 @@
         "magento/sample-data-media": "100.4.*",
         "symfony/event-dispatcher" : "^5.4 || ^6.0",
         "twint-ag/twint-magento-extension": "dev-master",
-        "mageplaza/magento-2-german-language-pack": "dev-master"
+        "mageplaza/magento-2-german-language-pack": "dev-master",
+        "mageplaza/magento-2-italian-language-pack": "dev-master",
+        "mageplaza/magento-2-french-language-pack": "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [

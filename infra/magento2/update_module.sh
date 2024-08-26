@@ -1,4 +1,5 @@
-composer update twint-ag/twint-magento-extension --no-progress --no-interaction
+rm -rf composer.lock
+composer update --no-progress --no-interaction
 
 bin/magento maintenance:enable
 
