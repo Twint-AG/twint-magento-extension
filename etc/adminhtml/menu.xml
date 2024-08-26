@@ -28,7 +28,7 @@
              resource="Twint_Magento::payment"/>
 
         <add id="Twint_Magento::regular"
-             title="Regular Checkout"
+             title="TWINT Checkout"
              translate="title"
              module="Twint_Magento"
              sortOrder="10"
@@ -37,7 +37,7 @@
              resource="Twint_Magento::payment"/>
 
         <add id="Twint_Magento::express"
-             title="Express Checkout"
+             title="TWINT Express Checkout"
              translate="title"
              module="Twint_Magento"
              sortOrder="10"

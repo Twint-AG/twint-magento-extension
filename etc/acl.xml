@@ -7,7 +7,7 @@
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
                             <resource id="Magento_Payment::payment">
-                                <resource id="Twint_Magento::payment" title="TWINT payment configurations" translate="title"/>
+                                <resource id="Twint_Magento::payment" title="TWINT Configuration" translate="title"/>
                             </resource>
                         </resource>
                     </resource>

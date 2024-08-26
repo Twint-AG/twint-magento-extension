@@ -9,7 +9,7 @@ use Twint\Magento\Service\AppsService;
 
 class ScanQrModal extends Template
 {
-    private $links = [];
+    private array $links = [];
 
     public function __construct(
         private readonly AppsService $appService,
@@ -38,7 +38,7 @@ class ScanQrModal extends Template
     public function getIsMobile(): bool
     {
         if (empty($this->links)) {
-            $this->links = $this->appService->getLinks($this->_storeManager->getStore()->getId());
+            $this->links = $this->appService->getLinks((string)$this->_storeManager->getStore()->getId());
         }
 
         return isset($this->links['android']) || isset($this->links['ios']);
@@ -47,7 +47,7 @@ class ScanQrModal extends Template
     public function getLinks(): string
     {
         if (empty($this->links)) {
-            $this->links = $this->appService->getLinks($this->_storeManager->getStore()->getId());
+            $this->links = $this->appService->getLinks((string)$this->_storeManager->getStore()->getId());
         }
 
         $links = $this->links;

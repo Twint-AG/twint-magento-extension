@@ -5,10 +5,10 @@
         </tab>
         <section id="twint" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <tab>twint</tab>
-            <label>Credentials</label>
+            <label>TWINT Credentials</label>
             <resource>Twint_Magento::payment</resource>
             <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Credentials</label>
+                <label>TWINT Credentials</label>
                 <field id="storeUuid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Store UUID</label>
                     <config_path>twint/credentials/store_uuid</config_path>
@@ -28,11 +28,11 @@
         </section>
 
         <section id="twint_regular" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Regular Checkout</label>
+            <label>TWINT Checkout</label>
             <tab>twint</tab>
             <resource>Twint_Magento::payment</resource>
             <group id="regular" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>TWINT Regular Checkout</label>
+                <label>TWINT Checkout</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
@@ -49,7 +49,7 @@
         </section>
 
         <section id="twint_express" translate="label,tab" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Express Checkout</label>
+            <label>TWINT Express Checkout</label>
             <tab>twint</tab>
             <resource>Twint_Magento::payment</resource>
             <group id="express" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -67,11 +67,6 @@
                     <source_model>Twint\Magento\Model\Source\Screens</source_model>
                     <config_path>twint/express/screens</config_path>
                     <can_be_empty>1</can_be_empty>
-                </field>
-
-                <field id="sort_order" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sort Order</label>
-                    <config_path>payment/twint_express/sort_order</config_path>
                 </field>
             </group>
         </section>

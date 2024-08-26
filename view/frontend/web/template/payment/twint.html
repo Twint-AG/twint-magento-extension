@@ -27,7 +27,7 @@
         </div>
         <div class="actions-toolbar">
             <div class="primary">
-                <button class="twint-button action checkout" type="submit"
+                <button class="action primary" type="submit"
                         data-bind="
                          click: placeOrder,
                          attr: {title: $t('Place Order')},
@@ -36,10 +36,7 @@
                          "
                         disabled
                         >
-                    <span class="icon-block">
-                        <img class="twint-icon" data-bind="attr: {src: getExpressUrl()}" alt="TWINT Checkout">
-                    </span>
-                    <span class="twint-label" data-bind="i18n: 'Checkout'"></span>
+                    <span data-bind="i18n: 'Place order'"></span>
                 </button>
             </div>
         </div>

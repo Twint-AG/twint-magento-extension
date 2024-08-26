@@ -28,9 +28,6 @@
         <plugin name="submit_cloned_quote" type="Twint\Magento\Plugin\SubmitClonedQuotePlugin"/>
     </type>
 
-    <preference for="Magento\CatalogWidget\Block\Product\ProductsList"
-                type="Twint\Magento\Block\Frontend\Product\ProductList"/>
-
     <type name="Magento\Framework\App\RouterList">
         <arguments>
             <argument name="routers" xsi:type="array">

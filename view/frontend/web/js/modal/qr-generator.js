@@ -33,17 +33,17 @@ define([
     }
 
     getElements() {
-      this.guideApp = document.getElementById('twint-guide-app');
       this.guideContact = document.getElementById('twint-guide-contact');
+      this.guides = document.getElementById('twint-guides');
     }
 
     hideGuide() {
       if (this.values.mode === 'regular') {
-        this.guideApp.classList.remove('hidden');
         this.guideContact.classList.add('hidden');
+        this.guides.classList.remove('md:grid-cols-2');
       } else {
         this.guideContact.classList.remove('hidden');
-        this.guideApp.classList.add('hidden');
+        this.guides.classList.add('md:grid-cols-2');
       }
     }
 

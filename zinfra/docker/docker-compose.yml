@@ -41,6 +41,9 @@ services:
       - "./../..:/var/www/plugin"
       - "/var/www/plugin/zinfra/"
       - "/var/www/plugin/vendor/"
+      - "/var/www/dev/magento2/pub/"
+      - "/var/www/dev/magento2/generated/"
+      - "/var/www/dev/magento2/var/"
     networks:
       - wwwserver
     depends_on:
