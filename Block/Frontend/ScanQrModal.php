@@ -100,7 +100,7 @@ class ScanQrModal extends Template
             $html .= '
                 <div id="twint-ios-container">
                     <div class="my-6 text-center">
-                        ' . __('Select your TWINT app:') . '
+                        ' . __('Choose your TWINT app:') . '
                     </div>
         
                     <div class="twint-app-container w-3/4 mx-auto justify-center max-w-screen-md mx-auto grid grid-cols-3 gap-4">

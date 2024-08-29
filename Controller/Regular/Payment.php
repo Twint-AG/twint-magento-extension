@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Regular;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
@@ -32,6 +33,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
 
     /**
      * @throws LocalizedException
+     * @throws Exception
      */
     public function execute()
     {
@@ -44,7 +46,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
 
         $payment = $order->getPayment();
         if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-            throw new LocalizedException(__('This order did not processed by TWINT'));
+            throw new Exception('This order did not processed by TWINT');
         }
 
         $pairing = $this->getPairing($order);
@@ -61,13 +63,14 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
 
     /**
      * @throws LocalizedException
+     * @throws Exception
      */
     protected function getOrder(int $orderId): Order
     {
         $order = $orderId === 0 ? $this->session->getLastRealOrder() : $this->orderRepository->get($orderId);
 
         if ((!$order instanceof Order)) {
-            throw new LocalizedException(__('Order #%1 not found', $orderId ?? null));
+            throw new Exception("Order $orderId not found");
         }
 
         return $order;

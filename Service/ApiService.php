@@ -62,7 +62,7 @@ class ApiService
             $log->setData('soap_response', json_encode($soapResponses));
             $log->setData('exception', $exception ?? null);
 
-            if (!$save && !$exception) {
+            if (!$exception && !$save  ) {
                 return $log;
             }
 

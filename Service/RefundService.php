@@ -61,13 +61,13 @@ class RefundService
     protected function validate(Pairing $pairing, float $amount): bool
     {
         if ($amount <= 0) {
-            throw new LocalizedException(__('Refund amount has to greater than 0'));
+            throw new LocalizedException(__('Amount to refund should be greater than 0'));
         }
 
         $total = $this->refundRepository->getTotalRefundedAmount($pairing->getId());
 
         if ($total + $amount - $pairing->getAmount() > 0) {
-            throw new LocalizedException(__('Refund amount is exceed the transaction amount'));
+            throw new LocalizedException(__('Total amount should not exceed the maximum refundable amount'));
         }
 
         return true;

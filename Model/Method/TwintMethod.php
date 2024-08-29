@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Model\Method;
 
+use Exception;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -118,6 +119,9 @@ abstract class TwintMethod extends AbstractMethod
         return MethodInterface::ACTION_AUTHORIZE;
     }
 
+    /**
+     * @throws Exception
+     */
     public function authorize(InfoInterface $payment, $amount): self
     {
         $amount = $this->priceCurrency->convertAndRound($amount);
@@ -125,7 +129,7 @@ abstract class TwintMethod extends AbstractMethod
         /** @var Pairing $pairing */
         list($order, $pairing, $history) = $this->clientService->createOrder($payment, $amount);
         if (!$order) {
-            throw new LocalizedException(__('Unable to handle payment'));
+            throw new Exception('Unable to handle payment');
         }
 
         $transactionId = $pairing->getPairingId() . '-' . $history->getId();
@@ -152,7 +156,7 @@ abstract class TwintMethod extends AbstractMethod
 
         $pairing = $this->pairingRepository->getByOrderId($order->getIncrementId());
         if (!($pairing instanceof Pairing)) {
-            throw new LocalizedException(__('Cannot get Pairing record to refund'));
+            throw new Exception('Cannot get Pairing record to refund');
         }
 
         try {

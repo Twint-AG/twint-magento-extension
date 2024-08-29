@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Service;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Container\InvoiceIdentity;
@@ -25,6 +26,10 @@ class InvoiceService
     ) {
     }
 
+    /**
+     * @throws Throwable
+     * @throws LocalizedException
+     */
     public function create(Order $order, Transaction $transaction): ?Invoice
     {
         if ($order->canInvoice()) {
@@ -41,7 +46,7 @@ class InvoiceService
 
                 $this->repository->save($invoice);
             } catch (Throwable $e) {
-                $this->logger->error(__('Cannot create invoice: ' . $e->getMessage()));
+                $this->logger->error('Cannot create invoice: ' . $e->getMessage());
                 throw $e;
             }
 

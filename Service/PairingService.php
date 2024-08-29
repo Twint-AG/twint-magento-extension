@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Service;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Logger\Monolog;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Quote\Model\Quote;
 use Throwable;
@@ -40,7 +41,8 @@ class PairingService
         private readonly ApiService                        $api,
         private readonly TransactionService                $transactionService,
         private readonly InvoiceService                    $invoiceService,
-        private readonly CartService                    $cartService
+        private readonly CartService                    $cartService,
+        private readonly Monolog          $logger
     )
     {
     }
@@ -61,7 +63,8 @@ class PairingService
                 false
             );
         } catch (Throwable $e) {
-            throw new LocalizedException(__('Cannot get pairing status'));
+            $this->logger->error("TWINT cannot get pairing status: " . $e->getMessage());
+            throw $e;
         }
 
         /** @var Order $tOrder */

@@ -44,7 +44,7 @@ class View extends Action
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()
             ->getTitle()
-            ->prepend(__('Request Log #%1', $id));
+            ->prepend(__('Request Log') . ' #' . $id);
 
         // Pass the request data to the block
         /** @var \Twint\Magento\Block\Adminhtml\Request\View $block */

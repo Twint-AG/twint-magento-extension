@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Adminhtml\Pairing;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
@@ -30,7 +31,8 @@ class View extends Action
     }
 
     /**
-     * @throws LocalizedException
+     * @return Page|ResultInterface|ResponseInterface
+     * @throws Exception
      */
     public function execute(): Page|ResultInterface|ResponseInterface
     {
@@ -40,13 +42,13 @@ class View extends Action
         /** @var Pairing $pairing */
         $pairing = $this->repository->getById($id);
         if (!$pairing) {
-            throw new LocalizedException(__('Pairing #%1 not found', $id));
+            throw new Exception("Pairing $id not found");
         }
 
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()
             ->getTitle()
-            ->prepend(__('Order #%1 - Transaction #%2', $pairing->getOrderId(), $pairing->getId()));
+            ->prepend(__('Order') . $pairing->getOrderId() . ' - ' . __('Transaction') . ' ' . $pairing->getId());
 
         /** @var View $block */
         $block = $resultPage->getLayout()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
@@ -59,7 +60,10 @@ class OrderService
     }
 
     /**
-     * @throws LocalizedException
+     * @param Pairing $pairing
+     * @param Transaction $transaction
+     * @return Order
+     * @throws Exception
      */
     public function cancel(Pairing $pairing, Transaction $transaction): Order
     {
@@ -70,17 +74,14 @@ class OrderService
         $payment->setLastTransId($transaction->getTxnId());
         $this->paymentRepository->save($payment);
 
-        try {
-            $order = $order->cancel()
-                ->save();
-            $this->checkoutSession
-                ->unsLastQuoteId()
-                ->unsLastSuccessQuoteId()
-                ->unsLastOrderId()
-                ->unsLastRealOrderId();
-        } catch (Throwable $e) {
-            throw new LocalizedException(__('Unable to cancel Checkout' . $e->getMessage()));
-        }
+        $order = $order->cancel()
+            ->save();
+
+        $this->checkoutSession
+            ->unsLastQuoteId()
+            ->unsLastSuccessQuoteId()
+            ->unsLastOrderId()
+            ->unsLastRealOrderId();
 
         return $order;
     }

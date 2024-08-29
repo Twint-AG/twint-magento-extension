@@ -26,7 +26,7 @@ class CertificateUpload extends AbstractElement
                         <div class="file-upload-container">
                             <label class="file-upload">
                                 <input type="file" id="certificate-file" accept=".p12"/>
-                                <span class="file-upload-btn">' . __('Chose File') . '</span>
+                                <span class="file-upload-btn">' . __('Choose File') . '</span>
                                 <span class="file-upload-label" 
                                     id="certificate-file-name"
                                     data-empty-title="' . __('Only .p12 files are allowed.') . '"
@@ -41,7 +41,7 @@ class CertificateUpload extends AbstractElement
                         <input type="password" id="certificate-password" name="certificate_password">
                     </div>
                     <div class="note">
-                        ' . __('Password is required for all TWINT certificates.') . '                    
+                        ' . __('Certificate password is required') . '                    
                     </div>
                 </div>
                 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Regular;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -11,6 +12,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 
@@ -24,17 +26,22 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
         parent::__construct($context);
     }
 
+    /**
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     * @throws Exception
+     */
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $order = $this->session->getLastRealOrder();
         if (!$order) {
-            throw new LocalizedException(__('Dont have needed order to pay'));
+            throw new Exception('Dont have needed order to pay');
         }
 
         $payment = $order->getPayment();
         if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-            throw new LocalizedException(__('This order did not provided by TWINT'));
+            throw new Exception('This order did not processed by TWINT');
         }
 
         $data = [

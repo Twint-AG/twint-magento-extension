@@ -11,7 +11,7 @@
 View,Ansicht
 TWINT,TWINT
 "Switch to TWINT app now","Wechseln Sie jetzt zur TWINT-App"
-"Select your TWINT app:","Wählen Sie Ihre TWINT-App:"
+"Choose your TWINT app:","Wählen Sie Ihre TWINT-App:"
 "Other banks","Andere Banken"
 or,oder
 "Enter this code in your TWINT app:","Geben Sie diesen Code in Ihrer TWINT-App ein:"
@@ -49,7 +49,7 @@ Test,Test
 "Refund amount is exceed the transaction amount","Rückerstattungsbetrag übersteigt den Transaktionsbetrag"
 "Custom Information for new tab","Benutzerdefinierte Informationen für neuen Tab"
 "Refund history","Rückerstattungsverlauf"
-"Transaction history","Transaktionsverlauf"
+"Transaction logs","Transaktionsverlauf"
 "API method","API-Methode"
 Request,Anfrage
 Response,Antwort
@@ -89,10 +89,10 @@ Status,Status
 "Transaction Status","Transaktionsstatus"
 "Transaction Date","Transaktionsdatum"
 Actions,Aktionen
-"Refund ID","Rückerstattungs-ID"
+"Reversal ID","Rückerstattungs-ID"
 Pairing,Pairing
 "Reversal ID","Stornierung-ID"
-"Refunded By","Rückerstattet von"
+"Refunded by","Rückerstattet von"
 "Refund Date","Rückerstattungsdatum"
 ID,ID
 Token,Token
