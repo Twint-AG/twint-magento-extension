@@ -52,4 +52,12 @@
         </arguments>
     </type>
 
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="commandTwintPoll" xsi:type="object">Twint\Magento\Console\Command\PollCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

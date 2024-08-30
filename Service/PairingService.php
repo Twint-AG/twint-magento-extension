@@ -12,6 +12,7 @@ use Throwable;
 use Twint\Magento\Api\PairingHistoryRepositoryInterface;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Model\Pairing;
@@ -28,6 +29,7 @@ use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
+use Zend_Db_Statement_Exception;
 
 class PairingService
 {
@@ -70,11 +72,7 @@ class PairingService
         /** @var Order $tOrder */
         $tOrder = $res->getReturn();
 
-        if ($tOrder->pairingStatus()->__toString() !== $pairing->getPairingStatus()
-            || $tOrder->transactionStatus()
-                ->__toString() !== $pairing->getTransactionStatus()
-            || $tOrder->status()
-                ->__toString() !== $pairing->getStatus()) {
+        if ($pairing->hasDiffs($tOrder)) {
             $log = $this->api->saveLog($res->getRequest());
             $pairing = $this->update($pairing, $tOrder);
             $history = $this->createHistory($pairing, $log);
@@ -119,46 +117,53 @@ class PairingService
     }
 
     /**
-     * @param Pairing $orgPairing
      * @param Pairing $pairing
+     * @param Pairing $cloned
      * @return MonitorStatus
+     * @throws Throwable
      */
-    public function monitorExpress(Pairing $orgPairing, Pairing $pairing): MonitorStatus
+    public function monitorExpress(Pairing $pairing, Pairing $cloned): MonitorStatus
     {
-        $client = $this->connector->build($pairing->getStoreId(), Version::NEXT);
+        $client = $this->connector->build($cloned->getStoreId(), Version::NEXT);
 
         $res = $this->api->call(
             $client,
             'monitorFastCheckOutCheckIn',
-            [PairingUuid::fromString($pairing->getPairingId())],
+            [PairingUuid::fromString($cloned->getPairingId())],
             false
         );
 
-        /** @var FastCheckoutCheckIn $checkIn */
-        $checkIn = $res->getReturn();
+        /** @var FastCheckoutCheckIn $checkInState */
+        $checkInState = $res->getReturn();
 
         $status = MonitorStatus::STATUS_IN_PROGRESS;
         $finished = false;
 
-        if ($orgPairing->getPairingStatus() !== $checkIn->pairingStatus()->__toString()
-            || $orgPairing->getShippingId() !== ($checkIn->hasShippingMethodId() ? (string)$checkIn->shippingMethodId() : null)
-            || !$orgPairing->isSameCustomerDataWith($checkIn)
-        ) {
+        if ($pairing->hasDiffs($checkInState)) {
+            try {
+                $cloned = $this->updateForExpress($cloned, $checkInState);
+            }catch (Zend_Db_Statement_Exception $e){
+                if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
+                    return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
+                }
+
+                throw $e;
+            }
+
             $log = $this->api->saveLog($res->getRequest());
-            $pairing = $this->updateForExpress($pairing, $checkIn);
-            $history = $this->createHistory($pairing, $log);
+            $history = $this->createHistory($cloned, $log);
+
+            if (empty($pairing->getCustomerData()) && $checkInState->hasCustomerData() && $checkInState->hasShippingMethodId()) {
+                $status = MonitorStatus::STATUS_PAID;
+
+                return MonitorStatus::fromValues(true, $status, [
+                    'pairing' => $cloned,
+                    'history' => $history
+                ]);
+            }
         }
 
-        if (empty($orgPairing->getCustomerData()) && $checkIn->hasCustomerData() && $checkIn->hasShippingMethodId()) {
-            $status = MonitorStatus::STATUS_PAID;
-
-            return MonitorStatus::fromValues(true, $status, [
-                'pairing' => $pairing,
-                'history' => $history
-            ]);
-        }
-
-        if($pairing->getPairingStatus() == PairingStatus::NO_PAIRING){
+        if($cloned->getPairingStatus() == PairingStatus::NO_PAIRING){
             $finished = true;
             $status = MonitorStatus::STATUS_CANCELLED;
         }
@@ -168,6 +173,7 @@ class PairingService
 
     public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn): Pairing
     {
+        $pairing->setData('version', $pairing->getVersion());
         $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
         $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
         $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
@@ -177,7 +183,7 @@ class PairingService
 
     public function update(Pairing $pairing, Order $order): Pairing
     {
-        $pairing->setData('status', (string)$order->status());
+        $pairing->setData('status', (string) $order->status());
         $pairing->setData('transaction_status', (string)$order->transactionStatus());
         $pairing->setData('pairing_status', (string)$order->pairingStatus());
 
@@ -189,7 +195,6 @@ class PairingService
         /** @var Order $twintOrder */
         $twintOrder = $response->getReturn();
 
-        /** @var Pairing $pairing */
         $pairing = $this->pairingFactory->create();
         $pairing->setData('pairing_id', (string)$twintOrder->id());
         $pairing->setData('status', (string)$twintOrder->status());
@@ -220,7 +225,6 @@ class PairingService
         /** @var InteractiveFastCheckoutCheckIn $checkIn */
         $checkIn = $response->getReturn();
 
-        /** @var Pairing $pairing */
         $pairing = $this->pairingFactory->create();
         $pairing->setData('pairing_id', (string)$checkIn->pairingUuid());
         $pairing->setData('token', (string)$checkIn->pairingToken());
@@ -240,7 +244,6 @@ class PairingService
 
     public function createHistory(Pairing $pairing, RequestLog $log): PairingHistory
     {
-        /** @var PairingHistory $history */
         $history = $this->historyFactory->create();
         $history->setData('parent_id', (string)$pairing->getId());
         $history->setData('status', $pairing->getStatus());

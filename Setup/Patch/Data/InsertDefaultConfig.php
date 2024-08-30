@@ -12,8 +12,8 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 class InsertDefaultConfig implements DataPatchInterface
 {
     public function __construct(
-        private ModuleDataSetupInterface $moduleDataSetup,
-        private ConfigResource $configResource
+        private ModuleDataSetupInterface $setup,
+        private ConfigResource           $configResource
     ) {
     }
 
@@ -29,8 +29,7 @@ class InsertDefaultConfig implements DataPatchInterface
 
     public function apply()
     {
-        $this->moduleDataSetup->getConnection()
-            ->startSetup();
+        $this->setup->startSetup();
 
         $defaultConfig = [
             // common
@@ -49,7 +48,6 @@ class InsertDefaultConfig implements DataPatchInterface
             $this->configResource->saveConfig($path, $value, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0);
         }
 
-        $this->moduleDataSetup->getConnection()
-            ->endSetup();
+        $this->setup->endSetup();
     }
 }

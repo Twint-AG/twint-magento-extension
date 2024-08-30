@@ -33,7 +33,7 @@ services:
     volumes:
       # UNCOMMENT FOR PERSISTANT WWW DATA
       - "${CONTAINERDATA}/${PROJECT_NAME}/data:/home/data"
-      - "../magento247:/var/www:rw"
+      - "../magento247:/var/www/dev/magento2:rw"
       - "./ubuntu/magento247-build/bin/install-magento:/usr/local/bin/install-magento"
       - "./ubuntu/magento247-build/bin/install-sampledata:/usr/local/bin/install-sampledata"
       - "./ubuntu/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
@@ -41,9 +41,6 @@ services:
       - "./../..:/var/www/plugin"
       - "/var/www/plugin/zinfra/"
       - "/var/www/plugin/vendor/"
-      - "/var/www/dev/magento2/pub/"
-      - "/var/www/dev/magento2/generated/"
-      - "/var/www/dev/magento2/var/"
     networks:
       - wwwserver
     depends_on:

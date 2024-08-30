@@ -13,8 +13,8 @@ class MonitorStatus
     public const STATUS_CANCELLED = -1;
 
     public function __construct(
-        private bool  $finished,
-        private int   $status = self::STATUS_IN_PROGRESS,
+        private readonly bool  $finished,
+        private readonly int   $status = self::STATUS_IN_PROGRESS,
         private array $args = []
     )
     {

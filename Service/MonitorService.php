@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Webapi\Exception;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Console\Command\PollCommand;
 use Twint\Magento\Model\Monitor\ExpressMonitorStatus;
 use Twint\Magento\Model\Monitor\MonitorStatus;
+use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\OrderConvertService;
 
 class MonitorService
@@ -20,36 +27,36 @@ class MonitorService
         private readonly PairingRepositoryInterface $pairingRepository,
         private readonly PairingService             $pairingService,
         private readonly OrderConvertService        $convertService,
+        private readonly DirectoryList        $directoryList,
+        private readonly Monolog          $logger
     )
     {
     }
 
     /**
-     * @param string $id
-     * @return MonitorStatus
+     * @param Pairing|string $pairing
+     * @return Pairing
      * @throws CouldNotSaveException
+     * @throws Exception
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws Exception
      * @throws Throwable
+     * @throws InputException
      */
-    public function monitor(string $id): MonitorStatus
+    public function monitor(Pairing|string $pairing): Pairing
     {
-        $orgPairing = $this->pairingRepository->getByPairingId($id);
-
-        if ($orgPairing->isFinish()) {
-            return MonitorStatus::fromValues(true, MonitorStatus::extractStatus($orgPairing));
+        if(is_string($pairing)){
+            $pairing = $this->pairingRepository->getByPairingId($pairing);
         }
 
-        if ($orgPairing->isLocked()) {
-            return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
+        if ($pairing->isFinished()) {
+            return $pairing;
         }
 
-        $this->pairingRepository->lock($orgPairing);
-        $pairing = clone $orgPairing;
+        $cloned = clone $pairing;
 
-        if ($orgPairing->isExpress()) {
-            $status = $this->pairingService->monitorExpress($orgPairing, $pairing);
+        if ($pairing->isExpress()) {
+            $status = $this->pairingService->monitorExpress($pairing, $cloned);
             if ($status->paid()) {
                 $orderIncrement = $this->convertService->convert(
                     $status->getAdditionalInformation('pairing'),
@@ -58,11 +65,61 @@ class MonitorService
                 $status->setAdditionalInformation('order', $orderIncrement);
             }
         } else {
-            $status = $this->pairingService->monitorRegular($orgPairing, $pairing);
+            $this->pairingService->monitorRegular($pairing, $cloned);
         }
 
-        $this->pairingRepository->unlock($orgPairing);
+        return $pairing;
+    }
 
-        return $status;
+    public function status(Pairing $pairing): MonitorStatus
+    {
+        if($pairing->isFinished()){
+            return $pairing->toMonitorStatus();
+        }
+
+        if(!$pairing->isMonitoring()) {
+            try {
+                $process = new Process([
+                    'php',
+                    $this->directoryList->getRoot() . '/bin/console',
+                    PollCommand::COMMAND,
+                    $pairing->getPairingId(),
+                ]);
+                $process->setOptions([
+                    'create_new_console' => true,
+                ]);
+                $process->disableOutput();
+                $process->start();
+
+                if (!$process->isSuccessful()) {
+                    dd($process->getErrorOutput());
+                    throw new ProcessFailedException($process);
+                }
+            } catch (Throwable $e) {
+                $this->logger->error("TWINT error start monitor: " . $e->getMessage());
+                dd($e);
+            }
+        }
+
+        // Wait for order placing process
+        if ($pairing->getIsOrdering()) {
+            $time = 0;
+            // 100 - Maximum 10s - same as next JS interval
+            while ($time < 100) {
+                $this->logger->info(
+                    "TWINT usleep(0.5) : {$pairing->getPairingId()}  {$pairing->getStatus()} {$pairing->getVersion()}"
+                );
+                $pairing = $this->pairingRepository->getByPairingId($pairing->getPairingId());
+
+                if ($pairing->isFinished()) {
+                    return $pairing->toMonitorStatus();
+                }
+
+                usleep(3 * 100000); // Sleep for 300,000 microseconds (0.3 seconds)
+                $time += 3;
+            }
+        }
+
+        return $pairing->toMonitorStatus();
     }
 }

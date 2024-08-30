@@ -31,4 +31,6 @@ interface PairingRepositoryInterface
     public function getUnFinishedExpresses(): SearchResultsInterface;
 
     public function updateOrderId(string $orderId, int|string $quoteId): void;
+
+    public function updateCheckedAt(string $pairingId);
 }

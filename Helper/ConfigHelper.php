@@ -8,6 +8,8 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\State;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Twint\Magento\Constant\TwintConstant;
@@ -17,8 +19,8 @@ class ConfigHelper extends AbstractHelper
 {
     public function __construct(
         Context $context,
-        private StoreManagerInterface $storeManager,
-        private State $state
+        private readonly StoreManagerInterface $storeManager,
+        private readonly State $state
     ) {
         parent::__construct($context);
     }
@@ -45,7 +47,11 @@ class ConfigHelper extends AbstractHelper
         return new Generic($this->scopeConfig->getValue(TwintConstant::SECTION, $sScopeCode, $sStoreCode));
     }
 
-    protected function fetchCurrentStoreCode()
+    /**
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     */
+    protected function fetchCurrentStoreCode(): array
     {
         $sScopeCode = ScopeInterface::SCOPE_STORES;
         $sStoreCode = $this->storeManager->getStore()

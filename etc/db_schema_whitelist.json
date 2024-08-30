@@ -17,12 +17,17 @@
             "quote_id": true,
             "org_quote_id": true,
             "shipping_id": true,
-            "customer": true
+            "customer": true,
+            "captured": true,
+            "is_express": true,
+            "checked_at": true,
+            "version": true
         },
         "index": {
             "TWINT_PAIRING_ORDER_ID": true,
             "TWINT_PAIRING_STATUS": true,
-            "TWINT_PAIRING_PAIRING_ID": true
+            "TWINT_PAIRING_PAIRING_ID": true,
+            "TWINT_PAIRING_QUOTE_ID": true
         },
         "constraint": {
             "PRIMARY": true,
@@ -62,7 +67,8 @@
             "quote_id": true,
             "org_quote_id": true,
             "shipping_id": true,
-            "customer": true
+            "customer": true,
+            "captured": true
         },
         "index": {
             "TWINT_PAIRING_HISTORY_ORDER_ID": true,

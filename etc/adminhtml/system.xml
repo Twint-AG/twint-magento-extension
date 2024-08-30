@@ -63,7 +63,7 @@
 
                 <field id="screens" translate="label,comment" type="Twint\Magento\Block\Adminhtml\Field\Checkboxes" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Display screens</label>
-                    <comment>Users can see TWINT checkout buttons</comment>
+                    <comment>Where users see the TWINT Express Checkout button</comment>
                     <source_model>Twint\Magento\Model\Source\Screens</source_model>
                     <config_path>twint/express/screens</config_path>
                     <can_be_empty>1</can_be_empty>

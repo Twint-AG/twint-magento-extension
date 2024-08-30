@@ -1,5 +1,10 @@
-.composer
+.composer/
 phpRedisAdmin
 
-dev/magento2/dev/tests
+vendor/
+var/
+pub/
+generated/
+lib/
+
 

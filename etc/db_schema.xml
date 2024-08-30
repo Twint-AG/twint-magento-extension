@@ -25,7 +25,9 @@
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" nullable="true" default="CURRENT_TIMESTAMP" on_update="true"
                 comment="Updated At"/>
-        <column xsi:type="timestamp" name="lock" nullable="true" comment="Lock Until"/>
+        <column xsi:type="timestamp" name="checked_at" nullable="true" comment="Latest monitor at"/>
+        <column xsi:type="smallint" unsigned="true" name="version" nullable="false"  default="1" comment="Version"/>
+        <column xsi:type="smallint" unsigned="true" name="is_ordering" nullable="false"  default="0" comment="Processing place order"/>
 
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>

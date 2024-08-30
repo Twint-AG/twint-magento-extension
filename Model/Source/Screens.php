@@ -16,7 +16,7 @@ class Screens extends Base
         return [
             [
                 'value' => TwintConstant::SCREEN_PDP,
-                'label' => __('Product details page'),
+                'label' => __('Product detail page'),
             ],
             [
                 'value' => TwintConstant::SCREEN_PLP,

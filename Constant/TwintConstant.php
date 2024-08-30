@@ -35,4 +35,8 @@ class TwintConstant
     public const SCREEN_CART_FLYOUT = 'minicart';
 
     public const WIDGET_CATALOG_PRODUCT_LIST = 'CPL';
+
+    public const MONITORING_TIME_WINDOW = 10; //Consider a pairing is under monitoring with in 10 seconds
+
+    public const EXCEPTION_VERSION_CONFLICT = 45000;
 }

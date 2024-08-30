@@ -7,6 +7,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
     'Twint_Magento',
-    //    '/var/www/dev/magento2/vendor/twint/magento-2' // for symlink in locally
-    __DIR__
+        '/var/www/dev/magento2/vendor/twint-ag/twint-magento-extension' // for symlink in locally
+//    __DIR__
 );

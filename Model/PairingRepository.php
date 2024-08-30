@@ -83,6 +83,9 @@ class PairingRepository implements PairingRepositoryInterface
     {
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
+        $collection->getSelect()->columns([
+            'checked_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))')
+        ]);
 
         $this->collectionProcessor->process($criteria, $collection);
 
@@ -295,6 +298,25 @@ class PairingRepository implements PairingRepositoryInterface
         $bind = [
             'order_id' => $orderId,
             'quote_id' => $quoteId
+        ];
+
+        // Execute the query
+        $connection->query($sql, $bind);
+    }
+
+    public function updateCheckedAt(string $pairingId){
+        // Get the connection
+        $connection = $this->resource->getConnection();
+
+        // Define the table name
+        $tableName = ResourceModel::TABLE_NAME;
+
+        // Write the SQL update query
+        $sql = "UPDATE $tableName SET checked_at = NOW() WHERE pairing_id = :id";
+
+        // Bind parameters
+        $bind = [
+            'id' => $pairingId,
         ];
 
         // Execute the query
