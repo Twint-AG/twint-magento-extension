@@ -14,6 +14,10 @@ define([
       this.stopped = false;
     }
 
+    restart(){
+      this.stopped = false;
+    }
+
     setId(value) {
       this.id = value;
     }

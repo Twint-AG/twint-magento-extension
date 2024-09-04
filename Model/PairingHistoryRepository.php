@@ -16,10 +16,10 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
 use Twint\Magento\Api\PairingHistoryRepositoryInterface;
+use Twint\Magento\Model\ResourceModel\Pairing;
 use Twint\Magento\Model\ResourceModel\PairingHistory as ResourceModel;
 use Twint\Magento\Model\ResourceModel\PairingHistory\Collection;
 use Twint\Magento\Model\ResourceModel\PairingHistory\CollectionFactory;
-use Twint\Magento\Model\ResourceModel\Pairing;
 
 class PairingHistoryRepository implements PairingHistoryRepositoryInterface
 {

@@ -73,8 +73,18 @@ class PairingService
         $tOrder = $res->getReturn();
 
         if ($pairing->hasDiffs($tOrder)) {
+            try {
+                $pairing = $this->update($pairing, $tOrder);
+            }catch (Zend_Db_Statement_Exception $e){
+                if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
+                    $this->logger->info("TWINT update was conflicted");
+                    return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
+                }
+
+                throw $e;
+            }
+
             $log = $this->api->saveLog($res->getRequest());
-            $pairing = $this->update($pairing, $tOrder);
             $history = $this->createHistory($pairing, $log);
         }
 
@@ -139,31 +149,37 @@ class PairingService
         $status = MonitorStatus::STATUS_IN_PROGRESS;
         $finished = false;
 
-        if ($pairing->hasDiffs($checkInState)) {
-            try {
-                $cloned = $this->updateForExpress($cloned, $checkInState);
-            }catch (Zend_Db_Statement_Exception $e){
-                if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
-                    return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
-                }
-
-                throw $e;
-            }
-
-            $log = $this->api->saveLog($res->getRequest());
-            $history = $this->createHistory($cloned, $log);
-
-            if (empty($pairing->getCustomerData()) && $checkInState->hasCustomerData() && $checkInState->hasShippingMethodId()) {
-                $status = MonitorStatus::STATUS_PAID;
-
-                return MonitorStatus::fromValues(true, $status, [
-                    'pairing' => $cloned,
-                    'history' => $history
-                ]);
-            }
+        if (!$cloned->hasDiffs($checkInState)) {
+            return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
-        if($cloned->getPairingStatus() == PairingStatus::NO_PAIRING){
+        try {
+            $cloned = $this->updateForExpress($cloned, $checkInState);
+        }catch (Zend_Db_Statement_Exception $e){
+            if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
+                $this->logger->info("TWINT update was conflicted");
+                return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
+            }
+
+            throw $e;
+        }
+
+        $log = $this->api->saveLog($res->getRequest());
+        $history = $this->createHistory($cloned, $log);
+
+        if (empty($pairing->getCustomerData()) && $checkInState->hasCustomerData()) {
+            $status = MonitorStatus::STATUS_PAID;
+
+            return MonitorStatus::fromValues(true, $status, [
+                'pairing' => $cloned,
+                'history' => $history
+            ]);
+        }
+
+        if(!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$checkInState->hasCustomerData()){
+            $this->logger->info("TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}");
+
+            $this->pairingRepository->markAsCancelled((int) $pairing->getId());
             $finished = true;
             $status = MonitorStatus::STATUS_CANCELLED;
         }
@@ -178,6 +194,8 @@ class PairingService
         $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
         $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
 
+        $this->logger->info("TWINT update: {$pairing->getPairingId()} {$pairing->getPairingStatus()}");
+
         return $this->pairingRepository->save($pairing);
     }
 
@@ -186,6 +204,8 @@ class PairingService
         $pairing->setData('status', (string) $order->status());
         $pairing->setData('transaction_status', (string)$order->transactionStatus());
         $pairing->setData('pairing_status', (string)$order->pairingStatus());
+
+        $this->logger->info("TWINT update: {$pairing->getPairingId()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}");
 
         return $this->pairingRepository->save($pairing);
     }

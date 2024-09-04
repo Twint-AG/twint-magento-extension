@@ -8,91 +8,79 @@
 "ERROR_CERTIFICATE_EXPIRED","Zertifikat abgelaufen"
 "ERROR_CERTIFICATE_NOT_YET_VALID","Zertifikat ist noch nicht gültig"
 
-View,Ansicht
+View,Anzeigen
 TWINT,TWINT
 "Switch to TWINT app now","Wechseln Sie jetzt zur TWINT-App"
-"Choose your TWINT app:","Wählen Sie Ihre TWINT-App:"
-"Other banks","Andere Banken"
-or,oder
-"Enter this code in your TWINT app:","Geben Sie diesen Code in Ihrer TWINT-App ein:"
-"Certificate validation successful","Zertifikatsvalidierung erfolgreich"
-"Something went wrong while processing the data.","Bei der Verarbeitung der Daten ist etwas schief gelaufen."
-"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Ungültige Anmeldedaten. Bitte überprüfen Sie erneut: Händler-ID, Zertifikat und Umgebung (Modus)"
-"Pairing #%1 not found","Pairing #%1 nicht gefunden"
-"Order #%1 - Transaction #%2","Bestellung #%1 - Transaktion #%2"
-"Request Log #%1","Anfrage-Log #%1"
-"Dont have needed order to pay","Keine zu zahlende Bestellung vorhanden"
-"This order did not provided by TWINT","Diese Bestellung wurde nicht von TWINT bereitgestellt"
-"This order did not processed by TWINT","Diese Bestellung wurde nicht von TWINT verarbeitet"
-"Order #%1 not found","Bestellung #%1 nicht gefunden"
-"Chose File","Datei auswählen"
-"Only .p12 files are allowed.","Es sind nur .p12-Dateien erlaubt."
-"Password is required for all TWINT certificates.","Für alle TWINT-Zertifikate ist ein Passwort erforderlich."
-"Certificate encrypted and stored,","Zertifikat verschlüsselt und gespeichert,"
-"Upload new certificate","Neues Zertifikat hochladen"
-"Unable to handle payment","Zahlung kann nicht verarbeitet werden"
-"Cannot get Pairing record to refund","Pairing-Datensatz für Rückerstattung kann nicht abgerufen werden"
-"Requested item doesn't exist","Angefordertes Element existiert nicht"
-"Database connection error","Datenbankverbindungsfehler"
-"Unable to save item","Element kann nicht gespeichert werden"
-Production,Produktion
+"Choose your TWINT app:","Choose your TWINT app:"
+"Other banks","Other banks"
+or,or
+"Enter this code in your TWINT app:","Enter this code in your TWINT app:"
+"Certificate validation successful","Certificate validation successful"
+"Something went wrong while processing the data.","Something went wrong while processing the data."
+"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Invalid credentials. Please check again: Store UUID, certificate and environment (mode)"
+"Request Log","Request Log"
+"Choose file","Choose file"
+"Only .p12 files are allowed","Only .p12 files are allowed"
+"Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
+"Certificate encrypted and stored,","Certificate encrypted and stored,"
+"Upload new certificate","Upload new certificate"
+Production,Production
 Test,Test
-"Product details page","Produktdetailseite"
-"Product listing page","Produktlistenseite"
-"Cart page","Warenkorb-Seite"
-"Cart flyout","Warenkorb-Flyout"
-"'Cannot create invoice: ' .","'Rechnung kann nicht erstellt werden: ' ."
-"Captured amount of CHF %1, Transaction ID %2","Erfasster Betrag von CHF %1, Transaktions-ID %2"
-"'Unable to cancel Checkout' .","'Checkout kann nicht abgebrochen werden' ."
-"Cannot get pairing status","Pairing-Status kann nicht abgerufen werden"
-"Refund amount has to greater than 0","Rückerstattungsbetrag muss größer als 0 sein"
-"Refund amount is exceed the transaction amount","Rückerstattungsbetrag übersteigt den Transaktionsbetrag"
-"Custom Information for new tab","Benutzerdefinierte Informationen für neuen Tab"
-"Refund history","Rückerstattungsverlauf"
-"Transaction logs","Transaktionsverlauf"
-"API method","API-Methode"
-Request,Anfrage
-Response,Antwort
+"Product detail page","Product detail page"
+"Product listing page","Product listing page"
+"Cart page","Cart page"
+"Cart flyout","Cart flyout"
+"Captured amount of CHF %1, Transaction ID %2","Captured amount of CHF %1, Transaction ID %2"
+"Refund amount has to greater than 0","Refund amount has to greater than 0"
+"Refund amount is exceed the transaction amount","Refund amount is exceed the transaction amount"
+"Custom Information for new tab","Custom Information for new tab"
+"Refund history","Refund history"
+"Transaction logs","Transaction logs"
+"API method","API method"
+Request,Request
+Response,Response
 "Express Checkout","Express Checkout"
-"Copy code","Code kopieren"
-"Open your bank's TWINT app on your smartphone.","Öffnen Sie die TWINT-App Ihrer Bank auf Ihrem Smartphone."
-"Scan this QR Code with your TWINT app to complete the checkout.","Scannen Sie diesen QR-Code mit Ihrer TWINT-App, um den Checkout abzuschließen."
-"Select a shipping address and complete the purchase in the app.","Wählen Sie eine Lieferadresse und schließen Sie den Kauf in der App ab."
+"Copy code","Copy code"
+"Open your bank's TWINT app on your smartphone.","Open your bank's TWINT app on your smartphone."
+"Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
+"Select a shipping address and complete the purchase in the app.","Select a shipping address and complete the purchase in the app."
 "TWINT Checkout","TWINT Checkout"
-"Place Order","Bestellung aufgeben"
-"Use Default","Standard verwenden"
-"Invalid Store UUID. Store UUID needs to be a UUIDv4","Ungültige Händler-ID. Händler-ID muss eine UUIDv4 sein"
-"Validating credentials","Anmeldedaten werden validiert"
-Saving...,Speichern...
-Copied!,Kopiert!
-"Cancel checkout","Checkout abbrechen"
-"Payment method offered by TWINT","Zahlungsmethode angeboten von TWINT"
-Configuration,Konfiguration
-Credentials,Anmeldedaten
-"Regular Checkout","Regulärer Checkout"
-"Store UUID","Händler-ID"
-Environment,Umgebung
-Certificate,Zertifikat
-twint,twint
-"TWINT Regular Checkout","TWINT Regulärer Checkout"
-Enabled,Aktiviert
-"Sort Order","Sortierreihenfolge"
+"Place Order","Place Order"
+"Invalid Store UUID. Store UUID needs to be a UUIDv4","Invalid Store UUID. Store UUID needs to be a UUIDv4"
+"Validating credentials","Validating credentials"
+Saving...,Saving...
+Copied!,Copied!
+"Cancel checkout","Cancel checkout"
+"Payment method offered by TWINT","Payment method offered by TWINT"
+Configuration,Configuration
+Credentials,Credentials
+"Regular Checkout","Regular Checkout"
+"Store UUID","Store UUID"
+Environment,Environment
+Certificate,Certificate
+"TWINT Regular Checkout","TWINT Regular Checkout"
+"Sort Order","Sort Order"
 "TWINT Express Checkout","TWINT Express Checkout"
-"Display screens","Anzeigebildschirme"
-"Where users see the TWINT Express Checkout button","Benutzer können TWINT-Checkout-Buttons sehen"
-"History ID","Verlaufs-ID"
-Order,Bestellung
-Store,Geschäft
-Amount,Betrag
+"Display screens","Display screens"
+"Where users see the TWINT Express Checkout button","Where users see the TWINT Express Checkout button"
+"History ID","History ID"
+Order,Order
+Store,Store
+Amount,Amount
 Status,Status
-"Pairing Status","Pairing-Status"
-"Transaction Status","Transaktionsstatus"
-"Transaction Date","Transaktionsdatum"
-Actions,Aktionen
-"Reversal ID","Rückerstattungs-ID"
-Pairing,Pairing
-"Reversal ID","Stornierung-ID"
-"Refunded by","Rückerstattet von"
-"Refund Date","Rückerstattungsdatum"
+"Pairing Status","Pairing Status"
+"Transaction Status","Transaction Status"
+"Transaction Date","Transaction Date"
+Actions,Actions
+"Reversal ID","Reversal ID"
+"Pairing ID","Pairing ID"
+"Reversal ID","Reversal ID"
+"Refunded by","Refunded by"
+"Refund Date","Refund Date"
 ID,ID
 Token,Token
+"TWINT Configuration","TWINT Configuration"
+"TWINT statuses","TWINT statuses"
+"Shipping Method","Shipping Method"
+"Customer Data","Customer Data"
+"History ID","History ID"

@@ -27,6 +27,7 @@ use Twint\Magento\Model\ResourceModel\Pairing\CollectionFactory;
 use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\TransactionStatus;
 use Zend_Db_Expr;
+use Zend_Db_Statement_Interface;
 
 class PairingRepository implements PairingRepositoryInterface
 {
@@ -211,29 +212,12 @@ class PairingRepository implements PairingRepositoryInterface
             ->setConditionType('in')
             ->create();
 
-        // Create the first lock filter
-        $lockFilter1 = $this->filterBuilder
-            ->setField('lock')
-            ->setValue(null)
-            ->setConditionType('null')
-            ->create();
-
-        // Create the second lock filter
-        $lockFilter2 = $this->filterBuilder
-            ->setField('lock')
-            ->setValue(new Zend_Db_Expr('now()'))
-            ->setConditionType('lteq')
-            ->create();
-
-        // Create the first filter group for the lock filters (OR condition)
-        $lockFilterGroup = $this->filterGroupBuilder->setFilters([$lockFilter1, $lockFilter2])->create();
-
         // Create the main filter group (AND condition)
         $mainFilterGroup = $this->filterGroupBuilder->setFilters([$statusFilter])->create();
 
         // Build the search criteria
         $criteria = $this->criteriaBuilder
-            ->setFilterGroups([$mainFilterGroup, $lockFilterGroup])
+            ->setFilterGroups([$mainFilterGroup])
             ->create();
 
         return $this->getList($criteria);
@@ -253,23 +237,6 @@ class PairingRepository implements PairingRepositoryInterface
             ->setConditionType('neq')
             ->create();
 
-        // Create the first lock filter
-        $lockFilter1 = $this->filterBuilder
-            ->setField('lock')
-            ->setValue(null)
-            ->setConditionType('null')
-            ->create();
-
-        // Create the second lock filter
-        $lockFilter2 = $this->filterBuilder
-            ->setField('lock')
-            ->setValue(new Zend_Db_Expr('now()'))
-            ->setConditionType('lteq')
-            ->create();
-
-        // Create the first filter group for the lock filters (OR condition)
-        $lockFilterGroup = $this->filterGroupBuilder->setFilters([$lockFilter1, $lockFilter2])->create();
-
         // Create the main filter group (AND condition)
         $mainFilterGroup = $this->filterGroupBuilder->setFilters([$statusFilter])->create();
 
@@ -277,7 +244,7 @@ class PairingRepository implements PairingRepositoryInterface
 
         // Build the search criteria
         $criteria = $this->criteriaBuilder
-            ->setFilterGroups([$mainFilterGroup, $quoteFilterGroup, $lockFilterGroup])
+            ->setFilterGroups([$mainFilterGroup, $quoteFilterGroup])
             ->create();
 
         return $this->getList($criteria);
@@ -304,7 +271,7 @@ class PairingRepository implements PairingRepositoryInterface
         $connection->query($sql, $bind);
     }
 
-    public function updateCheckedAt(string $pairingId){
+    public function updateCheckedAt(string $id){
         // Get the connection
         $connection = $this->resource->getConnection();
 
@@ -312,14 +279,65 @@ class PairingRepository implements PairingRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET checked_at = NOW() WHERE pairing_id = :id";
+        $sql = "UPDATE $tableName SET checked_at = NOW() WHERE id = :id";
 
         // Bind parameters
         $bind = [
-            'id' => $pairingId,
+            'id' => $id,
         ];
 
         // Execute the query
         $connection->query($sql, $bind);
+    }
+
+
+    public function markAsOrdering(string $id){
+        // Get the connection
+        $connection = $this->resource->getConnection();
+
+        // Define the table name
+        $tableName = ResourceModel::TABLE_NAME;
+
+        // Write the SQL update query
+        $sql = "UPDATE $tableName SET is_ordering = 1 WHERE id = :id";
+
+        // Bind parameters
+        $bind = [
+            'id' => $id
+        ];
+
+        // Execute the query
+        $connection->query($sql, $bind);
+    }
+
+    public function markAsPaid(int $id): Zend_Db_Statement_Interface
+    {
+        return $this->updateStatus($id, Pairing::EXPRESS_STATUS_PAID);
+    }
+
+    public function markAsCancelled(int $id): Zend_Db_Statement_Interface
+    {
+        return $this->updateStatus($id, Pairing::EXPRESS_STATUS_CANCELLED);
+    }
+
+    private function updateStatus(int $id, string $status): Zend_Db_Statement_Interface
+    {
+        // Get the connection
+        $connection = $this->resource->getConnection();
+
+        // Define the table name
+        $tableName = ResourceModel::TABLE_NAME;
+
+        // Write the SQL update query
+        $sql = "UPDATE $tableName SET status = :status WHERE id = :id";
+
+        // Bind parameters
+        $bind = [
+            'id' => $id,
+            'status' => $status
+        ];
+
+        // Execute the query
+        return $connection->query($sql, $bind);
     }
 }

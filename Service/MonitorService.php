@@ -11,7 +11,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Webapi\Exception;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
@@ -58,11 +57,14 @@ class MonitorService
         if ($pairing->isExpress()) {
             $status = $this->pairingService->monitorExpress($pairing, $cloned);
             if ($status->paid()) {
+                $this->pairingRepository->markAsOrdering($pairing->getId());
                 $orderIncrement = $this->convertService->convert(
                     $status->getAdditionalInformation('pairing'),
                     $status->getAdditionalInformation('history'),
                 );
                 $status->setAdditionalInformation('order', $orderIncrement);
+
+                $this->pairingRepository->markAsPaid((int) $pairing->getId());
             }
         } else {
             $this->pairingService->monitorRegular($pairing, $cloned);
@@ -71,6 +73,9 @@ class MonitorService
         return $pairing;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function status(Pairing $pairing): MonitorStatus
     {
         if($pairing->isFinished()){
@@ -81,7 +86,7 @@ class MonitorService
             try {
                 $process = new Process([
                     'php',
-                    $this->directoryList->getRoot() . '/bin/console',
+                    $this->directoryList->getRoot() . '/bin/magento',
                     PollCommand::COMMAND,
                     $pairing->getPairingId(),
                 ]);
@@ -90,14 +95,9 @@ class MonitorService
                 ]);
                 $process->disableOutput();
                 $process->start();
-
-                if (!$process->isSuccessful()) {
-                    dd($process->getErrorOutput());
-                    throw new ProcessFailedException($process);
-                }
             } catch (Throwable $e) {
                 $this->logger->error("TWINT error start monitor: " . $e->getMessage());
-                dd($e);
+                throw $e;
             }
         }
 
@@ -107,8 +107,9 @@ class MonitorService
             // 100 - Maximum 10s - same as next JS interval
             while ($time < 100) {
                 $this->logger->info(
-                    "TWINT usleep(0.5) : {$pairing->getPairingId()}  {$pairing->getStatus()} {$pairing->getVersion()}"
+                    "TWINT usleep(0.3) : {$pairing->getPairingId()}  {$pairing->getStatus()} {$pairing->getVersion()}"
                 );
+
                 $pairing = $this->pairingRepository->getByPairingId($pairing->getPairingId());
 
                 if ($pairing->isFinished()) {

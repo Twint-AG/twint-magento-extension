@@ -4,7 +4,7 @@
     <table name="twint_pairing" resource="default" engine="innodb" comment="TWINT pairing table">
         <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
         <column xsi:type="varchar" length="36" name="pairing_id" nullable="false" comment="Pairing ID"/>
-        <column xsi:type="varchar" length="32" name="status" nullable="false" default="NULL" comment="Status"/>
+        <column xsi:type="varchar" length="32" name="status" nullable="false" comment="Status"/>
         <column xsi:type="varchar" name="token" nullable="false" length="32" comment="Method Code"/>
         <column xsi:type="decimal" name="amount" unsigned="true" nullable="false" scale="4" precision="20"
                 comment="Amount"/>

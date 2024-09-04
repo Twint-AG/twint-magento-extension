@@ -15,7 +15,6 @@ use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Model\Pairing;
-use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\PairingService;
 use Twint\Sdk\Value\CustomerDataScopes;
@@ -78,7 +77,7 @@ class CheckoutService
             $client,
             'requestFastCheckOutCheckIn',
             [
-                Money::CHF($quote->getGrandTotal()),
+                Money::CHF($quote->getSubtotal()),
                 new CustomerDataScopes(...CustomerDataScopes::all()),
                 $this->getShippingOptions($quote),
             ]

@@ -32,6 +32,11 @@ class ScanQrModal extends Template
 
     public function getMobileClass(): string
     {
+        return $this->getIsMobile() ? 'twint-mobile' : '';
+    }
+
+    public function getDisplayClass(): string
+    {
         return $this->getIsMobile() ? 'hidden' : '';
     }
 
@@ -55,6 +60,8 @@ class ScanQrModal extends Template
         $isAndroid = isset($links['android']);
         $isIos = isset($links['ios']);
 
+        $mobile = $isAndroid || $isIos;
+
         $html = '';
 
         if ($isAndroid) {
@@ -71,7 +78,7 @@ class ScanQrModal extends Template
         }
 
         if ($isIos) {
-            $prefinedApps = [
+            $refinedApps = [
                 'UBS TWINT' => 'bank-ubs',
                 'Raiffeisen TWINT' => 'bank-raiffeisen',
                 'PostFinance TWINT' => 'bank-pf',
@@ -84,7 +91,7 @@ class ScanQrModal extends Template
             $else = '';
 
             foreach ($links['ios'] as $link) {
-                $icon = $prefinedApps[$link['name']] ?? null;
+                $icon = $refinedApps[$link['name']] ?? null;
                 if ($icon) {
                     $app .= '<img src="' . $this->getViewFileUrl("Twint_Magento/images/apps/{$icon}.png") . '" 
                     class="shadow-2xl w-64 h-64 rounded-3xl mx-auto"
@@ -115,9 +122,9 @@ class ScanQrModal extends Template
             ';
         }
 
-        if ($isIos || $isAndroid) {
+        if ($mobile) {
             $html .= '
-                <div class="default-hidden md:flex text-center md:hidden hidden">
+                <div class="default-hidden text-center">
                     <div class="flex items-center justify-center mx-4">
                         <div class="flex-grow border-b-0 border-t border-solid border-gray-300"></div>
                         <span class="mx-4 text-black">' . __('or') . '</span>

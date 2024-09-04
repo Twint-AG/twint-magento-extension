@@ -18,33 +18,19 @@ or,or
 "Certificate validation successful","Certificate validation successful"
 "Something went wrong while processing the data.","Something went wrong while processing the data."
 "Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Invalid credentials. Please check again: Store UUID, certificate and environment (mode)"
-"Pairing #%1 not found","Pairing #%1 not found"
-"Order #%1 - Transaction #%2","Order #%1 - Transaction #%2"
-"Request Log #%1","Request Log #%1"
-"Dont have needed order to pay","Dont have needed order to pay"
-"This order did not provided by TWINT","This order did not provided by TWINT"
-"This order did not processed by TWINT","This order did not processed by TWINT"
-"Order #%1 not found","Order #%1 not found"
-"Chose File","Chose File"
-"Only .p12 files are allowed.","Only .p12 files are allowed."
+"Request Log","Request Log"
+"Choose file","Choose file"
+"Only .p12 files are allowed","Only .p12 files are allowed"
 "Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
 "Certificate encrypted and stored,","Certificate encrypted and stored,"
 "Upload new certificate","Upload new certificate"
-"Unable to handle payment","Unable to handle payment"
-"Cannot get Pairing record to refund","Cannot get Pairing record to refund"
-"Requested item doesn't exist","Requested item doesn't exist"
-"Database connection error","Database connection error"
-"Unable to save item","Unable to save item"
 Production,Production
 Test,Test
-"Product details page","Product details page"
+"Product detail page","Product detail page"
 "Product listing page","Product listing page"
 "Cart page","Cart page"
 "Cart flyout","Cart flyout"
-"'Cannot create invoice: ' .","'Cannot create invoice: ' ."
 "Captured amount of CHF %1, Transaction ID %2","Captured amount of CHF %1, Transaction ID %2"
-"'Unable to cancel Checkout' .","'Unable to cancel Checkout' ."
-"Cannot get pairing status","Cannot get pairing status"
 "Refund amount has to greater than 0","Refund amount has to greater than 0"
 "Refund amount is exceed the transaction amount","Refund amount is exceed the transaction amount"
 "Custom Information for new tab","Custom Information for new tab"
@@ -60,7 +46,6 @@ Response,Response
 "Select a shipping address and complete the purchase in the app.","Select a shipping address and complete the purchase in the app."
 "TWINT Checkout","TWINT Checkout"
 "Place Order","Place Order"
-"Use Default","Use Default"
 "Invalid Store UUID. Store UUID needs to be a UUIDv4","Invalid Store UUID. Store UUID needs to be a UUIDv4"
 "Validating credentials","Validating credentials"
 Saving...,Saving...
@@ -73,9 +58,7 @@ Credentials,Credentials
 "Store UUID","Store UUID"
 Environment,Environment
 Certificate,Certificate
-twint,twint
 "TWINT Regular Checkout","TWINT Regular Checkout"
-Enabled,Enabled
 "Sort Order","Sort Order"
 "TWINT Express Checkout","TWINT Express Checkout"
 "Display screens","Display screens"
@@ -90,9 +73,14 @@ Status,Status
 "Transaction Date","Transaction Date"
 Actions,Actions
 "Reversal ID","Reversal ID"
-Pairing,Pairing
+"Pairing ID","Pairing ID"
 "Reversal ID","Reversal ID"
 "Refunded by","Refunded by"
 "Refund Date","Refund Date"
 ID,ID
 Token,Token
+"TWINT Configuration","TWINT Configuration"
+"TWINT statuses","TWINT statuses"
+"Shipping Method","Shipping Method"
+"Customer Data","Customer Data"
+"History ID","History ID"

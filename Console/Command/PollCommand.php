@@ -57,16 +57,24 @@ class PollCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $output->writeln("Running");
         $pairingId = $input->getArgument('pairing-id');
         $this->pairing = $this->repository->getByPairingId($pairingId);
-        $this->startedAt = new DateTime();
 
+        if(!$this->pairing){
+            $this->logger->info("TWINT pairing not exist: {$pairingId}");
+            $output->writeln("Pairing not exist");
+
+            return 1;
+        }
+
+        $this->startedAt = new DateTime();
         $this->state->setAreaCode(Area::AREA_GLOBAL);
 
         try {
             while (!$this->pairing->isFinished()) {
                 $this->logger->info("TWINT monitor: {$pairingId}: {$this->pairing->getVersion()}");
-                $this->repository->updateCheckedAt($pairingId);
+                $this->repository->updateCheckedAt($this->pairing->getId());
 
                 $this->monitor->monitor($this->pairing);
 
@@ -74,7 +82,8 @@ class PollCommand extends Command
                 $this->pairing = $this->repository->getByPairingId($pairingId);
             }
         }catch (Throwable $e){
-            dd($e);
+            $this->logger->error("TWINT monitor error: " . $e->getMessage());
+            return 1;
         }
 
         return 0;

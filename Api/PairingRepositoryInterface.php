@@ -32,5 +32,11 @@ interface PairingRepositoryInterface
 
     public function updateOrderId(string $orderId, int|string $quoteId): void;
 
-    public function updateCheckedAt(string $pairingId);
+    public function updateCheckedAt(string $id);
+
+    public function markAsOrdering(string $id);
+
+    public function markAsPaid(int $id);
+
+    public function markAsCancelled(int $id);
 }

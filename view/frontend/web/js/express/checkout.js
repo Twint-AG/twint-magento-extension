@@ -80,6 +80,7 @@ define([
     }
 
     showQR(data) {
+      this.refresher.restart();
       this.modal.setStatusRefresher(this.refresher)
       this.modal.init(
         {

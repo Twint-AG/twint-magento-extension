@@ -22,9 +22,9 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filter\LocalizedToNormalized;
 use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
-use Psr\Log\LoggerInterface;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
 use Twint\Magento\Util\CryptoHandler;
@@ -34,6 +34,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
     public function __construct(
         protected CheckoutService           $checkoutService,
         private readonly PriceHelper        $priceHelper,
+        private readonly Monolog          $logger,
         Context                             $context,
         private ScopeConfigInterface        $scopeConfig,
         private Session                     $checkoutSession,
@@ -95,7 +96,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
             ]);
         } catch (\Throwable $e) {
-            $this->_objectManager->get(LoggerInterface::class)->critical($e);
+            $this->logger->error('TWINT EC error: '. $e->getMessage());
 
             return $json->setData([
                 'success' => false

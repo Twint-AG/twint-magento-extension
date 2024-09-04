@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Twint\Magento\Service;
 
 use Magento\Framework\Logger\Monolog;
-use Monolog\Logger;
 use Throwable;
 use Twint\Magento\Api\RequestLogRepositoryInterface;
 use Twint\Magento\Model\Api\ApiResponse;
@@ -20,7 +19,7 @@ class ApiService
     public function __construct(
         private readonly RequestLogFactory             $factory,
         private readonly RequestLogRepositoryInterface $repository,
-        private readonly Monolog $logger
+        private readonly Monolog                       $logger
     )
     {
     }
@@ -29,11 +28,10 @@ class ApiService
     {
         try {
             $returnValue = $client->{$method}(...$args);
-        }catch (Throwable $e){
-            $this->logger->error("TWINT $method cannot handle success". $e->getMessage());
+        } catch (Throwable $e) {
+            $this->logger->error("TWINT $method cannot handle success" . $e->getMessage());
             throw $e;
-        }
-        finally {
+        } finally {
             $invocations = $client->flushInvocations();
             $log = $this->log($method, $invocations, $save);
         }
@@ -44,7 +42,7 @@ class ApiService
     /**
      * @param Invocation[] $invocation
      */
-    protected function log(string $method, array $invocation, bool $save = true): RequestLog
+    protected function log(string $method, array $invocation, bool $save): RequestLog
     {
         $log = $this->factory->create();
 
@@ -53,7 +51,6 @@ class ApiService
                 $invocation
             );
 
-            /** @var RequestLog $log */
             $log->setData('method', $method);
             $log->setData('request', $request);
             $log->setData('response', $response);
@@ -62,12 +59,14 @@ class ApiService
             $log->setData('soap_response', json_encode($soapResponses));
             $log->setData('exception', $exception ?? null);
 
-            if (!$exception && !$save  ) {
+            // write log if get exception immediately
+            if (!$exception && !$save) {
                 return $log;
             }
 
             return $this->repository->save($log);
         } catch (Throwable $e) {
+            $this->logger->error('TWINT cannot save request log: ' . $e->getMessage());
         }
 
         return $log;
@@ -79,7 +78,7 @@ class ApiService
     protected function parse(array $invocations): array
     {
         $request = json_encode($invocations[0]->arguments());
-        $exception = $invocations[0]->exception() ?? ' ';
+        $exception = $invocations[0]->exception() ?? null;
         if ($exception instanceof ApiFailure) {
             $exception = $exception->getMessage();
         }

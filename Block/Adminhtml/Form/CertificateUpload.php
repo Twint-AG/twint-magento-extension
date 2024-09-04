@@ -29,8 +29,8 @@ class CertificateUpload extends AbstractElement
                                 <span class="file-upload-btn">' . __('Choose File') . '</span>
                                 <span class="file-upload-label" 
                                     id="certificate-file-name"
-                                    data-empty-title="' . __('Only .p12 files are allowed.') . '"
-                                >' . __('Only .p12 files are allowed.') . '</span>
+                                    data-empty-title="' . __('Only .p12 files are allowed') . '"
+                                >' . __('Only .p12 files are allowed') . '</span>
                             </label>
                         </div>
                     </div>

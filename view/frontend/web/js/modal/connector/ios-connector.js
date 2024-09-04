@@ -26,6 +26,8 @@ define([
       this.appLinksElements = this.container.querySelector('select');
       if (this.appLinksElements)
         this.appLinksElements.addEventListener('change', this.onChangeAppList.bind(this))
+
+      this.showMobileQrCode();
     }
 
     onChangeAppList(event) {
@@ -36,7 +38,7 @@ define([
     }
 
     onClickBank(event, bank) {
-      var link = bank.getAttribute('data-link');
+      const link = bank.getAttribute('data-link');
       this.openAppBank(link);
     }
 
@@ -54,7 +56,7 @@ define([
             clearInterval(checkLocation);
           }, 2000);
         } catch (e) {
-          this.showMobileQrCode();
+
         }
       }
     }

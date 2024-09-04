@@ -13,7 +13,12 @@ define([
       this.stopped = false;
     }
 
+    restart(){
+      this.stopped = false;
+    }
+
     start(){
+      this.restart();
       clock.begin();
     }
 
@@ -47,7 +52,9 @@ define([
       customerData.invalidate(sections);
       customerData.reload(sections, true);
 
-      this.redirectAction.execute();
+      setTimeout(function (){
+        this.redirectAction.execute()
+      }.bind(this), 5);
     }
 
     onProcessing() {

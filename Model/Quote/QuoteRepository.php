@@ -10,12 +10,12 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
-use Magento\Quote\Model\ResourceModel\Quote\Payment as PaymentModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Item as AddressItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Rate as RateModel;
 use Magento\Quote\Model\ResourceModel\Quote\Item as ItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Item\Option as OptionModel;
+use Magento\Quote\Model\ResourceModel\Quote\Payment as PaymentModel;
 
 class QuoteRepository
 {
@@ -33,7 +33,10 @@ class QuoteRepository
     {
     }
 
-    public function clone(Quote $original, Quote $new)
+    /**
+     * @throws NoSuchEntityException
+     */
+    public function clone(Quote $original, Quote $new): Quote
     {
         try {
             $this->resourceModel->save($new);
@@ -44,7 +47,6 @@ class QuoteRepository
 
         } catch (\Throwable $e) {
             $this->logger->error('Cannot save entity ' . $e->getMessage());
-            dd($e);
         }
 
         return $this->getById($new->getId());

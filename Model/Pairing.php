@@ -13,10 +13,13 @@ use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderStatus;
 use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\TransactionStatus;
-use function Aws\boolean_value;
 
 class Pairing extends AbstractModel implements IdentityInterface
 {
+    public const EXPRESS_STATUS_PAID = 'PAID';
+
+    public const EXPRESS_STATUS_CANCELLED = 'CANCELLED';
+
     public const CACHE_TAG = 'twint_pairing';
 
     protected $_eventPrefix = 'twint_pairing';
@@ -37,11 +40,13 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isSuccessful(): bool
     {
-        if (!$this->isExpress())
-            return $this->getStatus() === OrderStatus::SUCCESS;
+        if ($this->isExpress()) {
+            return $this->getStatus() === self::EXPRESS_STATUS_PAID;
+        }
 
-        return !empty($this->getShippingId()) && !empty($this->getCustomerData());
+        return $this->getStatus() === OrderStatus::SUCCESS;
     }
+
 
     public function isFailure(): bool
     {
@@ -54,16 +59,6 @@ class Pairing extends AbstractModel implements IdentityInterface
     public function getPairingStatus(): string
     {
         return $this->getData('pairing_status');
-    }
-
-    public function isLocked(): bool
-    {
-        $lock = $this->getData('lock') ?? null;
-        if (!$lock) {
-            return false;
-        }
-
-        return $this->getData('lock') >= $this->getData('now');
     }
 
     protected function _construct()
@@ -91,7 +86,7 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isExpressFinish(): bool
     {
-        return $this->getPairingStatus() == PairingStatus::NO_PAIRING;
+        return in_array($this->getStatus(), [self::EXPRESS_STATUS_PAID, self::EXPRESS_STATUS_CANCELLED], true);
     }
 
     public function isRegularFinish(): bool
@@ -172,12 +167,12 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getVersion(): int
     {
-        return (int) $this->getData('version');
+        return (int)$this->getData('version');
     }
 
     public function getIsOrdering(): bool
     {
-        return (bool) $this->getData('is_ordering');
+        return (bool)$this->getData('is_ordering');
     }
 
     public function isMonitoring(): bool
@@ -189,23 +184,23 @@ class Pairing extends AbstractModel implements IdentityInterface
     {
         $json = null;
         if ($checkIn->hasCustomerData()) {
-            $json = json_encode($checkIn->hasCustomerData());
+            $json = json_encode($checkIn->customerData());
         }
 
         return $this->getCustomerData() === $json;
     }
 
-    public function hasDiffs(FastCheckoutCheckIn|Order $target):bool{
-
-        if($target instanceof FastCheckoutCheckIn)
+    public function hasDiffs(FastCheckoutCheckIn|Order $target): bool
+    {
+        if ($target instanceof FastCheckoutCheckIn)
             return $this->getPairingStatus() !== $target->pairingStatus()->__toString()
-            || $this->getShippingId() !== ($target->hasShippingMethodId() ? (string)$target->shippingMethodId() : null)
-            || !$this->isSameCustomerDataWith($target);
+                || $this->getShippingId() !== ($target->hasShippingMethodId() ? (string)$target->shippingMethodId() : null);
+//                || !$this->isSameCustomerDataWith($target);
 
 
         /** @var Order $target */
-        return  $this->getPairingStatus() !== $target->pairingStatus()->__toString()
-            || $this->getTransactionStatus() !==  $target->transactionStatus()->__toString()
+        return $this->getPairingStatus() !== $target->pairingStatus()->__toString()
+            || $this->getTransactionStatus() !== $target->transactionStatus()->__toString()
             || $this->getStatus() !== $target->status()->__toString();
     }
 
@@ -213,7 +208,7 @@ class Pairing extends AbstractModel implements IdentityInterface
     {
         return MonitorStatus::fromValues(
             $this->isFinished(),
-            $this->isSuccessful() ? MonitorStatus::STATUS_PAID :  MonitorStatus::STATUS_CANCELLED,
+            $this->isSuccessful() ? MonitorStatus::STATUS_PAID : MonitorStatus::STATUS_CANCELLED,
             [
                 'order' => $this->getOrderId()
             ]
