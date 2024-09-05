@@ -26,7 +26,9 @@ const config = {
       'Twint_Magento/js/express/status-refresh': 'Twint_Magento/js/express/status-refresh',
       'Twint_Magento/js/express/points': 'Twint_Magento/js/express/points',
 
-      'Twint_Magento/js/modal/interval': 'Twint_Magento/js/modal/interval'
+      'Twint_Magento/js/modal/interval': 'Twint_Magento/js/modal/interval',
+
+      'Twint_Magento/js/refresh-cart': 'Twint_Magento/js/refresh-cart',
     }
   }
 };

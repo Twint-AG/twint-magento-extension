@@ -48,13 +48,7 @@ define([
     }
 
     onPaid() {
-      let sections = ['cart'];
-      customerData.invalidate(sections);
-      customerData.reload(sections, true);
-
-      setTimeout(function (){
-        this.redirectAction.execute()
-      }.bind(this), 5);
+      this.redirectAction.execute();
     }
 
     onProcessing() {
