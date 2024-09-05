@@ -16,7 +16,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
-use Twint\Command\TwintPollCommand;
 use Twint\Magento\Controller\Regular\BaseAction;
 use Twint\Magento\Model\PairingRepository;
 use Twint\Magento\Service\MonitorService;

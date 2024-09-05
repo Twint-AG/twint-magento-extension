@@ -25,6 +25,7 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
 use Twint\Magento\Util\CryptoHandler;
@@ -169,7 +170,8 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 $e,
                 __('We can\'t add this item to your shopping cart right now.')
             );
-            $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
+            $this->_objectManager->get(LoggerInterface::class)->critical($e);
+
             return $this->goBack();
         }
 

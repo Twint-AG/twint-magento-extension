@@ -12,6 +12,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Twint\Magento\Api\RequestLogRepositoryInterface;
+use Twint\Magento\Block\Adminhtml\Request\View as RequestView;
 
 class View extends Action
 {
@@ -47,7 +48,7 @@ class View extends Action
             ->prepend(__('Request Log') . ' #' . $id);
 
         // Pass the request data to the block
-        /** @var \Twint\Magento\Block\Adminhtml\Request\View $block */
+        /** @var RequestView $block */
         $block = $resultPage->getLayout()
             ->getBlock('twint_request_view');
         $block?->setEntity($request);

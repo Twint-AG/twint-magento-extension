@@ -28,7 +28,7 @@ class AddressService
 
     protected ShippingAssignmentFactory $shippingAssignmentFactory;
 
-    private $shippingFactory;
+    private mixed $shippingFactory;
 
     public function __construct(
         private readonly ServiceInputProcessor                  $serviceInputProcessor,
@@ -176,7 +176,7 @@ class AddressService
         );
     }
 
-    protected function createMarkedId(Quote $quote)
+    protected function createMarkedId(Quote $quote): string
     {
         // Load or create the quote ID mask for the quote
         $quoteIdMask = $this->quoteIdMaskFactory->create()->load($quote->getId(), 'quote_id');

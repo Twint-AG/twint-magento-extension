@@ -14,7 +14,7 @@ class TwintConstant
 
     public const CONFIG_CREDENTIALS = self::SECTION . '/credentials';
 
-    public const CONFIG_MERCHANT_ID = self::CONFIG_CREDENTIALS . '/store_uuid';
+    public const CONFIG_STORE_UUID = self::CONFIG_CREDENTIALS . '/store_uuid';
 
     public const CONFIG_TEST_MODE = self::CONFIG_CREDENTIALS . '/environment';
 
@@ -26,15 +26,13 @@ class TwintConstant
 
     public const REGULAR_ENABLED = 'twint/regular/enabled';
 
-    public const EXPRESS_ENABLED = 'twint/regular/enabled';
+    public const EXPRESS_ENABLED = 'twint/express/enabled';
     public const EXPRESS_SCREENS = 'twint/express/screens';
 
     public const SCREEN_PLP = 'PLP';
     public const SCREEN_PDP = 'PDP';
     public const SCREEN_CART = 'cart';
     public const SCREEN_CART_FLYOUT = 'minicart';
-
-    public const WIDGET_CATALOG_PRODUCT_LIST = 'CPL';
 
     public const MONITORING_TIME_WINDOW = 10; //Consider a pairing is under monitoring with in 10 seconds
 

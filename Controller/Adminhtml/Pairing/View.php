@@ -12,6 +12,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Block\Adminhtml\Pairing\View as PairingView;
 use Twint\Magento\Model\Pairing;
 
 class View extends Action
@@ -49,7 +50,7 @@ class View extends Action
             ->getTitle()
             ->prepend(__('Order') . $pairing->getOrderId() . ' - ' . __('Transaction') . ' ' . $pairing->getId());
 
-        /** @var View $block */
+        /** @var PairingView $block */
         $block = $resultPage->getLayout()
             ->getBlock('pairing.view');
         $block?->setEntity($pairing);

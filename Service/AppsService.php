@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace Twint\Magento\Service;
 
 use Exception;
+use Magento\Framework\App\CacheInterface;
 use Twint\Magento\Builder\ClientBuilder;
 use function Psl\Type\string;
 
 class AppsService
 {
+    private const CACHE_DURATION = 86400; // 1 hour
+
     public function __construct(
         private readonly ClientBuilder $connector,
-    ) {
+        private readonly CacheInterface $cache
+    )
+    {
     }
 
-    public function getLinks(string $storeCode, string $token = '--TOKEN--')
+    public function buildLinks(string $storeCode, string $token = '--TOKEN--'): array
     {
         $links = [];
 
@@ -40,5 +45,20 @@ class AppsService
         }
 
         return $links;
+    }
+
+    public function getLinks(string $storeCode, string $token = '--TOKEN--'): array
+    {
+        $key = ($_SERVER['HTTP_USER_AGENT'] ?? '') . $token . $storeCode;
+
+        $data = $this->cache->load($key);
+        if ($data) {
+            return unserialize($data);
+        }
+
+        $data = $this->buildLinks($storeCode, $token);
+        $this->cache->save(serialize($data), $key, [], self::CACHE_DURATION);
+
+        return $data;
     }
 }

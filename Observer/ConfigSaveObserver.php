@@ -31,7 +31,7 @@ class ConfigSaveObserver implements ObserverInterface
                 $validated = $this->validator->validate(
                     $credentials['certificate'],
                     $credentials['store_uuid'],
-                    (bool) $credentials['environment']
+                    (string) $credentials['environment']
                 );
 
                 $data['groups']['credentials']['fields']['validated'] = [
