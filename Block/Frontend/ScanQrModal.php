@@ -19,18 +19,6 @@ class ScanQrModal extends Template
         parent::__construct($context, $data);
     }
 
-    public function getCacheKeyInfo()
-    {
-        dd(1);
-        return [
-            'BLOCK_TPL',
-            $this->_storeManager->getStore()->getCode(),
-            $this->getTemplateFile(),
-            'base_url' => $this->getBaseUrl(),
-            'template' => $this->getTemplate()
-        ];
-    }
-
     public function getContent(): string
     {
         return '<div id="modal">Demo</div>';
