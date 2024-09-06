@@ -24,11 +24,15 @@ class ApiService
     {
     }
 
+    /**
+     * @throws Throwable
+     */
     public function call(InvocationRecordingClient $client, string $method, array $args, bool $save = true): ApiResponse
     {
         try {
             $returnValue = $client->{$method}(...$args);
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->logger->error("TWINT $method cannot handle success" . $e->getMessage());
             throw $e;
         } finally {

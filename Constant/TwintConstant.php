@@ -37,4 +37,8 @@ class TwintConstant
     public const MONITORING_TIME_WINDOW = 10; //Consider a pairing is under monitoring with in 10 seconds
 
     public const EXCEPTION_VERSION_CONFLICT = 45000;
+
+    public const PAIRING_TIMEOUT_REGULAR = 60 * 3; //3 mins
+
+    public const PAIRING_TIMEOUT_EXPRESS = 60 * 5; //5 mins
 }

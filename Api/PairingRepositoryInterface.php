@@ -39,4 +39,6 @@ interface PairingRepositoryInterface
     public function markAsPaid(int $id);
 
     public function markAsCancelled(int $id);
+
+    public function markAsMerchantCancelled(int $id);
 }

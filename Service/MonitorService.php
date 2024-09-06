@@ -108,13 +108,13 @@ class MonitorService
 
         // Wait for order placing process
         if ($pairing->getIsOrdering()) {
+            $this->logger->info(
+                "TWINT usleep(0.3) : {$pairing->getPairingId()}  {$pairing->getStatus()} {$pairing->getVersion()}"
+            );
+
             $time = 0;
             // 100 - Maximum 10s - same as next JS interval
             while ($time < 100) {
-                $this->logger->info(
-                    "TWINT usleep(0.3) : {$pairing->getPairingId()}  {$pairing->getStatus()} {$pairing->getVersion()}"
-                );
-
                 $pairing = $this->pairingRepository->getByPairingId($pairing->getPairingId());
 
                 if ($pairing->isFinished()) {

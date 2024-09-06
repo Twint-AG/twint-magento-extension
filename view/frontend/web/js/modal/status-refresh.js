@@ -40,8 +40,9 @@ define([
 
       return this.storage.get(serviceUrl).done(
         function (response) {
-          if (response.finish === true)
-            return self.onPaid();
+          if (response.finish === true) {
+            return response.paid ? self.onPaid() : self.onCancelled();
+          }
           return self.onProcessing();
         }
       );
@@ -59,8 +60,12 @@ define([
       }
     }
 
-    setModal() {
+    setModal(modal) {
+      this.modal = modal;
+    }
 
+    onCancelled() {
+      this.modal.close();
     }
 
     stop() {

@@ -73,7 +73,7 @@ class PollCommand extends Command
 
         try {
             while (!$this->pairing->isFinished()) {
-                $this->logger->info("TWINT monitor: {$pairingId}: {$this->pairing->getVersion()}");
+                $this->logger->info("TWINT monitor: {$pairingId}: {$this->pairing->getVersion()} {$this->pairing->getCreatedAgo()}");
                 $this->repository->updateCheckedAt($this->pairing->getId());
 
                 $this->monitor->monitor($this->pairing);

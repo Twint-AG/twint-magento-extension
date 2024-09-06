@@ -20,6 +20,8 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public const EXPRESS_STATUS_CANCELLED = 'CANCELLED';
 
+    public const EXPRESS_STATUS_MERCHANT_CANCELLED = 'MERCHANT_CANCELLED';
+
     public const CACHE_TAG = 'twint_pairing';
 
     protected $_eventPrefix = 'twint_pairing';
@@ -158,6 +160,16 @@ class Pairing extends AbstractModel implements IdentityInterface
     public function getCheckedAgo(): int
     {
         return (int)$this->getData('checked_ago');
+    }
+
+    public function getCreatedAgo(): int
+    {
+        return (int)$this->getData('created_ago');
+    }
+
+    public function isTimedOut(): bool
+    {
+        return $this->getCreatedAgo() > ($this->isExpress() ? TwintConstant::PAIRING_TIMEOUT_EXPRESS : TwintConstant::PAIRING_TIMEOUT_REGULAR);
     }
 
     public function getCheckedAt()

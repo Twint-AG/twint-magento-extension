@@ -29,7 +29,7 @@ class Collection extends SearchResult
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
 
         $this->addOrder('parent_id', 'desc');
-        $this->addOrder('created_at', 'desc');
+        $this->addOrder('id', 'desc');
     }
 
     protected function _initSelect()

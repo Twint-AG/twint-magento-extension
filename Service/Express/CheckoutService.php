@@ -10,20 +10,18 @@ use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
+use Throwable;
 use Twint\Core\Setting\Settings;
 use Twint\Magento\Builder\ClientBuilder;
-use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
-use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\ApiService;
+use Twint\Magento\Service\MonitorService;
 use Twint\Magento\Service\PairingService;
 use Twint\Sdk\Value\CustomerDataScopes;
 use Twint\Sdk\Value\Money;
-use Twint\Sdk\Value\PairingUuid;
 use Twint\Sdk\Value\ShippingMethod;
 use Twint\Sdk\Value\ShippingMethodId;
 use Twint\Sdk\Value\ShippingMethods;
-use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
 use Twint\Sdk\Value\Version;
 
 class CheckoutService
@@ -35,27 +33,15 @@ class CheckoutService
         private ShipmentEstimationInterface $shipmentEstimation,
         private AddressFactory              $addressFactory,
         private PairingService              $pairingService,
+        private MonitorService              $monitor
     )
     {
-    }
-
-    public function capture(Pairing $pairing): ApiResponse
-    {
-        $client = $this->connector->build($pairing->getStoreId());
-
-        /** @var non-empty-string $orderId */
-        $orderId = $order->getId();
-
-        return $this->api->call($client, 'startFastCheckoutOrder', [
-            PairingUuid::fromString($pairing->getId()),
-            new UnfiledMerchantTransactionReference($orderId),
-            new Money($order->getCurrency()?->getIsoCode() ?? TwintConstant::CURRENCY, $order->getAmountTotal()),
-        ], true);
     }
 
     /**
      * @throws NoSuchEntityException
      * @throws LocalizedException
+     * @throws Throwable
      */
     public function checkout()
     {
@@ -66,6 +52,7 @@ class CheckoutService
 
         $res = $this->callApi($quote);
         list ($pairing) = $this->pairingService->createForExpress($res, $quote, $currentQuote);
+        $this->monitor->status($pairing);
 
         return $pairing;
     }

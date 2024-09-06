@@ -21,6 +21,7 @@ use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
 use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
+use Twint\Sdk\Exception\CancellationFailed;
 use Twint\Sdk\InvocationRecorder\InvocationRecordingClient;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
@@ -115,6 +116,12 @@ class PairingService
                 return $this->recursiveMonitor($orgPairing, $pairing, $client, $confirmRes);
             }
 
+            if ($orgPairing->isTimedOut()) {
+                $cancellationRes = $this->cancelOrder($pairing, $client);
+
+                return $this->recursiveMonitor($orgPairing, $pairing, $client, $cancellationRes);
+            }
+
             return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
@@ -135,7 +142,7 @@ class PairingService
         }
 
         if ($tOrder->isFailure() && !$orgPairing->isFailure()) {
-            if(!$orgPairing->getCaptured()) {
+            if (!$orgPairing->getCaptured()) {
                 $order = $this->orderService->getOrder($pairing->getOrderId());
                 $transaction = $this->transactionService->createVoid($order, $pairing, $history);
                 $this->orderService->cancel($pairing, $transaction);
@@ -145,6 +152,18 @@ class PairingService
         }
 
         return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function cancelOrder(Pairing $pairing, InvocationRecordingClient $client): ApiResponse
+    {
+        $this->logger->info("TWINT cancel order: {$pairing->getPairingId()}");
+
+        return $this->api->call($client, 'cancelOrder', [
+            new OrderId(new Uuid($pairing->getPairingId()))
+        ]);
     }
 
     private function markAsCaptured(Pairing $pairing): Pairing
@@ -171,18 +190,36 @@ class PairingService
             false
         );
 
-        /** @var FastCheckoutCheckIn $checkInState */
-        $checkInState = $res->getReturn();
+        return $this->monitorExpressRecursive($pairing, $cloned, $res, $client);
+    }
+
+    /**
+     * @throws Zend_Db_Statement_Exception
+     * @throws Throwable
+     */
+    public function monitorExpressRecursive(Pairing $pairing, Pairing $cloned, ApiResponse $res, InvocationRecordingClient $client): MonitorStatus
+    {
+        /** @var FastCheckoutCheckIn $state */
+        $state = $res->getReturn();
 
         $status = MonitorStatus::STATUS_IN_PROGRESS;
         $finished = false;
 
-        if (!$cloned->hasDiffs($checkInState)) {
+        if (!$cloned->hasDiffs($state)) {
+            // Because cancelFastCheckoutCheckIn API return void then need monitor in next loop
+            if ($state->pairingStatus()->__toString() === PairingStatus::PAIRING_IN_PROGRESS && $pairing->isTimedOut()) {
+                $cancellationRes = $this->cancelFastCheckoutCheckIn($cloned, $client);
+                $this->pairingRepository->markAsMerchantCancelled((int) $cloned->getId());
+
+                $cloned->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
+                $this->createHistory($cloned, $cancellationRes->getRequest());
+            }
+
             return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
         try {
-            $cloned = $this->updateForExpress($cloned, $checkInState);
+            $cloned = $this->updateForExpress($cloned, $state);
         } catch (Zend_Db_Statement_Exception $e) {
             if ($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT) {
                 $this->logger->info("TWINT {$pairing->getPairingId()} update was conflicted");
@@ -195,7 +232,8 @@ class PairingService
         $log = $this->api->saveLog($res->getRequest());
         $history = $this->createHistory($cloned, $log);
 
-        if (empty($pairing->getCustomerData()) && $checkInState->hasCustomerData()) {
+        // As paid
+        if (empty($pairing->getCustomerData()) && $state->hasCustomerData()) {
             $status = MonitorStatus::STATUS_PAID;
 
             return MonitorStatus::fromValues(true, $status, [
@@ -204,7 +242,8 @@ class PairingService
             ]);
         }
 
-        if (!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$checkInState->hasCustomerData()) {
+        // As cancelled
+        if (!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$state->hasCustomerData()) {
             $this->logger->info("TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}");
 
             $this->pairingRepository->markAsCancelled((int)$pairing->getId());
@@ -213,6 +252,18 @@ class PairingService
         }
 
         return MonitorStatus::fromValues($finished, $status);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function cancelFastCheckoutCheckIn(Pairing $pairing, InvocationRecordingClient $client): ApiResponse
+    {
+        $this->logger->info("TWINT cancel EC: {$pairing->getPairingId()}");
+
+        return $this->api->call($client, 'cancelFastCheckoutCheckIn', [
+            PairingUuid::fromString($pairing->getPairingId())
+        ]);
     }
 
     public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn): Pairing

@@ -85,7 +85,8 @@ class PairingRepository implements PairingRepositoryInterface
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
         $collection->getSelect()->columns([
-            'checked_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))')
+            'checked_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))'),
+            'created_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(created_at))')
         ]);
 
         $this->collectionProcessor->process($criteria, $collection);
@@ -318,6 +319,11 @@ class PairingRepository implements PairingRepositoryInterface
     public function markAsCancelled(int $id): Zend_Db_Statement_Interface
     {
         return $this->updateStatus($id, Pairing::EXPRESS_STATUS_CANCELLED);
+    }
+
+    public function markAsMerchantCancelled(int $id): Zend_Db_Statement_Interface
+    {
+        return $this->updateStatus($id, Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
     }
 
     private function updateStatus(int $id, string $status): Zend_Db_Statement_Interface
