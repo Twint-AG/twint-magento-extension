@@ -6,12 +6,15 @@ namespace Twint\Magento\Service\Express;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Webapi\Exception;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteRepository;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Twint\Magento\Exception\PaymentException;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Service\PairingService;
@@ -24,7 +27,7 @@ class OrderConvertService
         private AddressService          $addressService,
         private QuoteService            $quoteService,
         private OrderRepository         $orderRepository,
-        private QuoteRepository         $quoteRepository,
+        private QuoteRepository         $quoteRepository
     )
     {
 
@@ -63,7 +66,7 @@ class OrderConvertService
      * @param string|int $quoteId
      * @return void
      */
-    private function updateOrderIdForPairing(Order $order, string|int $quoteId): void
+    private function updateOrderIdForPairing(Order|OrderInterface $order, string|int $quoteId): void
     {
         $incrementId = $order->getIncrementId();
 

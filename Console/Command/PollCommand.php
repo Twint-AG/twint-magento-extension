@@ -82,7 +82,7 @@ class PollCommand extends Command
                 $this->pairing = $this->repository->getByPairingId($pairingId);
             }
         }catch (Throwable $e){
-            $this->logger->error("TWINT monitor error: " . $e->getMessage());
+            $this->logger->error("TWINT monitor error: {$pairingId} {$e->getMessage()} {$e->getFile()}:{$e->getLine()}");
             return 1;
         }
 

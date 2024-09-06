@@ -15,8 +15,8 @@ use Twint\Magento\Model\PairingHistory;
 class TransactionService
 {
     public function __construct(
-        private TransactionRepositoryInterface $repository,
-        private TransactionFactory $factory,
+        private readonly TransactionRepositoryInterface $repository,
+        private readonly TransactionFactory             $factory,
     ) {
     }
 

@@ -39,7 +39,8 @@ class CheckoutService
     {
     }
 
-    public function capture(Pairing $pairing){
+    public function capture(Pairing $pairing): ApiResponse
+    {
         $client = $this->connector->build($pairing->getStoreId());
 
         /** @var non-empty-string $orderId */

@@ -22,7 +22,8 @@ class RefundService
         private readonly PairingRepositoryInterface $pairingRepository,
         private readonly RefundRepositoryInterface  $refundRepository,
         private readonly RefundFactory              $factory,
-        private readonly Session                    $adminSession
+        private readonly Session                    $adminSession,
+        private readonly PairingService                    $pairingService
     )
     {
     }
@@ -51,6 +52,7 @@ class RefundService
 
         /** @var Refund $refund */
         $refund = $this->create($res, $pairing, $reversalReference, $amount);
+        $this->pairingService->createHistory($pairing, $res->getRequest(), $amount);
 
         return $refund;
     }

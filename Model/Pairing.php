@@ -193,13 +193,12 @@ class Pairing extends AbstractModel implements IdentityInterface
     public function hasDiffs(FastCheckoutCheckIn|Order $target): bool
     {
         if ($target instanceof FastCheckoutCheckIn)
-            return $this->getPairingStatus() !== $target->pairingStatus()->__toString()
+            return $this->getPairingStatus() !== ($target->pairingStatus()?->__toString() ?? '')
                 || $this->getShippingId() !== ($target->hasShippingMethodId() ? (string)$target->shippingMethodId() : null);
-//                || !$this->isSameCustomerDataWith($target);
 
 
         /** @var Order $target */
-        return $this->getPairingStatus() !== $target->pairingStatus()->__toString()
+        return $this->getPairingStatus() !== ($target->pairingStatus()?->__toString() ?? '')
             || $this->getTransactionStatus() !== $target->transactionStatus()->__toString()
             || $this->getStatus() !== $target->status()->__toString();
     }

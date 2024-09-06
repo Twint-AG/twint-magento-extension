@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Console\Command\PollCommand;
-use Twint\Magento\Model\Monitor\ExpressMonitorStatus;
+use Twint\Magento\Exception\PaymentException;
 use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\OrderConvertService;
@@ -58,19 +58,24 @@ class MonitorService
             $status = $this->pairingService->monitorExpress($pairing, $cloned);
             if ($status->paid()) {
                 $this->pairingRepository->markAsOrdering($pairing->getId());
-                $orderIncrement = $this->convertService->convert(
-                    $status->getAdditionalInformation('pairing'),
-                    $status->getAdditionalInformation('history'),
-                );
-                $status->setAdditionalInformation('order', $orderIncrement);
+                try {
+                    $orderIncrement = $this->convertService->convert(
+                        $status->getAdditionalInformation('pairing'),
+                        $status->getAdditionalInformation('history'),
+                    );
+                    $status->setAdditionalInformation('order', $orderIncrement);
 
-                $this->pairingRepository->markAsPaid((int) $pairing->getId());
+                    $this->pairingRepository->markAsPaid((int)$pairing->getId());
+                }catch (PaymentException $e){
+                    $this->logger->error("TWINT payment error: " . $e->getMessage());
+                    $this->pairingRepository->markAsCancelled((int) $pairing->getId());
+                }
             }
         } else {
             $this->pairingService->monitorRegular($pairing, $cloned);
         }
 
-        return $pairing;
+        return $cloned;
     }
 
     /**

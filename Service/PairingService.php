@@ -21,12 +21,15 @@ use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
 use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
+use Twint\Sdk\InvocationRecorder\InvocationRecordingClient;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
+use Twint\Sdk\Value\Money;
 use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
 use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\PairingUuid;
+use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
 use Zend_Db_Statement_Exception;
@@ -43,8 +46,8 @@ class PairingService
         private readonly ApiService                        $api,
         private readonly TransactionService                $transactionService,
         private readonly InvoiceService                    $invoiceService,
-        private readonly CartService                    $cartService,
-        private readonly Monolog          $logger
+        private readonly CartService                       $cartService,
+        private readonly Monolog                           $logger
     )
     {
     }
@@ -55,7 +58,7 @@ class PairingService
      */
     public function monitorRegular(Pairing $orgPairing, Pairing $pairing): MonitorStatus
     {
-        $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
+        $client = $this->connector->build($pairing->getStoreId());
 
         try {
             $res = $this->api->call(
@@ -69,26 +72,49 @@ class PairingService
             throw $e;
         }
 
+        return $this->recursiveMonitor($orgPairing, $pairing, $client, $res);
+    }
+
+    /**
+     * @throws Throwable
+     * @throws LocalizedException
+     * @throws Zend_Db_Statement_Exception
+     */
+    protected function recursiveMonitor(Pairing $orgPairing, Pairing $pairing, InvocationRecordingClient $client, ApiResponse $res): MonitorStatus
+    {
         /** @var Order $tOrder */
         $tOrder = $res->getReturn();
 
         if ($pairing->hasDiffs($tOrder)) {
             try {
                 $pairing = $this->update($pairing, $tOrder);
-            }catch (Zend_Db_Statement_Exception $e){
-                if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
-                    $this->logger->info("TWINT update was conflicted");
+            } catch (Zend_Db_Statement_Exception $e) {
+                if ($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT) {
+                    $this->logger->info("TWINT {$pairing->getPairingId()} update was conflicted");
                     return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
                 }
 
                 throw $e;
             }
 
-            $log = $this->api->saveLog($res->getRequest());
+            $log = $res->getRequest();
+            if (empty($log->getId())) {
+                $log = $this->api->saveLog($res->getRequest());
+            }
+
             $history = $this->createHistory($pairing, $log);
         }
 
         if ($tOrder->isPending()) {
+            if ($tOrder->isConfirmationPending()) {
+                $confirmRes = $this->api->call($client, 'confirmOrder', [
+                    new UnfiledMerchantTransactionReference($pairing->getOrderId()),
+                    new Money(Money::CHF, $pairing->getAmount()),
+                ]);
+
+                return $this->recursiveMonitor($orgPairing, $pairing, $client, $confirmRes);
+            }
+
             return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
         }
 
@@ -104,14 +130,16 @@ class PairingService
             $this->invoiceService->create($order, $transaction);
             $pairing = $this->markAsCaptured($pairing);
             $this->cartService->removeAllItems($pairing->getOriginalQuoteId());
-            
+
             return MonitorStatus::fromValues(true, MonitorStatus::STATUS_PAID);
         }
 
         if ($tOrder->isFailure() && !$orgPairing->isFailure()) {
-            $order = $this->orderService->getOrder($pairing->getOrderId());
-            $transaction = $this->transactionService->createVoid($order, $pairing, $history);
-            $this->orderService->cancel($pairing, $transaction);
+            if(!$orgPairing->getCaptured()) {
+                $order = $this->orderService->getOrder($pairing->getOrderId());
+                $transaction = $this->transactionService->createVoid($order, $pairing, $history);
+                $this->orderService->cancel($pairing, $transaction);
+            }
 
             return MonitorStatus::fromValues(true, MonitorStatus::STATUS_CANCELLED);
         }
@@ -155,9 +183,9 @@ class PairingService
 
         try {
             $cloned = $this->updateForExpress($cloned, $checkInState);
-        }catch (Zend_Db_Statement_Exception $e){
-            if($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT){
-                $this->logger->info("TWINT update was conflicted");
+        } catch (Zend_Db_Statement_Exception $e) {
+            if ($e->getCode() === TwintConstant::EXCEPTION_VERSION_CONFLICT) {
+                $this->logger->info("TWINT {$pairing->getPairingId()} update was conflicted");
                 return MonitorStatus::fromValues(false, MonitorStatus::STATUS_IN_PROGRESS);
             }
 
@@ -176,10 +204,10 @@ class PairingService
             ]);
         }
 
-        if(!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$checkInState->hasCustomerData()){
+        if (!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$checkInState->hasCustomerData()) {
             $this->logger->info("TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}");
 
-            $this->pairingRepository->markAsCancelled((int) $pairing->getId());
+            $this->pairingRepository->markAsCancelled((int)$pairing->getId());
             $finished = true;
             $status = MonitorStatus::STATUS_CANCELLED;
         }
@@ -201,7 +229,7 @@ class PairingService
 
     public function update(Pairing $pairing, Order $order): Pairing
     {
-        $pairing->setData('status', (string) $order->status());
+        $pairing->setData('status', (string)$order->status());
         $pairing->setData('transaction_status', (string)$order->transactionStatus());
         $pairing->setData('pairing_status', (string)$order->pairingStatus());
 
@@ -228,7 +256,7 @@ class PairingService
 
         $pairing->setData('captured', (int)$captured);
 
-        if($pair = SubmitClonedQuotePlugin::$pair){
+        if ($pair = SubmitClonedQuotePlugin::$pair) {
             $pairing->setData('org_quote_id', $pair[0]->getId());
             $pairing->setData('quote_id', $pair[1]->getId());
         }
@@ -262,7 +290,7 @@ class PairingService
         return [$pairing, $history];
     }
 
-    public function createHistory(Pairing $pairing, RequestLog $log): PairingHistory
+    public function createHistory(Pairing $pairing, RequestLog $log, float $amount = null): PairingHistory
     {
         $history = $this->historyFactory->create();
         $history->setData('parent_id', (string)$pairing->getId());
@@ -270,7 +298,7 @@ class PairingService
         $history->setData('transaction_status', $pairing->getTransactionStatus());
         $history->setData('pairing_status', $pairing->getPairingStatus());
         $history->setData('token', $pairing->getToken());
-        $history->setData('amount', $pairing->getAmount());
+        $history->setData('amount', $amount ?? $pairing->getAmount());
         $history->setData('store_id', $pairing->getStoreId());
         $history->setData('order_id', $pairing->getOrderId());
         $history->setData('org_quote_id', $pairing->getOriginalQuoteId());

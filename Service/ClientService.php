@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Logger\Monolog;
+use Magento\Framework\Webapi\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
+use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
+use Twint\Magento\Exception\PaymentException;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Model\Pairing;
 use Twint\Sdk\Value\Money;
@@ -25,10 +33,15 @@ class ClientService
         private readonly PairingService $pairingService,
         private readonly ApiService     $api,
         private readonly OrderService   $orderService,
+        private readonly MonitorService   $monitor,
+        private readonly Monolog          $logger
     )
     {
     }
 
+    /**
+     * @throws Throwable
+     */
     public function startFastCheckoutOrder(InfoInterface $payment, float $amount, Pairing $pairing): array
     {
         $client = $this->connector->build($pairing->getStoreId());
@@ -47,7 +60,30 @@ class ClientService
 
         list($pairing, $history) = $this->pairingService->create($amount, $res, $payment, true);
 
+        $success = $this->monitorOrder($pairing);
+        if(!$success){
+            throw new PaymentException("TWINT: Your balance is insufficient.");
+        }
+
         return [$twintOrder, $pairing, $history];
+    }
+
+    /**
+     * @throws NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws Throwable
+     * @throws Exception
+     * @throws LocalizedException
+     * @throws InputException
+     */
+    protected function monitorOrder(Pairing $pairing): bool
+    {
+        while(!$pairing->isFinished()) {
+            $this->logger->info("TWINT EC monitor: {$pairing->getPairingId()} {$pairing->getStatus()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}");
+            $pairing = $this->monitor->monitor($pairing);
+        }
+
+        return $pairing->isSuccessful();
     }
 
     /**
@@ -55,6 +91,7 @@ class ClientService
      * @param $amount
      * @return array
      *
+     * @throws Throwable
      */
     public function createOrder(InfoInterface $payment, $amount): array
     {
@@ -72,10 +109,14 @@ class ClientService
             new Money(Money::CHF, $amount),
         ]);
 
+        /** @var Order $twintOrder */
         $twintOrder = $res->getReturn();
 
         list($pairing, $history) = $this->pairingService->create($amount, $res, $payment);
+
         $this->orderService->markAsPendingPayment($order);
+
+        $this->monitor->status($pairing);
 
         return [$twintOrder, $pairing, $history];
     }
