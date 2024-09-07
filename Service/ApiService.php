@@ -46,7 +46,7 @@ class ApiService
     /**
      * @param Invocation[] $invocation
      */
-    protected function log(string $method, array $invocation, bool $save): RequestLog
+    public function log(string $method, array $invocation, bool $save): RequestLog
     {
         $log = $this->factory->create();
 

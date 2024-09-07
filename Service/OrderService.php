@@ -100,15 +100,6 @@ class OrderService
         return $this->repository->save($order);
     }
 
-    public function updateRefundedAmount(string $orderIncrement, float $amount): OrderInterface
-    {
-        /** @var Order $order */
-        $order = $this->getOrder($orderIncrement);
-        $order->setTotalRefunded($order->getTotalRefunded() + $amount);
-
-        return $this->repository->save($order);
-    }
-
     protected function getBaseAmount(Order $order, float $amount): float
     {
         $rate = $order->getBaseToOrderRate() ?? 1;

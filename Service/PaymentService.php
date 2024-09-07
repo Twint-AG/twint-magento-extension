@@ -15,7 +15,7 @@ class PaymentService
     ) {
     }
 
-    public function update(Payment $payment, Transaction $transaction)
+    public function update(Payment $payment, Transaction $transaction): void
     {
         $payment->setLastTransId($transaction->getId());
 
