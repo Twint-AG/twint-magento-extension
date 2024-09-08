@@ -7,7 +7,6 @@ namespace Twint\Magento\Block\Adminhtml\Pairing;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\View\Element\Template;
 use Twint\Magento\Model\Pairing;
-use Twint\Magento\Model\RequestLog;
 
 class View extends Template
 {

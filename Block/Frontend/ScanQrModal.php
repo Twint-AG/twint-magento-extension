@@ -42,8 +42,8 @@ class ScanQrModal extends Template
 
     public function getIsMobile(): bool
     {
-        if (empty($this->links)) {
-            $this->links = $this->appService->getLinks((string)$this->_storeManager->getStore()->getId());
+        if ($this->links === []) {
+            $this->links = $this->appService->getLinks((string) $this->_storeManager->getStore()->getId());
         }
 
         return isset($this->links['android']) || isset($this->links['ios']);
@@ -51,8 +51,8 @@ class ScanQrModal extends Template
 
     public function getLinks(): string
     {
-        if (empty($this->links)) {
-            $this->links = $this->appService->getLinks((string)$this->_storeManager->getStore()->getId());
+        if ($this->links === []) {
+            $this->links = $this->appService->getLinks((string) $this->_storeManager->getStore()->getId());
         }
 
         $links = $this->links;

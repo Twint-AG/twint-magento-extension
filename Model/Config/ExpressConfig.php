@@ -13,6 +13,6 @@ class ExpressConfig extends BasePaymentConfig
 
     public function onScreen(string $screen): bool
     {
-        return in_array($screen, $this->getScreens());
+        return in_array($screen, $this->getScreens(), true);
     }
 }

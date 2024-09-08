@@ -16,7 +16,7 @@ class TransactionService
 {
     public function __construct(
         private readonly TransactionRepositoryInterface $repository,
-        private readonly TransactionFactory             $factory,
+        private readonly TransactionFactory $factory,
     ) {
     }
 

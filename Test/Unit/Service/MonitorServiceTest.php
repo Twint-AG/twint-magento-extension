@@ -1,27 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Test\Unit\Service;
 
-use PHPUnit\Framework\TestCase;
-use Mockery;
-use Twint\Magento\Model\PairingHistory;
-use Twint\Magento\Service\MonitorService;
-use Twint\Magento\Api\PairingRepositoryInterface;
-use Twint\Magento\Service\PairingService;
-use Twint\Magento\Service\Express\OrderConvertService;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Logger\Monolog;
-use Twint\Magento\Model\Pairing;
-use Twint\Magento\Model\Monitor\MonitorStatus;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
+use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Model\Monitor\MonitorStatus;
+use Twint\Magento\Model\Pairing;
+use Twint\Magento\Model\PairingHistory;
+use Twint\Magento\Service\Express\OrderConvertService;
+use Twint\Magento\Service\MonitorService;
+use Twint\Magento\Service\PairingService;
 
+/**
+ * @internal
+ */
 class MonitorServiceTest extends TestCase
 {
     private $pairingRepositoryMock;
+
     private $pairingServiceMock;
+
     private $orderConvertServiceMock;
+
     private $directoryListMock;
+
     private $loggerMock;
+
     private $monitorService;
 
     protected function setUp(): void
@@ -49,11 +59,12 @@ class MonitorServiceTest extends TestCase
     public function testMonitorWithFinishedPairing()
     {
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('isFinished')->andReturn(true);
+        $pairingMock->shouldReceive('isFinished')
+            ->andReturn(true);
 
         $result = $this->monitorService->monitor($pairingMock);
 
-        $this->assertSame($pairingMock, $result);
+        self::assertSame($pairingMock, $result);
     }
 
     public function testMonitorWithExpressPairingAndPaidStatus()
@@ -63,47 +74,66 @@ class MonitorServiceTest extends TestCase
         $historyMock = Mockery::mock(PairingHistory::class);
 
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('isFinished')->andReturn(false);
-        $pairingMock->shouldReceive('isExpress')->andReturn(true);
-        $pairingMock->shouldReceive('getId')->andReturn($pairingId);
+        $pairingMock->shouldReceive('isFinished')
+            ->andReturn(false);
+        $pairingMock->shouldReceive('isExpress')
+            ->andReturn(true);
+        $pairingMock->shouldReceive('getId')
+            ->andReturn($pairingId);
 
         $statusMock = Mockery::mock(MonitorStatus::class);
-        $statusMock->shouldReceive('paid')->andReturn(true);
-        $statusMock->shouldReceive('getAdditionalInformation')->with('pairing')->andReturn($pairingMock);
-        $statusMock->shouldReceive('getAdditionalInformation')->with('history')->andReturn($historyMock);
-        $statusMock->shouldReceive('setAdditionalInformation')->andReturnUndefined();
+        $statusMock->shouldReceive('paid')
+            ->andReturn(true);
+        $statusMock->shouldReceive('getAdditionalInformation')
+            ->with('pairing')
+            ->andReturn($pairingMock);
+        $statusMock->shouldReceive('getAdditionalInformation')
+            ->with('history')
+            ->andReturn($historyMock);
+        $statusMock->shouldReceive('setAdditionalInformation')
+            ->andReturnUndefined();
 
-        $this->pairingServiceMock->shouldReceive('monitorExpress')->andReturn($statusMock);
+        $this->pairingServiceMock->shouldReceive('monitorExpress')
+            ->andReturn($statusMock);
         $this->pairingRepositoryMock->shouldReceive('markAsOrdering');
-        $this->orderConvertServiceMock->shouldReceive('convert')->andReturn('10000001');
+        $this->orderConvertServiceMock->shouldReceive('convert')
+            ->andReturn('10000001');
         $this->pairingRepositoryMock->shouldReceive('markAsPaid');
 
         $result = $this->monitorService->monitor($pairingMock);
 
-        $this->assertInstanceOf(Pairing::class, $result);
+        self::assertInstanceOf(Pairing::class, $result);
     }
 
     public function testStatusWithFinishedPairing()
     {
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('isFinished')->andReturn(true);
-        $pairingMock->shouldReceive('toMonitorStatus')->andReturn(new MonitorStatus(true, 1));
+        $pairingMock->shouldReceive('isFinished')
+            ->andReturn(true);
+        $pairingMock->shouldReceive('toMonitorStatus')
+            ->andReturn(new MonitorStatus(true, 1));
 
         $result = $this->monitorService->status($pairingMock);
 
-        $this->assertInstanceOf(MonitorStatus::class, $result);
+        self::assertInstanceOf(MonitorStatus::class, $result);
     }
 
     public function testStatusWithUnmonitoredPairing()
     {
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('isFinished')->andReturn(false);
-        $pairingMock->shouldReceive('isMonitoring')->andReturn(false);
-        $pairingMock->shouldReceive('getPairingId')->andReturn('123');
-        $pairingMock->shouldReceive('getIsOrdering')->andReturn(false);
-        $pairingMock->shouldReceive('toMonitorStatus')->andReturn(new MonitorStatus(false, -1));
+        $pairingMock->shouldReceive('isFinished')
+            ->andReturn(false);
+        $pairingMock->shouldReceive('isMonitoring')
+            ->andReturn(false);
+        $pairingMock->shouldReceive('getPairingId')
+            ->andReturn('123');
+        $pairingMock->shouldReceive('getIsOrdering')
+            ->andReturn(false);
+        $pairingMock->shouldReceive('toMonitorStatus')
+            ->andReturn(new MonitorStatus(false, -1));
 
-        $this->directoryListMock->shouldReceive('getRoot')->andReturn('/var/www/magento');
+        $this->directoryListMock->shouldReceive('getRoot')
+            ->andReturn('/var/www/magento');
 
         $processMock = Mockery::mock('overload:' . Process::class);
         $processMock->shouldReceive('setOptions');
@@ -112,6 +142,6 @@ class MonitorServiceTest extends TestCase
 
         $result = $this->monitorService->status($pairingMock);
 
-        $this->assertInstanceOf(MonitorStatus::class, $result);
+        self::assertInstanceOf(MonitorStatus::class, $result);
     }
 }

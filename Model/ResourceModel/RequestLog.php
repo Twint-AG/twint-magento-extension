@@ -12,6 +12,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 class RequestLog extends AbstractDb
 {
     public const TABLE_NAME = 'twint_request_log';
+
     /**
      * Resource initialization
      */

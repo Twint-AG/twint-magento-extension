@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Express;
 
+use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Controller\Cart\Add;
 use Magento\Checkout\Model\Cart;
@@ -19,6 +20,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Data\Form\FormKey\Validator;
+use Magento\Framework\Escaper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filter\LocalizedToNormalized;
 use Magento\Framework\Locale\ResolverInterface;
@@ -26,6 +28,7 @@ use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
 use Twint\Magento\Util\CryptoHandler;
@@ -33,20 +36,19 @@ use Twint\Magento\Util\CryptoHandler;
 class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 {
     public function __construct(
-        protected CheckoutService           $checkoutService,
-        private readonly PriceHelper        $priceHelper,
-        private readonly Monolog          $logger,
-        Context                             $context,
-        private ScopeConfigInterface        $scopeConfig,
-        private Session                     $checkoutSession,
-        private StoreManagerInterface       $storeManager,
-        private Validator                   $formKeyValidator,
-        private CryptoHandler   $cryptoHandler,
-        Cart                                $cart,
-        ProductRepositoryInterface          $productRepository,
+        protected CheckoutService $checkoutService,
+        private readonly PriceHelper $priceHelper,
+        private readonly Monolog $logger,
+        Context $context,
+        ScopeConfigInterface $scopeConfig,
+        Session $checkoutSession,
+        StoreManagerInterface $storeManager,
+        Validator $formKeyValidator,
+        private CryptoHandler $cryptoHandler,
+        Cart $cart,
+        ProductRepositoryInterface $productRepository,
         protected ?RequestQuantityProcessor $quantityProcessor = null
-    )
-    {
+    ) {
         parent::__construct($context, $scopeConfig, $checkoutSession, $storeManager, $formKeyValidator, $cart, $productRepository, $quantityProcessor);
 
         $this->quantityProcessor = $quantityProcessor
@@ -56,10 +58,11 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
     public function execute(): Json|ResultInterface|ResponseInterface
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $params = $this->getRequest()->getParams();
+        $params = $this->getRequest()
+            ->getParams();
 
         try {
-            $wholeCart = (bool)($params['whole_cart'] ?? false);
+            $wholeCart = (bool) ($params['whole_cart'] ?? false);
 
             $items = $this->cart->getItems();
             $count = is_array($items) ? count($items) : $items->count();
@@ -67,22 +70,25 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             if (!$wholeCart) {
                 $result = $this->parentCall();
 
-                if (isset($result['backUrl']) || isset($result['reload']))
+                if (isset($result['backUrl']) || isset($result['reload'])) {
                     return $json->setData($result);
+                }
 
                 if ($count > 0) {
-                    $this->messageManager->addSuccessMessage(__("You have existing products in the shopping cart. Please review your shopping cart before continue."));
+                    $this->messageManager->addSuccessMessage(
+                        __('You have existing products in the shopping cart. Please review your shopping cart before continue.')
+                    );
 
                     return $json->setData(array_merge($result, [
-                        'showMiniCart' => true
+                        'showMiniCart' => true,
                     ]));
                 }
             }
 
             // Checkout in cart but don't have item
-            if ($wholeCart && $count == 0) {
+            if ($wholeCart && $count === 0) {
                 return $json->setData([
-                    'reload' => true
+                    'reload' => true,
                 ]);
             }
 
@@ -96,11 +102,11 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 'token' => $pairing->getToken(),
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
             ]);
-        } catch (\Throwable $e) {
-            $this->logger->error('TWINT EC error: '. $e->getMessage());
+        } catch (Throwable $e) {
+            $this->logger->error('TWINT EC error: ' . $e->getMessage());
 
             return $json->setData([
-                'success' => false
+                'success' => false,
             ]);
         }
     }
@@ -108,26 +114,28 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
     public function parentCall(): array
     {
         if (!$this->_formKeyValidator->validate($this->getRequest())) {
-            $this->messageManager->addErrorMessage(
-                __('Your session has expired')
-            );
+            $this->messageManager->addErrorMessage(__('Your session has expired'));
             return [
-                'reload' => true
+                'reload' => true,
             ];
         }
 
-        $params = $this->getRequest()->getParams();
+        $params = $this->getRequest()
+            ->getParams();
         try {
             if (isset($params['qty'])) {
                 $filter = new LocalizedToNormalized(
-                    ['locale' => $this->_objectManager->get(ResolverInterface::class)->getLocale()]
+                    [
+                        'locale' => $this->_objectManager->get(ResolverInterface::class)->getLocale(),
+                    ]
                 );
                 $params['qty'] = $this->quantityProcessor->prepareQuantity($params['qty']);
                 $params['qty'] = $filter->filter($params['qty']);
             }
 
             $product = $this->_initProduct();
-            $related = $this->getRequest()->getParam('related_product');
+            $related = $this->getRequest()
+                ->getParam('related_product');
 
             /** Check product availability */
             if (!$product) {
@@ -146,18 +154,22 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
              */
             $this->_eventManager->dispatch(
                 'checkout_cart_add_product_complete',
-                ['product' => $product, 'request' => $this->getRequest(), 'response' => $this->getResponse()]
+                [
+                    'product' => $product,
+                    'request' => $this->getRequest(),
+                    'response' => $this->getResponse(),
+                ]
             );
         } catch (LocalizedException $e) {
             if ($this->_checkoutSession->getUseNotice(true)) {
                 $this->messageManager->addNoticeMessage(
-                    $this->_objectManager->get(\Magento\Framework\Escaper::class)->escapeHtml($e->getMessage())
+                    $this->_objectManager->get(Escaper::class)->escapeHtml($e->getMessage())
                 );
             } else {
                 $messages = array_unique(explode("\n", $e->getMessage()));
                 foreach ($messages as $message) {
                     $this->messageManager->addErrorMessage(
-                        $this->_objectManager->get(\Magento\Framework\Escaper::class)->escapeHtml($message)
+                        $this->_objectManager->get(Escaper::class)->escapeHtml($message)
                     );
                 }
             }
@@ -165,7 +177,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             $url = $this->_checkoutSession->getRedirectUrl(true);
 
             return $this->goBack($url);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('We can\'t add this item to your shopping cart right now.')
@@ -182,12 +194,12 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
     {
         if ($backUrl) {
             return [
-                'backUrl' => $backUrl
+                'backUrl' => $backUrl,
             ];
         }
 
         return [
-            'reload' => true
+            'reload' => true,
         ];
     }
 }

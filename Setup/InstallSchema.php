@@ -15,9 +15,9 @@ class InstallSchema implements InstallSchemaInterface
     {
         $db = $setup->getConnection();
 
-        $name = "before_update_twint_pairing";
+        $name = 'before_update_twint_pairing';
 
-        $db->query("DROP TRIGGER IF EXISTS $name;");
+        $db->query("DROP TRIGGER IF EXISTS {$name};");
 
         $trigger = new Trigger();
         $trigger->setName($name);
@@ -90,4 +90,3 @@ class InstallSchema implements InstallSchemaInterface
         $db->createTrigger($trigger);
     }
 }
-

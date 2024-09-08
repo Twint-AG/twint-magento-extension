@@ -32,18 +32,17 @@ use Zend_Db_Statement_Interface;
 class PairingRepository implements PairingRepositoryInterface
 {
     public function __construct(
-        private PairingFactory                 $factory,
-        private readonly ResourceModel         $resourceModel,
-        private CollectionFactory              $collectionFactory,
-        private SearchResultsFactory           $searchResultsFactory,
+        private PairingFactory $factory,
+        private readonly ResourceModel $resourceModel,
+        private CollectionFactory $collectionFactory,
+        private SearchResultsFactory $searchResultsFactory,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
-        private readonly SortOrderBuilder      $sortOrderBuilder,
-        private readonly FilterGroupBuilder    $filterGroupBuilder,
-        private readonly FilterBuilder         $filterBuilder,
-        private readonly ResourceConnection    $resource,
-        private ?CollectionProcessorInterface  $collectionProcessor = null
-    )
-    {
+        private readonly SortOrderBuilder $sortOrderBuilder,
+        private readonly FilterGroupBuilder $filterGroupBuilder,
+        private readonly FilterBuilder $filterBuilder,
+        private readonly ResourceConnection $resource,
+        private ?CollectionProcessorInterface $collectionProcessor = null
+    ) {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -84,10 +83,11 @@ class PairingRepository implements PairingRepositoryInterface
     {
         /** @var Collection $collection */
         $collection = $this->collectionFactory->create();
-        $collection->getSelect()->columns([
-            'checked_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))'),
-            'created_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(created_at))')
-        ]);
+        $collection->getSelect()
+            ->columns([
+                'checked_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(checked_at))'),
+                'created_ago' => new Zend_Db_Expr('(UNIX_TIMESTAMP() - UNIX_TIMESTAMP(created_at))'),
+            ]);
 
         $this->collectionProcessor->process($criteria, $collection);
 
@@ -141,12 +141,7 @@ class PairingRepository implements PairingRepositoryInterface
     public function getByOrderId(string $id): ?Pairing
     {
         $criteria = $this->criteriaBuilder->addFilter('order_id', $id)
-            ->addSortOrder(
-                $this->sortOrderBuilder
-                    ->setField('id')
-                    ->setDescendingDirection()
-                    ->create()
-            )
+            ->addSortOrder($this->sortOrderBuilder ->setField('id') ->setDescendingDirection() ->create())
             ->create();
         $items = $this->getList($criteria)
             ->getItems();
@@ -224,7 +219,7 @@ class PairingRepository implements PairingRepositoryInterface
         return $this->getList($criteria);
     }
 
-    public function getUnFinishedExpresses(): SearchResultsInterface
+    public function getUnFinishedExpresses(): searchResultsInterface
     {
         $statusFilter = $this->filterBuilder
             ->setField('pairing_status')
@@ -260,19 +255,20 @@ class PairingRepository implements PairingRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id";
+        $sql = "UPDATE {$tableName} SET order_id = :order_id WHERE quote_id = :quote_id";
 
         // Bind parameters
         $bind = [
             'order_id' => $orderId,
-            'quote_id' => $quoteId
+            'quote_id' => $quoteId,
         ];
 
         // Execute the query
         $connection->query($sql, $bind);
     }
 
-    public function updateCheckedAt(string $id){
+    public function updateCheckedAt(string $id)
+    {
         // Get the connection
         $connection = $this->resource->getConnection();
 
@@ -280,7 +276,7 @@ class PairingRepository implements PairingRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET checked_at = NOW() WHERE id = :id";
+        $sql = "UPDATE {$tableName} SET checked_at = NOW() WHERE id = :id";
 
         // Bind parameters
         $bind = [
@@ -291,8 +287,8 @@ class PairingRepository implements PairingRepositoryInterface
         $connection->query($sql, $bind);
     }
 
-
-    public function markAsOrdering(string $id){
+    public function markAsOrdering(string $id)
+    {
         // Get the connection
         $connection = $this->resource->getConnection();
 
@@ -300,11 +296,11 @@ class PairingRepository implements PairingRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET is_ordering = 1 WHERE id = :id";
+        $sql = "UPDATE {$tableName} SET is_ordering = 1 WHERE id = :id";
 
         // Bind parameters
         $bind = [
-            'id' => $id
+            'id' => $id,
         ];
 
         // Execute the query
@@ -335,12 +331,12 @@ class PairingRepository implements PairingRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET status = :status WHERE id = :id";
+        $sql = "UPDATE {$tableName} SET status = :status WHERE id = :id";
 
         // Bind parameters
         $bind = [
             'id' => $id,
-            'status' => $status
+            'status' => $status,
         ];
 
         // Execute the query

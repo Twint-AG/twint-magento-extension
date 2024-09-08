@@ -36,11 +36,14 @@ class Collection extends SearchResult
     {
         parent::_initSelect();
 
-        $this->getSelect()->joinLeft(
-            ['request' => $this->getTable(RequestLog::TABLE_NAME)],
-            'main_table.request_id = request.id',
-            ['method', 'soap_action' ]
-        );
+        $this->getSelect()
+            ->joinLeft(
+                [
+                    'request' => $this->getTable(RequestLog::TABLE_NAME),
+                ],
+                'main_table.request_id = request.id',
+                ['method', 'soap_action']
+            );
 
         return $this;
     }

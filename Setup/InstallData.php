@@ -34,7 +34,7 @@ class InstallData implements InstallDataInterface
                 'scope' => 'default',
                 'scope_id' => 0,
                 'path' => $key,
-                'value' => (string)$value
+                'value' => (string) $value,
             ];
         }
 

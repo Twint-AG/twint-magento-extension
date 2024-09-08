@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Twint\Magento\Service;
 
 use Magento\Sales\Api\Data\TransactionInterface;
@@ -14,13 +16,18 @@ use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Service\TransactionService;
 
-class TransactionServiceTest extends MockeryTestCase
+/**
+ * @internal
+ */
+class Test_Unit_TransactionServiceTest extends MockeryTestCase
 {
     private $transactionRepositoryMock;
+
     private $transactionFactoryMock;
+
     private $transactionService;
 
-    function tearDown(): void
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -52,7 +59,7 @@ class TransactionServiceTest extends MockeryTestCase
 
         $result = $this->transactionService->createCapture($order, $pairing, $pairingHistory);
 
-        $this->assertSame($transaction, $result);
+        self::assertSame($transaction, $result);
     }
 
     public function testCreateVoid()
@@ -71,32 +78,58 @@ class TransactionServiceTest extends MockeryTestCase
 
         $result = $this->transactionService->createVoid($order, $pairing, $pairingHistory);
 
-        $this->assertSame($transaction, $result);
+        self::assertSame($transaction, $result);
     }
 
     private function setupMocksForTransactionCreation($order, $payment, $pairing, $pairingHistory, $transaction)
     {
-        $order->shouldReceive('getPayment')->once()->andReturn($payment);
-        $order->shouldReceive('getId')->once()->andReturn(1);
+        $order->shouldReceive('getPayment')
+            ->once()
+            ->andReturn($payment);
+        $order->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
 
-        $payment->shouldReceive('getId')->twice()->andReturn(100);
-        $payment->shouldReceive('getLastTransId')->once()->andReturn('last_trans_id');
+        $payment->shouldReceive('getId')
+            ->twice()
+            ->andReturn(100);
+        $payment->shouldReceive('getLastTransId')
+            ->once()
+            ->andReturn('last_trans_id');
 
-        $pairing->shouldReceive('getPairingId')->once()->andReturn('pairing_id');
+        $pairing->shouldReceive('getPairingId')
+            ->once()
+            ->andReturn('pairing_id');
 
-        $pairingHistory->shouldReceive('getId')->once()->andReturn(1);
+        $pairingHistory->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
 
         $this->transactionFactoryMock->shouldReceive('create')
             ->once()
             ->andReturn($transaction);
 
-        $transaction->shouldReceive('setPaymentId')->with(100)->once();
-        $transaction->shouldReceive('set')->with(100)->once();
-        $transaction->shouldReceive('setIsClosed')->with(0)->once();
-        $transaction->shouldReceive('setTxnId')->with('pairing_id-1')->once();
-        $transaction->shouldReceive('setOrderId')->with(1)->once();
-        $transaction->shouldReceive('setParentTxnId')->with('last_trans_id')->once();
-        $transaction->shouldReceive('setIsClosed')->with(1)->once();
+        $transaction->shouldReceive('setPaymentId')
+            ->with(100)
+            ->once();
+        $transaction->shouldReceive('set')
+            ->with(100)
+            ->once();
+        $transaction->shouldReceive('setIsClosed')
+            ->with(0)
+            ->once();
+        $transaction->shouldReceive('setTxnId')
+            ->with('pairing_id-1')
+            ->once();
+        $transaction->shouldReceive('setOrderId')
+            ->with(1)
+            ->once();
+        $transaction->shouldReceive('setParentTxnId')
+            ->with('last_trans_id')
+            ->once();
+        $transaction->shouldReceive('setIsClosed')
+            ->with(1)
+            ->once();
 
         $this->transactionRepositoryMock->shouldReceive('save')
             ->with($transaction)

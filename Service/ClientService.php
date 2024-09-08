@@ -29,14 +29,13 @@ use Twint\Sdk\Value\Version;
 class ClientService
 {
     public function __construct(
-        private readonly ClientBuilder  $connector,
+        private readonly ClientBuilder $connector,
         private readonly PairingService $pairingService,
-        private readonly ApiService     $api,
-        private readonly OrderService   $orderService,
-        private readonly MonitorService   $monitor,
-        private readonly Monolog          $logger
-    )
-    {
+        private readonly ApiService $api,
+        private readonly OrderService $orderService,
+        private readonly MonitorService $monitor,
+        private readonly Monolog $logger
+    ) {
     }
 
     /**
@@ -61,8 +60,8 @@ class ClientService
         list($pairing, $history) = $this->pairingService->create($amount, $res, $payment, true);
 
         $success = $this->monitorOrder($pairing);
-        if(!$success){
-            throw new PaymentException("TWINT: Your balance is insufficient.");
+        if (!$success) {
+            throw new PaymentException('TWINT: Your balance is insufficient.');
         }
 
         return [$twintOrder, $pairing, $history];
@@ -78,8 +77,10 @@ class ClientService
      */
     protected function monitorOrder(Pairing $pairing): bool
     {
-        while(!$pairing->isFinished()) {
-            $this->logger->info("TWINT EC monitor: {$pairing->getPairingId()} {$pairing->getStatus()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}");
+        while (!$pairing->isFinished()) {
+            $this->logger->info(
+                "TWINT EC monitor: {$pairing->getPairingId()} {$pairing->getStatus()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}"
+            );
             $pairing = $this->monitor->monitor($pairing);
         }
 
@@ -87,10 +88,6 @@ class ClientService
     }
 
     /**
-     * @param InfoInterface $payment
-     * @param $amount
-     * @return array
-     *
      * @throws Throwable
      */
     public function createOrder(InfoInterface $payment, $amount): array

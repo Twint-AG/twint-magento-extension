@@ -18,28 +18,22 @@ use Twint\Sdk\Value\Order;
 class RefundService
 {
     public function __construct(
-        private readonly clientService              $payment,
+        private readonly clientService $payment,
         private readonly PairingRepositoryInterface $pairingRepository,
-        private readonly RefundRepositoryInterface  $refundRepository,
-        private readonly RefundFactory              $factory,
-        private readonly Session                    $adminSession,
-        private readonly PairingService                    $pairingService
-    )
-    {
+        private readonly RefundRepositoryInterface $refundRepository,
+        private readonly RefundFactory $factory,
+        private readonly Session $adminSession,
+        private readonly PairingService $pairingService
+    ) {
     }
 
-    /**
-     * @param int|Pairing $pairing
-     * @param float $amount
-     * @return Refund
-     */
     public function refund(int|Pairing $pairing, float $amount, string $reversalReference = null): Refund
     {
         if (is_int($pairing)) {
             $pairing = $this->pairingRepository->getById($pairing);
         }
 
-        if (empty($reversalReference)) {
+        if ($reversalReference === null || $reversalReference === '' || $reversalReference === '0') {
             $reversalReference = 'R-' . $pairing->getOrderId() . '-' . time();
         }
 
@@ -47,7 +41,7 @@ class RefundService
             $pairing->getPairingId(),
             $reversalReference,
             $amount,
-            (int)$pairing->getStoreId()
+            (int) $pairing->getStoreId()
         );
 
         /** @var Refund $refund */
@@ -100,7 +94,7 @@ class RefundService
         $entity->setData('reversal_id', $reversalId);
         $entity->setData('amount', $amount);
         $entity->setData('currency', TwintConstant::CURRENCY);
-        $entity->setData('status', (string)$order->status());
+        $entity->setData('status', (string) $order->status());
         $entity->setData('refunded_by', $this->getLoggedAdmin());
         $entity->setData('request_id', $res->getRequest()->getId());
 

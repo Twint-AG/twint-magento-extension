@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Twint\Magento\Service\Express;
-
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -11,7 +11,6 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Throwable;
-use Twint\Core\Setting\Settings;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Service\ApiService;
@@ -27,15 +26,14 @@ use Twint\Sdk\Value\Version;
 class CheckoutService
 {
     public function __construct(
-        private QuoteService                $cartService,
-        private readonly ClientBuilder      $connector,
-        private ApiService                  $api,
+        private QuoteService $cartService,
+        private readonly ClientBuilder $connector,
+        private ApiService $api,
         private ShipmentEstimationInterface $shipmentEstimation,
-        private AddressFactory              $addressFactory,
-        private PairingService              $pairingService,
-        private MonitorService              $monitor
-    )
-    {
+        private AddressFactory $addressFactory,
+        private PairingService $pairingService,
+        private MonitorService $monitor
+    ) {
     }
 
     /**
@@ -51,7 +49,7 @@ class CheckoutService
         $quote->collectTotals();
 
         $res = $this->callApi($quote);
-        list ($pairing) = $this->pairingService->createForExpress($res, $quote, $currentQuote);
+        list($pairing) = $this->pairingService->createForExpress($res, $quote, $currentQuote);
         $this->monitor->status($pairing);
 
         return $pairing;

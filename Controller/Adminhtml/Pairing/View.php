@@ -31,7 +31,6 @@ class View extends Action
     }
 
     /**
-     * @return Page|ResultInterface|ResponseInterface
      * @throws Exception
      */
     public function execute(): Page|ResultInterface|ResponseInterface
@@ -42,7 +41,7 @@ class View extends Action
         /** @var Pairing $pairing */
         $pairing = $this->repository->getById($id);
         if (!$pairing) {
-            throw new Exception("Pairing $id not found");
+            throw new Exception("Pairing {$id} not found");
         }
 
         $resultPage = $this->resultPageFactory->create();

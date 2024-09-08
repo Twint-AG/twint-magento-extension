@@ -13,10 +13,9 @@ class UpdatePairingStatus
 {
     public function __construct(
         private readonly PairingRepositoryInterface $repository,
-        private readonly MonitorService             $monitorService,
-        private readonly LoggerInterface            $logger
-    )
-    {
+        private readonly MonitorService $monitorService,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     public function execute(): void

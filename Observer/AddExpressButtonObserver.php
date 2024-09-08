@@ -20,7 +20,8 @@ class AddExpressButtonObserver implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         /** @var ShortcutButtons $shortcutButtons */
-        $shortcutButtons = $observer->getEvent()->getContainer();
+        $shortcutButtons = $observer->getEvent()
+            ->getContainer();
 
         $type = $this->getPageType($observer->getEvent());
         $map = [
@@ -30,7 +31,8 @@ class AddExpressButtonObserver implements ObserverInterface
 
         if (isset($map[$type])) {
             /** @var ShortcutInterface $shortcut */
-            $shortcut = $shortcutButtons->getLayout()->createBlock($map[$type]);
+            $shortcut = $shortcutButtons->getLayout()
+                ->createBlock($map[$type]);
 
             $shortcutButtons->addShortcut($shortcut);
         }

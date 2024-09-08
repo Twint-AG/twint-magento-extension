@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Model\Quote;
 
 use Magento\Framework\Exception\AlreadyExistsException;
@@ -9,28 +11,26 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Quote\Model\QuoteFactory;
-use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Item as AddressItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Rate as RateModel;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
 use Magento\Quote\Model\ResourceModel\Quote\Item as ItemModel;
-use Magento\Quote\Model\ResourceModel\Quote\Item\Option as OptionModel;
 use Magento\Quote\Model\ResourceModel\Quote\Payment as PaymentModel;
+use Throwable;
 
 class QuoteRepository
 {
     public function __construct(
-        private readonly QuoteModel       $resourceModel,
-        private readonly AddressModel     $addressModel,
-        private readonly ItemModel        $itemModel,
-        private readonly OptionModel      $optionModel,
+        private readonly QuoteModel $resourceModel,
+        private readonly AddressModel $addressModel,
+        private readonly ItemModel $itemModel,
         private readonly AddressItemModel $addressItemModel,
-        private readonly RateModel        $rateModel,
-        private readonly PaymentModel        $paymentModel,
-        private readonly QuoteFactory     $factory,
-        private readonly Monolog          $logger
-    )
-    {
+        private readonly RateModel $rateModel,
+        private readonly PaymentModel $paymentModel,
+        private readonly QuoteFactory $factory,
+        private readonly Monolog $logger
+    ) {
     }
 
     /**
@@ -41,24 +41,25 @@ class QuoteRepository
         try {
             $this->resourceModel->save($new);
             $itemsMapping = $this->saveItems($original, $new);
-            $addressMapping = $this->saveAddresses($original, $new, $itemsMapping);
-            $this->shippingAddressItems($original, $new, $itemsMapping, $addressMapping);
+            $addressMapping = $this->saveAddresses($original, $new);
+            $this->shippingAddressItems($original, $itemsMapping, $addressMapping);
             $this->savePayment($original, $new);
-
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error('Cannot save entity ' . $e->getMessage());
         }
 
         return $this->getById($new->getId());
     }
 
-    private function shippingAddressItems(Quote $original, Quote $new, array $itemsMapping, array $addressMapping){
+    private function shippingAddressItems(Quote $original, array $itemsMapping, array $addressMapping)
+    {
         /** @var Address\Item $item */
-        foreach ($original->getShippingAddressesItems() as $item){
-            if($item instanceof Item)
+        foreach ($original->getShippingAddressesItems() as $item) {
+            if ($item instanceof Item) {
                 continue;
+            }
 
-            $cloned = clone  $item;
+            $cloned = clone $item;
 
             $cloned->setId(null);
             $cloned->setEntityId(null);
@@ -70,8 +71,8 @@ class QuoteRepository
 
             $this->addressItemModel->save($cloned);
 
-            foreach ($item->getChildren() as $child){
-                $clonedChild = clone  $item;
+            foreach ($item->getChildren() as $child) {
+                $clonedChild = clone $item;
 
                 $clonedChild->setId(null);
                 $clonedChild->setEntityId(null);
@@ -145,7 +146,7 @@ class QuoteRepository
     /**
      * @throws AlreadyExistsException
      */
-    private function saveAddresses(Quote $original, Quote $new, array $itemMappings): array
+    private function saveAddresses(Quote $original, Quote $new): array
     {
         $map = [];
         foreach ($original->getAllAddresses() as $address) {

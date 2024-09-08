@@ -17,6 +17,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Twint\Magento\Controller\Regular\BaseAction;
+use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingRepository;
 use Twint\Magento\Service\MonitorService;
 use Twint\Magento\Util\CryptoHandler;
@@ -24,12 +25,11 @@ use Twint\Magento\Util\CryptoHandler;
 class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
 {
     public function __construct(
-        Context                         $context,
+        Context $context,
         private readonly MonitorService $monitorService,
         private readonly CryptoHandler $cryptoHandler,
         private readonly PairingRepository $repository
-    )
-    {
+    ) {
         parent::__construct($context);
     }
 
@@ -41,15 +41,16 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
     public function execute(): Json|ResultInterface|ResponseInterface
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $id = $this->getRequest()->getParam('id') ?? null;
+        $id = $this->getRequest()
+            ->getParam('id') ?? null;
 
         if (empty($id)) {
-            throw new UnexpectedValueException("Pairing Id is required");
+            throw new UnexpectedValueException('Pairing Id is required');
         }
 
         $id = $this->cryptoHandler->unHash($id);
         $pairing = $this->repository->getByPairingId($id);
-        if(!$pairing){
+        if (!$pairing instanceof Pairing) {
             throw new NotFoundHttpException('Pairing not found');
         }
 
@@ -58,7 +59,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
         return $json->setData([
             'finish' => $monitorStatus->getFinished(),
             'status' => $monitorStatus->getStatus(),
-            'order' => $monitorStatus->getAdditionalInformation('order')
+            'order' => $monitorStatus->getAdditionalInformation('order'),
         ]);
     }
 }

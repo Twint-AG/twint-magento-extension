@@ -24,17 +24,14 @@ class MonitorService
 {
     public function __construct(
         private readonly PairingRepositoryInterface $pairingRepository,
-        private readonly PairingService             $pairingService,
-        private readonly OrderConvertService        $convertService,
-        private readonly DirectoryList        $directoryList,
-        private readonly Monolog          $logger
-    )
-    {
+        private readonly PairingService $pairingService,
+        private readonly OrderConvertService $convertService,
+        private readonly DirectoryList $directoryList,
+        private readonly Monolog $logger
+    ) {
     }
 
     /**
-     * @param Pairing|string $pairing
-     * @return Pairing
      * @throws CouldNotSaveException
      * @throws Exception
      * @throws LocalizedException
@@ -44,7 +41,7 @@ class MonitorService
      */
     public function monitor(Pairing|string $pairing): Pairing
     {
-        if(is_string($pairing)){
+        if (is_string($pairing)) {
             $pairing = $this->pairingRepository->getByPairingId($pairing);
         }
 
@@ -65,9 +62,9 @@ class MonitorService
                     );
                     $status->setAdditionalInformation('order', $orderIncrement);
 
-                    $this->pairingRepository->markAsPaid((int)$pairing->getId());
-                }catch (PaymentException $e){
-                    $this->logger->error("TWINT payment error: " . $e->getMessage());
+                    $this->pairingRepository->markAsPaid((int) $pairing->getId());
+                } catch (PaymentException $e) {
+                    $this->logger->error('TWINT payment error: ' . $e->getMessage());
                     $this->pairingRepository->markAsCancelled((int) $pairing->getId());
                 }
             }
@@ -83,11 +80,11 @@ class MonitorService
      */
     public function status(Pairing $pairing): MonitorStatus
     {
-        if($pairing->isFinished()){
+        if ($pairing->isFinished()) {
             return $pairing->toMonitorStatus();
         }
 
-        if(!$pairing->isMonitoring()) {
+        if (!$pairing->isMonitoring()) {
             try {
                 $process = new Process([
                     'php',
@@ -101,7 +98,7 @@ class MonitorService
                 $process->disableOutput();
                 $process->start();
             } catch (Throwable $e) {
-                $this->logger->error("TWINT error start monitor: " . $e->getMessage());
+                $this->logger->error('TWINT error start monitor: ' . $e->getMessage());
                 throw $e;
             }
         }

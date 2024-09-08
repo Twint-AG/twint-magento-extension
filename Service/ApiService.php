@@ -17,11 +17,10 @@ use Twint\Sdk\InvocationRecorder\Value\Invocation;
 class ApiService
 {
     public function __construct(
-        private readonly RequestLogFactory             $factory,
+        private readonly RequestLogFactory $factory,
         private readonly RequestLogRepositoryInterface $repository,
-        private readonly Monolog                       $logger
-    )
-    {
+        private readonly Monolog $logger
+    ) {
     }
 
     /**
@@ -31,9 +30,8 @@ class ApiService
     {
         try {
             $returnValue = $client->{$method}(...$args);
-        }
-        catch (Throwable $e) {
-            $this->logger->error("TWINT $method cannot handle success" . $e->getMessage());
+        } catch (Throwable $e) {
+            $this->logger->error("TWINT {$method} cannot handle success" . $e->getMessage());
             throw $e;
         } finally {
             $invocations = $client->flushInvocations();

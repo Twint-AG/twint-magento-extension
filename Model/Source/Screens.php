@@ -29,7 +29,7 @@ class Screens extends Base
             [
                 'value' => TwintConstant::SCREEN_CART_FLYOUT,
                 'label' => __('Cart flyout'),
-            ]
+            ],
         ];
     }
 }

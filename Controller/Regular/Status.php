@@ -15,17 +15,17 @@ use Magento\Framework\Webapi\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Twint\Magento\Model\Monitor\MonitorStatus;
+use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingRepository;
 use Twint\Magento\Service\MonitorService;
 
 class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
 {
     public function __construct(
-        Context                         $context,
+        Context $context,
         private readonly MonitorService $monitorService,
         private readonly PairingRepository $repository
-    )
-    {
+    ) {
         parent::__construct($context);
     }
 
@@ -40,10 +40,10 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $id = $this->getRequest()
-                ->getParam('id') ?? null;
+            ->getParam('id') ?? null;
 
         $pairing = $this->repository->getByPairingId($id);
-        if(!$pairing){
+        if (!$pairing instanceof Pairing) {
             throw new NotFoundHttpException('Pairing not found');
         }
 
@@ -51,7 +51,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
 
         return $json->setData([
             'finish' => $status->getFinished(),
-            'paid' => $status->getStatus() == MonitorStatus::STATUS_PAID,
+            'paid' => $status->getStatus() === MonitorStatus::STATUS_PAID,
         ]);
     }
 }

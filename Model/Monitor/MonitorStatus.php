@@ -9,15 +9,33 @@ use Twint\Magento\Model\Pairing;
 class MonitorStatus
 {
     public const STATUS_PAID = 1;
+
     public const STATUS_IN_PROGRESS = 0;
+
     public const STATUS_CANCELLED = -1;
 
     public function __construct(
-        private readonly bool  $finished,
-        private readonly int   $status = self::STATUS_IN_PROGRESS,
+        private readonly bool $finished,
+        private readonly int $status = self::STATUS_IN_PROGRESS,
         private array $args = []
-    )
+    ) {
+    }
+
+    public static function fromValues(bool $finished, int $status, array $args = []): static
     {
+        return new static($finished, $status, $args);
+    }
+
+    public static function extractStatus(Pairing $pairing): int
+    {
+        if ($pairing->isSuccessful()) {
+            return self::STATUS_PAID;
+        }
+        if ($pairing->isFailure()) {
+            return self::STATUS_CANCELLED;
+        }
+
+        return self::STATUS_IN_PROGRESS;
     }
 
     public function getFinished(): bool
@@ -43,17 +61,5 @@ class MonitorStatus
     public function paid(): bool
     {
         return $this->status === self::STATUS_PAID;
-    }
-
-    public static function fromValues(bool $finished, int $status, array $args = []): static
-    {
-        return new static($finished, $status, $args);
-    }
-
-    public static function extractStatus(Pairing $pairing): int{
-        if($pairing->isSuccessful()) return self::STATUS_PAID;
-        if($pairing->isFailure()) return self::STATUS_CANCELLED;
-
-        return self::STATUS_IN_PROGRESS;
     }
 }

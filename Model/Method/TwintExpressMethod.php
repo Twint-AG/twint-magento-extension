@@ -21,7 +21,7 @@ class TwintExpressMethod extends TwintMethod
 
     public function isEnabled(string|int $storeId): bool
     {
-        return (bool)$this->_scopeConfig->getValue(
+        return (bool) $this->_scopeConfig->getValue(
             TwintConstant::EXPRESS_ENABLED,
             ScopeInterface::SCOPE_STORE,
             $storeId
@@ -33,7 +33,7 @@ class TwintExpressMethod extends TwintMethod
         return MethodInterface::ACTION_AUTHORIZE_CAPTURE;
     }
 
-    public function capture(InfoInterface $payment, $amount): TwintExpressMethod|static
+    public function capture(InfoInterface $payment, $amount): self|static
     {
         $amount = $this->priceCurrency->convertAndRound($amount);
 
@@ -54,7 +54,8 @@ class TwintExpressMethod extends TwintMethod
 
     private function getPairing(InfoInterface $payment): ?Pairing
     {
-        $quoteId = $payment->getOrder()->getQuoteId();
+        $quoteId = $payment->getOrder()
+            ->getQuoteId();
 
         return $this->pairingRepository->getByQuoteId($quoteId);
     }

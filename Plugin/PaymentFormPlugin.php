@@ -11,10 +11,6 @@ class PaymentFormPlugin
 {
     /**
      * Remove out TWINT methods
-     *
-     * @param Container $subject
-     * @param callable $proceed
-     * @return mixed
      */
     public function aroundGetMethods(Container $subject, callable $proceed): array
     {

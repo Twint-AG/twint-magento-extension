@@ -13,8 +13,7 @@ class ClearCacheAfterConfigChanged implements ObserverInterface
 {
     public function __construct(
         private readonly Manager $manager,
-    )
-    {
+    ) {
     }
 
     public function execute(Observer $observer)
@@ -28,12 +27,7 @@ class ClearCacheAfterConfigChanged implements ObserverInterface
 
     private function clearCache(): void
     {
-        $types = [
-            'config',
-            'block_html',
-            'layout',
-            'full_page'
-        ];
+        $types = ['config', 'block_html', 'layout', 'full_page'];
 
         $this->manager->clean($types);
     }

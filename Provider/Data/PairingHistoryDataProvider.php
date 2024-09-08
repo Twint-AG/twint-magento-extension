@@ -41,5 +41,4 @@ class PairingHistoryDataProvider extends DataProvider
 
         parent::addFilter($filter);
     }
-
 }

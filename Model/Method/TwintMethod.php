@@ -37,23 +37,22 @@ abstract class TwintMethod extends AbstractMethod
     protected $_code = self::CODE;
 
     public function __construct(
-        Context                              $context,
-        Registry                             $registry,
-        ExtensionAttributesFactory           $extensionFactory,
-        AttributeValueFactory                $customAttributeFactory,
-        Data                                 $paymentData,
-        ScopeConfigInterface                 $scopeConfig,
-        Logger                               $logger,
-        protected ClientService              $clientService,
-        protected RefundService              $refundService,
-        protected PriceCurrencyInterface     $priceCurrency,
+        Context $context,
+        Registry $registry,
+        ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        Data $paymentData,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger,
+        protected ClientService $clientService,
+        protected RefundService $refundService,
+        protected PriceCurrencyInterface $priceCurrency,
         protected PairingRepositoryInterface $pairingRepository,
-        AbstractResource                     $resource = null,
-        AbstractDb                           $resourceCollection = null,
-        array                                $data = [],
-        DirectoryHelper                      $directory = null
-    )
-    {
+        AbstractResource $resource = null,
+        AbstractDb $resourceCollection = null,
+        array $data = [],
+        DirectoryHelper $directory = null
+    ) {
         parent::__construct(
             $context,
             $registry,
@@ -72,7 +71,7 @@ abstract class TwintMethod extends AbstractMethod
     public function isAvailable(CartInterface $quote = null): bool
     {
         return $quote->getCurrency()
-                ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
+            ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
             && $this->_scopeConfig->getValue(
                 TwintConstant::CONFIG_VALIDATED,
                 ScopeInterface::SCOPE_STORE,
@@ -161,7 +160,7 @@ abstract class TwintMethod extends AbstractMethod
 
         try {
             $refund = $this->refundService->refund($pairing, $amount);
-            if($payment instanceof Order\Payment){
+            if ($payment instanceof Order\Payment) {
                 $payment->setTransactionId("R-{$pairing->getPairingId()}-{$refund->getId()}");
             }
         } catch (Throwable $e) {

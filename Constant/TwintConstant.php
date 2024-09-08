@@ -27,11 +27,15 @@ class TwintConstant
     public const REGULAR_ENABLED = 'twint/regular/enabled';
 
     public const EXPRESS_ENABLED = 'twint/express/enabled';
+
     public const EXPRESS_SCREENS = 'twint/express/screens';
 
     public const SCREEN_PLP = 'PLP';
+
     public const SCREEN_PDP = 'PDP';
+
     public const SCREEN_CART = 'cart';
+
     public const SCREEN_CART_FLYOUT = 'minicart';
 
     public const MONITORING_TIME_WINDOW = 10; //Consider a pairing is under monitoring with in 10 seconds

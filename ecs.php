@@ -11,7 +11,6 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->skip([__DIR__ . '/infra']);
     $ecsConfig->skip([__DIR__ . '/zinfra']);
     $ecsConfig->skip([__DIR__ . '/bin']);
-    $ecsConfig->skip([__DIR__ . '/tests']);
     $ecsConfig->skip([__DIR__ . '/magento']);
 
     $ecsConfig->ruleWithConfiguration(PsrAutoloadingFixer::class, [

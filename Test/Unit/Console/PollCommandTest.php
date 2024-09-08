@@ -1,27 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Console\Command\Test;
 
+use Exception;
+use Magento\Framework\App\State;
+use Magento\Framework\Logger\Monolog;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Twint\Magento\Console\Command\PollCommand;
-use Magento\Framework\App\State;
 use Twint\Magento\Api\PairingRepositoryInterface;
-use Magento\Framework\Logger\Monolog;
-use Twint\Magento\Service\MonitorService;
+use Twint\Magento\Console\Command\PollCommand;
 use Twint\Magento\Model\Pairing;
+use Twint\Magento\Service\MonitorService;
 
-class PollCommandTest extends TestCase
+/**
+ * @internal
+ */
+class Test_Unit_Console_PollCommandTest extends TestCase
 {
     private $stateMock;
+
     private $repositoryMock;
+
     private $loggerMock;
+
     private $monitorMock;
+
     private $inputMock;
+
     private $outputMock;
+
     private $pairingMock;
+
     private $command;
 
     protected function setUp(): void
@@ -42,7 +55,7 @@ class PollCommandTest extends TestCase
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -74,14 +87,15 @@ class PollCommandTest extends TestCase
             ->once();
 
         $result = $this->command->execute($this->inputMock, $this->outputMock);
-        $this->assertEquals(1, $result);
+        self::assertSame(1, $result);
     }
 
     public function testExecuteSuccessfulMonitor()
     {
         $pairingId = '12345678-1234-5678-9876-123456789012';
 
-        $this->stateMock->shouldReceive('setAreaCode')->andReturn(true);
+        $this->stateMock->shouldReceive('setAreaCode')
+            ->andReturn(true);
 
         $this->inputMock
             ->shouldReceive('getArgument')
@@ -130,14 +144,15 @@ class PollCommandTest extends TestCase
             ->with("TWINT monitor: {$pairingId}: 1 100");
 
         $result = $this->command->execute($this->inputMock, $this->outputMock);
-        $this->assertEquals(0, $result);
+        self::assertSame(0, $result);
     }
 
     public function testExecuteThrowsException()
     {
         $pairingId = '12345678-1234-5678-9876-123456789012';
 
-        $this->stateMock->shouldReceive('setAreaCode')->andReturn(true);
+        $this->stateMock->shouldReceive('setAreaCode')
+            ->andReturn(true);
 
         $this->inputMock
             ->shouldReceive('getArgument')
@@ -160,7 +175,7 @@ class PollCommandTest extends TestCase
         $this->repositoryMock
             ->shouldReceive('updateCheckedAt')
             ->with('1')
-            ->andThrow(new \Exception('Error'));
+            ->andThrow(new Exception('Error'));
 
         $this->loggerMock
             ->shouldReceive('error')
@@ -171,6 +186,6 @@ class PollCommandTest extends TestCase
             ->with('Running');
 
         $result = $this->command->execute($this->inputMock, $this->outputMock);
-        $this->assertEquals(1, $result);
+        self::assertSame(1, $result);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Include the Magento autoloader
 require_once realpath(__DIR__ . '/../../app/Mage.php');
 //
@@ -24,6 +26,6 @@ spl_autoload_register(function ($class) {
 // Set up any additional configuration or mocks needed for your tests
 
 // Clean up after tests if necessary
-register_shutdown_function(function() {
+register_shutdown_function(static function () {
     // Perform any cleanup tasks
 });

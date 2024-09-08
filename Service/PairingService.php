@@ -37,19 +37,18 @@ use Zend_Db_Statement_Exception;
 class PairingService
 {
     public function __construct(
-        private readonly ClientBuilder                     $connector,
-        private readonly PairingFactory                    $pairingFactory,
-        private readonly PairingHistoryFactory             $historyFactory,
-        private readonly PairingRepositoryInterface        $pairingRepository,
+        private readonly ClientBuilder $connector,
+        private readonly PairingFactory $pairingFactory,
+        private readonly PairingHistoryFactory $historyFactory,
+        private readonly PairingRepositoryInterface $pairingRepository,
         private readonly PairingHistoryRepositoryInterface $historyRepository,
-        private readonly OrderService                      $orderService,
-        private readonly ApiService                        $api,
-        private readonly TransactionService                $transactionService,
-        private readonly InvoiceService                    $invoiceService,
-        private readonly CartService                       $cartService,
-        private readonly Monolog                           $logger
-    )
-    {
+        private readonly OrderService $orderService,
+        private readonly ApiService $api,
+        private readonly TransactionService $transactionService,
+        private readonly InvoiceService $invoiceService,
+        private readonly CartService $cartService,
+        private readonly Monolog $logger
+    ) {
     }
 
     /**
@@ -68,7 +67,7 @@ class PairingService
                 false
             );
         } catch (Throwable $e) {
-            $this->logger->error("TWINT cannot get pairing status: " . $e->getMessage());
+            $this->logger->error('TWINT cannot get pairing status: ' . $e->getMessage());
             throw $e;
         }
 
@@ -80,8 +79,12 @@ class PairingService
      * @throws LocalizedException
      * @throws Zend_Db_Statement_Exception
      */
-    protected function recursiveMonitor(Pairing $orgPairing, Pairing $pairing, InvocationRecordingClient $client, ApiResponse $res): MonitorStatus
-    {
+    protected function recursiveMonitor(
+        Pairing $orgPairing,
+        Pairing $pairing,
+        InvocationRecordingClient $client,
+        ApiResponse $res
+    ): MonitorStatus {
         /** @var Order $tOrder */
         $tOrder = $res->getReturn();
 
@@ -160,9 +163,7 @@ class PairingService
     {
         $this->logger->info("TWINT cancel order: {$pairing->getPairingId()}");
 
-        return $this->api->call($client, 'cancelOrder', [
-            new OrderId(new Uuid($pairing->getPairingId()))
-        ]);
+        return $this->api->call($client, 'cancelOrder', [new OrderId(new Uuid($pairing->getPairingId()))]);
     }
 
     private function markAsCaptured(Pairing $pairing): Pairing
@@ -173,9 +174,6 @@ class PairingService
     }
 
     /**
-     * @param Pairing $pairing
-     * @param Pairing $cloned
-     * @return MonitorStatus
      * @throws Throwable
      */
     public function monitorExpress(Pairing $pairing, Pairing $cloned): MonitorStatus
@@ -196,8 +194,12 @@ class PairingService
      * @throws Zend_Db_Statement_Exception
      * @throws Throwable
      */
-    public function monitorExpressRecursive(Pairing $pairing, Pairing $cloned, ApiResponse $res, InvocationRecordingClient $client): MonitorStatus
-    {
+    public function monitorExpressRecursive(
+        Pairing $pairing,
+        Pairing $cloned,
+        ApiResponse $res,
+        InvocationRecordingClient $client
+    ): MonitorStatus {
         /** @var FastCheckoutCheckIn $state */
         $state = $res->getReturn();
 
@@ -232,20 +234,22 @@ class PairingService
         $history = $this->createHistory($cloned, $log);
 
         // As paid
-        if (empty($pairing->getCustomerData()) && $state->hasCustomerData()) {
+        if (($pairing->getCustomerData() === null || $pairing->getCustomerData() === '' || $pairing->getCustomerData() === '0') && $state->hasCustomerData()) {
             $status = MonitorStatus::STATUS_PAID;
 
             return MonitorStatus::fromValues(true, $status, [
                 'pairing' => $cloned,
-                'history' => $history
+                'history' => $history,
             ]);
         }
 
         // As cancelled
         if (!$pairing->getIsOrdering() && $pairing->getPairingStatus() !== PairingStatus::NO_PAIRING && $cloned->getPairingStatus() === PairingStatus::NO_PAIRING && !$state->hasCustomerData()) {
-            $this->logger->info("TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}");
+            $this->logger->info(
+                "TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}"
+            );
 
-            $this->pairingRepository->markAsCancelled((int)$pairing->getId());
+            $this->pairingRepository->markAsCancelled((int) $pairing->getId());
             $finished = true;
             $status = MonitorStatus::STATUS_CANCELLED;
         }
@@ -261,7 +265,7 @@ class PairingService
         $this->logger->info("TWINT cancel EC: {$pairing->getPairingId()}");
 
         return $this->api->call($client, 'cancelFastCheckoutCheckIn', [
-            PairingUuid::fromString($pairing->getPairingId())
+            PairingUuid::fromString($pairing->getPairingId()),
         ]);
     }
 
@@ -269,8 +273,8 @@ class PairingService
     {
         $pairing->setData('version', $pairing->getVersion());
         $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
-        $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
-        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
+        $pairing->setData('shipping_id', (string) $checkIn->shippingMethodId());
+        $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
 
         $this->logger->info("TWINT update: {$pairing->getPairingId()} {$pairing->getPairingStatus()}");
 
@@ -279,11 +283,13 @@ class PairingService
 
     public function update(Pairing $pairing, Order $order): Pairing
     {
-        $pairing->setData('status', (string)$order->status());
-        $pairing->setData('transaction_status', (string)$order->transactionStatus());
-        $pairing->setData('pairing_status', (string)$order->pairingStatus());
+        $pairing->setData('status', (string) $order->status());
+        $pairing->setData('transaction_status', (string) $order->transactionStatus());
+        $pairing->setData('pairing_status', (string) $order->pairingStatus());
 
-        $this->logger->info("TWINT update: {$pairing->getPairingId()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}");
+        $this->logger->info(
+            "TWINT update: {$pairing->getPairingId()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}"
+        );
 
         return $this->pairingRepository->save($pairing);
     }
@@ -294,17 +300,17 @@ class PairingService
         $twintOrder = $response->getReturn();
 
         $pairing = $this->pairingFactory->create();
-        $pairing->setData('pairing_id', (string)$twintOrder->id());
-        $pairing->setData('status', (string)$twintOrder->status());
-        $pairing->setData('token', (string)$twintOrder->pairingToken());
-        $pairing->setData('transaction_status', (string)$twintOrder->transactionStatus());
-        $pairing->setData('pairing_status', (string)$twintOrder->pairingStatus());
+        $pairing->setData('pairing_id', (string) $twintOrder->id());
+        $pairing->setData('status', (string) $twintOrder->status());
+        $pairing->setData('token', (string) $twintOrder->pairingToken());
+        $pairing->setData('transaction_status', (string) $twintOrder->transactionStatus());
+        $pairing->setData('pairing_status', (string) $twintOrder->pairingStatus());
         $pairing->setData('amount', $amount);
 
-        $pairing->setData('order_id', (string)$twintOrder->merchantTransactionReference());
+        $pairing->setData('order_id', (string) $twintOrder->merchantTransactionReference());
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 
-        $pairing->setData('captured', (int)$captured);
+        $pairing->setData('captured', (int) $captured);
 
         if ($pair = SubmitClonedQuotePlugin::$pair) {
             $pairing->setData('org_quote_id', $pair[0]->getId());
@@ -324,9 +330,9 @@ class PairingService
         $checkIn = $response->getReturn();
 
         $pairing = $this->pairingFactory->create();
-        $pairing->setData('pairing_id', (string)$checkIn->pairingUuid());
-        $pairing->setData('token', (string)$checkIn->pairingToken());
-        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
+        $pairing->setData('pairing_id', (string) $checkIn->pairingUuid());
+        $pairing->setData('token', (string) $checkIn->pairingToken());
+        $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
         $pairing->setData('amount', $quote->getGrandTotal());
         $pairing->setData('store_id', $quote->getStoreId());
         $pairing->setData('quote_id', $quote->getId());
@@ -343,7 +349,7 @@ class PairingService
     public function createHistory(Pairing $pairing, RequestLog $log, float $amount = null): PairingHistory
     {
         $history = $this->historyFactory->create();
-        $history->setData('parent_id', (string)$pairing->getId());
+        $history->setData('parent_id', (string) $pairing->getId());
         $history->setData('status', $pairing->getStatus());
         $history->setData('transaction_status', $pairing->getTransactionStatus());
         $history->setData('pairing_status', $pairing->getPairingStatus());
@@ -356,7 +362,7 @@ class PairingService
         $history->setData('shipping_id', $pairing->getShippingId());
         $history->setData('customer', $pairing->getCustomerData());
         $history->setData('request_id', $log->getId());
-        $history->setData('captured', (int)$pairing->getCaptured());
+        $history->setData('captured', (int) $pairing->getCaptured());
 
         return $this->historyRepository->save($history);
     }

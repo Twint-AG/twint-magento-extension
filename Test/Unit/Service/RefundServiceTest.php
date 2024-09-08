@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Twint\Magento\Service;
 
 use Magento\Backend\Model\Auth\Session;
@@ -7,6 +9,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Api\RefundRepositoryInterface;
 use Twint\Magento\Model\Api\ApiResponse;
@@ -17,14 +20,23 @@ use Twint\Magento\Service\ClientService;
 use Twint\Magento\Service\PairingService;
 use Twint\Magento\Service\RefundService;
 
-class RefundServiceTest extends TestCase
+/**
+ * @internal
+ */
+class Test_Unit_RefundServiceTest extends TestCase
 {
     private MockInterface $clientServiceMock;
+
     private MockInterface $pairingRepositoryMock;
+
     private MockInterface $refundRepositoryMock;
+
     private MockInterface $refundFactoryMock;
+
     private MockInterface $sessionMock;
+
     private MockInterface $pairingServiceMock;
+
     private RefundService $refundService;
 
     protected function setUp(): void
@@ -61,10 +73,14 @@ class RefundServiceTest extends TestCase
         $reversalReference = 'R-123-' . time();
 
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('getPairingId')->andReturn('twint_pairing_id');
-        $pairingMock->shouldReceive('getOrderId')->andReturn('123');
-        $pairingMock->shouldReceive('getStoreId')->andReturn('1');
-        $pairingMock->shouldReceive('getId')->andReturn('1');
+        $pairingMock->shouldReceive('getPairingId')
+            ->andReturn('twint_pairing_id');
+        $pairingMock->shouldReceive('getOrderId')
+            ->andReturn('123');
+        $pairingMock->shouldReceive('getStoreId')
+            ->andReturn('1');
+        $pairingMock->shouldReceive('getId')
+            ->andReturn('1');
 
         $this->pairingRepositoryMock->shouldReceive('getById')
             ->with($pairingId)
@@ -72,19 +88,25 @@ class RefundServiceTest extends TestCase
 
         $apiResponseMock = Mockery::mock(ApiResponse::class);
         $orderMock = Mockery::mock('overload:Twint\Sdk\Value\Order');
-        $orderMock->shouldReceive('status')->andReturn('COMPLETED');
+        $orderMock->shouldReceive('status')
+            ->andReturn('COMPLETED');
 
-        $apiResponseMock->shouldReceive('getReturn')->andReturn($orderMock);
-        $apiResponseMock->shouldReceive('getRequest->getId')->andReturn('request_id');
+        $apiResponseMock->shouldReceive('getReturn')
+            ->andReturn($orderMock);
+        $apiResponseMock->shouldReceive('getRequest->getId')
+            ->andReturn('request_id');
 
         $this->clientServiceMock->shouldReceive('refund')
             ->with('twint_pairing_id', $reversalReference, $amount, 1)
             ->andReturn($apiResponseMock);
 
         $refundMock = Mockery::mock(Refund::class);
-        $this->refundFactoryMock->shouldReceive('create')->andReturn($refundMock);
+        $this->refundFactoryMock->shouldReceive('create')
+            ->andReturn($refundMock);
 
-        $refundMock->shouldReceive('setData')->withAnyArgs()->andReturnSelf();
+        $refundMock->shouldReceive('setData')
+            ->withAnyArgs()
+            ->andReturnSelf();
 
         $this->refundRepositoryMock->shouldReceive('save')
             ->with($refundMock)
@@ -94,11 +116,12 @@ class RefundServiceTest extends TestCase
             ->with($pairingMock, Mockery::any(), $amount)
             ->once();
 
-        $this->sessionMock->shouldReceive('getUser')->andReturn(null);
+        $this->sessionMock->shouldReceive('getUser')
+            ->andReturn(null);
 
         $result = $this->refundService->refund($pairingId, $amount, $reversalReference);
 
-        $this->assertInstanceOf(Refund::class, $result);
+        self::assertInstanceOf(Refund::class, $result);
     }
 
     public function testGetRefundableAmount(): void
@@ -108,8 +131,10 @@ class RefundServiceTest extends TestCase
         $totalRefunded = 50.00;
 
         $pairingMock = Mockery::mock(Pairing::class);
-        $pairingMock->shouldReceive('getId')->andReturn($pairingId);
-        $pairingMock->shouldReceive('getAmount')->andReturn($pairingAmount);
+        $pairingMock->shouldReceive('getId')
+            ->andReturn($pairingId);
+        $pairingMock->shouldReceive('getAmount')
+            ->andReturn($pairingAmount);
 
         $this->pairingRepositoryMock->shouldReceive('getById')
             ->with($pairingId)
@@ -121,7 +146,7 @@ class RefundServiceTest extends TestCase
 
         $result = $this->refundService->getRefundableAmount($pairingId);
 
-        $this->assertEquals(150.00, $result);
+        self::assertSame(150.00, $result);
     }
 
     public function testValidateThrowsExceptionForNegativeAmount(): void
@@ -132,7 +157,7 @@ class RefundServiceTest extends TestCase
         $pairingMock = Mockery::mock(Pairing::class);
         $amount = -10.00;
 
-        $method = new \ReflectionMethod(RefundService::class, 'validate');
+        $method = new ReflectionMethod(RefundService::class, 'validate');
         $method->setAccessible(true);
         $method->invoke($this->refundService, $pairingMock, $amount);
     }

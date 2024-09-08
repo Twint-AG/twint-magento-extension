@@ -1,14 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Twint\Magento\Service\Express;
 
-use Magento\Checkout\Api\ShippingInformationManagementInterface;
 use Magento\Checkout\Model\ShippingInformation;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Webapi\Exception;
 use Magento\Framework\Webapi\ServiceInputProcessor;
-use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\CartExtensionFactory;
@@ -18,7 +17,6 @@ use Magento\Quote\Model\QuoteAddressValidator;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 use Magento\Quote\Model\ShippingAssignmentFactory;
 use Magento\Quote\Model\ShippingFactory;
-use Magento\Sales\Model\OrderRepository;
 use Twint\Magento\Model\Method\TwintExpressMethod;
 use Twint\Magento\Model\Pairing;
 
@@ -31,18 +29,14 @@ class AddressService
     private mixed $shippingFactory;
 
     public function __construct(
-        private readonly ServiceInputProcessor                  $serviceInputProcessor,
-        private readonly CartRepositoryInterface                $quoteRepository,
-        private readonly QuoteIdMaskFactory                     $quoteIdMaskFactory,
-        private readonly ShippingInformationManagementInterface $shippingInformationManagement,
-        private readonly QuoteAddressValidator                  $addressValidator,
-        private CartManagementInterface                         $quoteManagement,
-        private OrderRepository                                 $orderRepository,
-        CartExtensionFactory                                    $cartExtensionFactory = null,
-        ShippingAssignmentFactory                               $shippingAssignmentFactory = null,
-        ShippingFactory                                         $shippingFactory = null
-    )
-    {
+        private readonly ServiceInputProcessor $serviceInputProcessor,
+        private readonly CartRepositoryInterface $quoteRepository,
+        private readonly QuoteIdMaskFactory $quoteIdMaskFactory,
+        private readonly QuoteAddressValidator $addressValidator,
+        CartExtensionFactory $cartExtensionFactory = null,
+        ShippingAssignmentFactory $shippingAssignmentFactory = null,
+        ShippingFactory $shippingFactory = null
+    ) {
         $this->cartExtensionFactory = $cartExtensionFactory ?: ObjectManager::getInstance()
             ->get(CartExtensionFactory::class);
         $this->shippingAssignmentFactory = $shippingAssignmentFactory ?: ObjectManager::getInstance()
@@ -52,9 +46,6 @@ class AddressService
     }
 
     /**
-     * @param Pairing $pairing
-     * @param Quote $quote
-     * @return void
      * @throws Exception
      */
     public function handle(Pairing $pairing, Quote $quote): void
@@ -105,26 +96,20 @@ class AddressService
         $quote->setIsMultiShipping(0);
 
         $this->quoteRepository->save($quote);
-
     }
 
     private function prepareShippingAssignment(
-        CartInterface    $quote,
+        CartInterface $quote,
         AddressInterface $address,
-        string           $method
-    ): CartInterface
-    {
+        string $method
+    ): CartInterface {
         $cartExtension = $quote->getExtensionAttributes();
         if ($cartExtension === null) {
             $cartExtension = $this->cartExtensionFactory->create();
         }
 
         $shippingAssignments = $cartExtension->getShippingAssignments();
-        if (empty($shippingAssignments)) {
-            $shippingAssignment = $this->shippingAssignmentFactory->create();
-        } else {
-            $shippingAssignment = $shippingAssignments[0];
-        }
+        $shippingAssignment = empty($shippingAssignments) ? $this->shippingAssignmentFactory->create() : $shippingAssignments[0];
 
         $shipping = $shippingAssignment->getShipping();
         if ($shipping === null) {
@@ -147,41 +132,41 @@ class AddressService
         $shipping = $data['shipping_address'];
 
         $address = [
-            "countryId" => $shipping['country'],
-            "region" => "",
-            "street" => [
-                $shipping['street'],
-                ""
-            ],
-            "company" => "",
-            "telephone" => $data['phone_number'],
-            "postcode" => $shipping['zip'],
-            "city" => $shipping['city'],
-            "firstname" => $shipping['firstName'],
-            "lastname" => $shipping['lastName'],
-            'email' => $data['email']
+            'countryId' => $shipping['country'],
+            'region' => '',
+            'street' => [$shipping['street'], ''],
+            'company' => '',
+            'telephone' => $data['phone_number'],
+            'postcode' => $shipping['zip'],
+            'city' => $shipping['city'],
+            'firstname' => $shipping['firstName'],
+            'lastname' => $shipping['lastName'],
+            'email' => $data['email'],
         ];
 
         $input = [
             'addressInformation' => [
                 'shipping_address' => $address,
-                'billing_address' => $address
+                'billing_address' => $address,
             ],
-            'cartId' => $markedId
+            'cartId' => $markedId,
         ];
 
         return $this->serviceInputProcessor->process(
             'Magento\Checkout\Api\GuestShippingInformationManagementInterface',
-            'saveAddressInformation', $input
+            'saveAddressInformation',
+            $input
         );
     }
 
     protected function createMarkedId(Quote $quote): string
     {
         // Load or create the quote ID mask for the quote
-        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($quote->getId(), 'quote_id');
+        $quoteIdMask = $this->quoteIdMaskFactory->create()
+            ->load($quote->getId(), 'quote_id');
         if (!$quoteIdMask->getMaskedId()) {
-            $quoteIdMask->setQuoteId($quote->getId())->save();
+            $quoteIdMask->setQuoteId($quote->getId())
+                ->save();
         }
 
         // Return the masked ID

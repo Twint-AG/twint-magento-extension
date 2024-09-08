@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Twint\Magento\Service;
 
 use Magento\Quote\Model\Quote;
@@ -10,10 +12,15 @@ use PHPUnit\Framework\TestCase;
 use Twint\Magento\Model\Quote\QuoteRepository;
 use Twint\Magento\Service\CartService;
 
-class CartServiceTest extends TestCase
+/**
+ * @internal
+ */
+class Test_Unit_CartServiceTest extends TestCase
 {
     private CartService $cartService;
+
     private MockInterface $quoteFactory;
+
     private MockInterface $quoteRepository;
 
     protected function setUp(): void
@@ -23,10 +30,7 @@ class CartServiceTest extends TestCase
         $this->quoteFactory = Mockery::mock(QuoteFactory::class);
         $this->quoteRepository = Mockery::mock(QuoteRepository::class);
 
-        $this->cartService = new CartService(
-            $this->quoteFactory,
-            $this->quoteRepository
-        );
+        $this->cartService = new CartService($this->quoteFactory, $this->quoteRepository);
     }
 
     protected function tearDown(): void
@@ -40,24 +44,30 @@ class CartServiceTest extends TestCase
         $originalQuote = Mockery::mock(Quote::class);
         $clonedQuote = Mockery::mock(Quote::class);
 
-        $originalQuote->shouldReceive('getData')->andReturn([
-            'customer_id' => 1,
-            'store_id' => 1,
-            'id' => 100,
-            'items' => [],
-        ]);
+        $originalQuote->shouldReceive('getData')
+            ->andReturn([
+                'customer_id' => 1,
+                'store_id' => 1,
+                'id' => 100,
+                'items' => [],
+            ]);
 
-        $clonedQuote->shouldReceive('setData')->with('customer_id', 1)->once();
-        $clonedQuote->shouldReceive('setData')->with('store_id', 1)->once();
+        $clonedQuote->shouldReceive('setData')
+            ->with('customer_id', 1)
+            ->once();
+        $clonedQuote->shouldReceive('setData')
+            ->with('store_id', 1)
+            ->once();
 
-        $this->quoteFactory->shouldReceive('create')->andReturn($clonedQuote);
+        $this->quoteFactory->shouldReceive('create')
+            ->andReturn($clonedQuote);
         $this->quoteRepository->shouldReceive('clone')
             ->with($originalQuote, $clonedQuote)
             ->andReturn($clonedQuote);
 
         $result = $this->cartService->clone($originalQuote);
 
-        $this->assertSame($clonedQuote, $result);
+        self::assertSame($clonedQuote, $result);
     }
 
     public function testDeActivate(): void
@@ -84,8 +94,10 @@ class CartServiceTest extends TestCase
     {
         $quote = Mockery::mock(Quote::class);
 
-        $quote->shouldReceive('removeAllItems')->once();
-        $quote->shouldReceive('collectTotals')->once();
+        $quote->shouldReceive('removeAllItems')
+            ->once();
+        $quote->shouldReceive('collectTotals')
+            ->once();
 
         $this->quoteRepository->shouldReceive('save')
             ->with($quote)
@@ -93,7 +105,7 @@ class CartServiceTest extends TestCase
 
         $result = $this->cartService->removeAllItems($quote);
 
-        $this->assertSame($quote, $result);
+        self::assertSame($quote, $result);
     }
 
     public function testRemoveAllItemsWithQuoteId(): void
@@ -105,8 +117,10 @@ class CartServiceTest extends TestCase
             ->with($quoteId)
             ->andReturn($quote);
 
-        $quote->shouldReceive('removeAllItems')->once();
-        $quote->shouldReceive('collectTotals')->once();
+        $quote->shouldReceive('removeAllItems')
+            ->once();
+        $quote->shouldReceive('collectTotals')
+            ->once();
 
         $this->quoteRepository->shouldReceive('save')
             ->with($quote)
@@ -114,6 +128,6 @@ class CartServiceTest extends TestCase
 
         $result = $this->cartService->removeAllItems($quoteId);
 
-        $this->assertSame($quote, $result);
+        self::assertSame($quote, $result);
     }
 }

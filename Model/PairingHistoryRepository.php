@@ -26,14 +26,13 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
     private static array $cache = [];
 
     public function __construct(
-        private PairingHistoryFactory         $factory,
-        private readonly ResourceModel        $resourceModel,
-        private CollectionFactory             $collectionFactory,
-        private SearchResultsFactory          $searchResultsFactory,
-        private readonly ResourceConnection   $resource,
+        private PairingHistoryFactory $factory,
+        private readonly ResourceModel $resourceModel,
+        private CollectionFactory $collectionFactory,
+        private SearchResultsFactory $searchResultsFactory,
+        private readonly ResourceConnection $resource,
         private ?CollectionProcessorInterface $collectionProcessor = null
-    )
-    {
+    ) {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -95,12 +94,12 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
         $tableName = ResourceModel::TABLE_NAME;
 
         // Write the SQL update query
-        $sql = "UPDATE $tableName SET order_id = :order_id WHERE quote_id = :quote_id and status <> ''";
+        $sql = "UPDATE {$tableName} SET order_id = :order_id WHERE quote_id = :quote_id and status <> ''";
 
         // Bind parameters
         $bind = [
             'order_id' => $orderId,
-            'quote_id' => $quoteId
+            'quote_id' => $quoteId,
         ];
 
         // Execute the query
@@ -116,16 +115,13 @@ class PairingHistoryRepository implements PairingHistoryRepositoryInterface
         $connection = $this->resource->getConnection();
 
         $select = $connection->select()
-            ->from(
-                ['a' => Pairing::TABLE_NAME],
-                ['id']
-            )
-            ->join(
-                ['b' => 'sales_order'],
-                'a.order_id = b.increment_id',
-                []
-            )
-            ->where('b.entity_id = ?', (int)$orderId);
+            ->from([
+                'a' => Pairing::TABLE_NAME,
+            ], ['id'])
+            ->join([
+                'b' => 'sales_order',
+            ], 'a.order_id = b.increment_id', [])
+            ->where('b.entity_id = ?', (int) $orderId);
 
         static::$cache[$orderId] = $connection->fetchCol($select);
 

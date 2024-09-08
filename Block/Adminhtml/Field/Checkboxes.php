@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Block\Adminhtml\Field;
 
 use Magento\Framework\Data\Form\Element\Checkboxes as BaseCheckboxes;
@@ -23,7 +25,7 @@ class Checkboxes extends BaseCheckboxes
 
         $array = explode(',', $checked ?? '');
 
-        return in_array($value, $array) ? 'checked' : null;
+        return in_array($value, $array, true) ? 'checked' : null;
     }
 
     public function getDisabled($value)

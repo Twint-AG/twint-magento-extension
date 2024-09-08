@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Block\Frontend\Express\Screen\Category;
 
 use Magento\Catalog\Api\Data\ProductInterface;
@@ -10,8 +12,9 @@ use Twint\Magento\Constant\TwintConstant;
 
 class Button extends Base implements ProductAwareInterface
 {
+    public const SCREEN = TwintConstant::SCREEN_PLP;
+
     protected ?ProductInterface $product = null;
-    const SCREEN = TwintConstant::SCREEN_PLP;
 
     public function setProduct(ProductInterface $product)
     {

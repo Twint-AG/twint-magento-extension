@@ -16,8 +16,7 @@ class AppsService
     public function __construct(
         private readonly ClientBuilder $connector,
         private readonly CacheInterface $cache
-    )
-    {
+    ) {
     }
 
     public function buildLinks(string $storeCode, string $token = '--TOKEN--'): array

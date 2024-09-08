@@ -12,7 +12,7 @@ use Twint\Magento\Model\Quote\QuoteRepository;
 class CartService
 {
     public function __construct(
-        private readonly QuoteFactory    $factory,
+        private readonly QuoteFactory $factory,
         private readonly QuoteRepository $quoteRepository,
     ) {
     }
@@ -22,12 +22,12 @@ class CartService
      */
     public function clone(Quote $quote): Quote
     {
-        /** @var Quote $quote */
         $cloned = $this->factory->create();
 
         foreach ($quote->getData() as $key => $value) {
-            if (in_array($key, ['id', 'entity_id', 'items', 'extension_attributes']))
+            if (in_array($key, ['id', 'entity_id', 'items', 'extension_attributes'], true)) {
                 continue;
+            }
 
             $cloned->setData($key, $value);
         }
@@ -47,7 +47,7 @@ class CartService
 
     public function removeAllItems(Quote|int $quote): Quote
     {
-        if(is_int($quote)){
+        if (is_int($quote)) {
             $quote = $this->quoteRepository->getById($quote);
         }
 

@@ -39,8 +39,8 @@ class ClientBuilder
      */
     public function build(string|int $storeCode, int $version = Version::LATEST): InvocationRecordingClient
     {
-        if (isset(self::$instances[$storeCode.$version])) {
-            return self::$instances[$storeCode.$version];
+        if (isset(self::$instances[$storeCode . $version])) {
+            return self::$instances[$storeCode . $version];
         }
 
         $credentials = $this->configHelper->getConfigs()
@@ -87,7 +87,7 @@ class ClientBuilder
                 $messageRecorder
             );
 
-            self::$instances[$storeCode.$version] = $client;
+            self::$instances[$storeCode . $version] = $client;
 
             return $client;
         } catch (Throwable $e) {

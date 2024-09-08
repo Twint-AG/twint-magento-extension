@@ -21,7 +21,7 @@ class Environment extends Base
             [
                 'value' => Option::TESTING,
                 'label' => __('Test'),
-            ]
+            ],
         ];
     }
 }

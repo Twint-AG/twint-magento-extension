@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\Magento\Test\Unit\Service;
 
 use Exception;
@@ -12,14 +14,23 @@ use Twint\Magento\Model\RequestLog;
 use Twint\Magento\Model\RequestLogFactory;
 use Twint\Magento\Service\ApiService;
 
+/**
+ * @internal
+ */
 class ApiServiceTest extends TestCase
 {
     private $apiService;
+
     private $factoryMock;
+
     private $repositoryMock;
+
     private $loggerMock;
+
     private $clientMock;
+
     private $invocationMock;
+
     private $requestLogMock;
 
     protected function setUp(): void
@@ -31,11 +42,7 @@ class ApiServiceTest extends TestCase
         $this->invocationMock = Mockery::mock('overload:Twint\Sdk\InvocationRecorder\Value\Invocation');
         $this->requestLogMock = $this->createMock(RequestLog::class);
 
-        $this->apiService = new ApiService(
-            $this->factoryMock,
-            $this->repositoryMock,
-            $this->loggerMock
-        );
+        $this->apiService = new ApiService($this->factoryMock, $this->repositoryMock, $this->loggerMock);
     }
 
     public function testCallSuccess()
@@ -53,16 +60,16 @@ class ApiServiceTest extends TestCase
             ->andReturn([$this->invocationMock]);
 
         // Mock the factory to return a request log
-        $this->factoryMock->expects($this->once())
+        $this->factoryMock->expects(self::once())
             ->method('create')
             ->willReturn($this->requestLogMock);
 
         $response = $this->apiService->call($this->clientMock, $method, $args, $save);
 
         // Assert the ApiResponse
-        $this->assertInstanceOf(ApiResponse::class, $response);
-        $this->assertEquals('success', $response->getReturn());
-        $this->assertEquals($this->requestLogMock, $response->getRequest());
+        self::assertInstanceOf(ApiResponse::class, $response);
+        self::assertSame('success', $response->getReturn());
+        self::assertSame($this->requestLogMock, $response->getRequest());
     }
 
     public function testCallThrowsException()
@@ -79,14 +86,14 @@ class ApiServiceTest extends TestCase
             ->andReturn([$this->invocationMock]);
 
         // Mock the factory to return a request log
-        $this->factoryMock->expects($this->once())
+        $this->factoryMock->expects(self::once())
             ->method('create')
             ->willReturn($this->requestLogMock);
 
         $this->expectException(Exception::class);
 
         $res = $this->apiService->call($this->clientMock, $method, $args, false);
-        $this->assertNull($res->getReturn());
+        self::assertNull($res->getReturn());
     }
 
     public function testLogSuccess()
@@ -105,12 +112,12 @@ class ApiServiceTest extends TestCase
             ->andReturn([]);
 
         // Mock the factory to create a log
-        $this->factoryMock->expects($this->once())
+        $this->factoryMock->expects(self::once())
             ->method('create')
             ->willReturn($this->requestLogMock);
 
         // Mock the repository save
-        $this->repositoryMock->expects($this->once())
+        $this->repositoryMock->expects(self::once())
             ->method('save')
             ->with($this->requestLogMock)
             ->willReturn($this->requestLogMock);
@@ -118,6 +125,6 @@ class ApiServiceTest extends TestCase
         $log = $this->apiService->log($method, [$this->invocationMock], $save);
 
         // Assert log was returned
-        $this->assertInstanceOf(RequestLog::class, $log);
+        self::assertInstanceOf(RequestLog::class, $log);
     }
 }

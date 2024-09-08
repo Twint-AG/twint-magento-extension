@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Twint\Magento\Service;
 
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -9,9 +11,13 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Twint\Magento\Service\PaymentService;
 
-class PaymentServiceTest extends TestCase
+/**
+ * @internal
+ */
+class Test_Unit_PaymentServiceTest extends TestCase
 {
     private $orderPaymentRepositoryMock;
+
     private $paymentService;
 
     protected function setUp(): void
@@ -32,7 +38,9 @@ class PaymentServiceTest extends TestCase
         $transactionMock = Mockery::mock(Transaction::class);
 
         $transactionId = '123456';
-        $transactionMock->shouldReceive('getId')->once()->andReturn($transactionId);
+        $transactionMock->shouldReceive('getId')
+            ->once()
+            ->andReturn($transactionId);
 
         $paymentMock->shouldReceive('setLastTransId')
             ->once()

@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Plugin;
 
+use Closure;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 use Twint\Magento\Service\CartService;
-use Twint\Magento\Service\PairingService;
 
 class SubmitClonedQuotePlugin
 {
-    static array $pair = [];
+    public static array $pair = [];
+
     public function __construct(
-        private readonly CartService $cartService,
-        private readonly PairingService $pairingService
-    )
-    {
+        private readonly CartService $cartService
+    ) {
     }
 
     public function aroundSubmit(
         QuoteManagement $subject,
-        \Closure $proceed,
+        Closure $proceed,
         Quote $quote,
         array $orderData = [],
     ) {

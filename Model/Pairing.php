@@ -49,11 +49,11 @@ class Pairing extends AbstractModel implements IdentityInterface
         return $this->getStatus() === OrderStatus::SUCCESS;
     }
 
-
     public function isFailure(): bool
     {
-        if ($this->isExpress())
-            return $this->getPairingStatus() == PairingStatus::NO_PAIRING;
+        if ($this->isExpress()) {
+            return $this->getPairingStatus() === PairingStatus::NO_PAIRING;
+        }
 
         return $this->getStatus() === OrderStatus::FAILURE;
     }
@@ -80,8 +80,9 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isFinished(): bool
     {
-        if ($this->isExpress())
+        if ($this->isExpress()) {
             return $this->isExpressFinish();
+        }
 
         return $this->isRegularFinish();
     }
@@ -109,12 +110,12 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getQuoteId(): ?int
     {
-        return (int)$this->getData('quote_id');
+        return (int) $this->getData('quote_id');
     }
 
     public function getOriginalQuoteId(): ?int
     {
-        return (int)$this->getData('org_quote_id');
+        return (int) $this->getData('org_quote_id');
     }
 
     public function getShippingId(): ?string
@@ -144,27 +145,27 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getAmount(): float
     {
-        return (float)$this->getData('amount');
+        return (float) $this->getData('amount');
     }
 
     public function getCaptured(): bool
     {
-        return (bool)$this->getData('captured');
+        return (bool) $this->getData('captured');
     }
 
     public function isExpress(): bool
     {
-        return (bool)$this->getData('is_express');
+        return (bool) $this->getData('is_express');
     }
 
     public function getCheckedAgo(): int
     {
-        return (int)$this->getData('checked_ago');
+        return (int) $this->getData('checked_ago');
     }
 
     public function getCreatedAgo(): int
     {
-        return (int)$this->getData('created_ago');
+        return (int) $this->getData('created_ago');
     }
 
     public function isTimedOut(): bool
@@ -179,12 +180,12 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getVersion(): int
     {
-        return (int)$this->getData('version');
+        return (int) $this->getData('version');
     }
 
     public function getIsOrdering(): bool
     {
-        return (bool)$this->getData('is_ordering');
+        return (bool) $this->getData('is_ordering');
     }
 
     public function isMonitoring(): bool
@@ -204,15 +205,18 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function hasDiffs(FastCheckoutCheckIn|Order $target): bool
     {
-        if ($target instanceof FastCheckoutCheckIn)
-            return $this->getPairingStatus() !== ($target->pairingStatus()?->__toString() ?? '')
-                || $this->getShippingId() !== ($target->hasShippingMethodId() ? (string)$target->shippingMethodId() : null);
+        if ($target instanceof FastCheckoutCheckIn) {
+            return $this->getPairingStatus() !== ($target->pairingStatus()->__toString() ?? '')
+                || $this->getShippingId() !== ($target->hasShippingMethodId() ? (string) $target->shippingMethodId() : null);
+        }
 
 
         /** @var Order $target */
         return $this->getPairingStatus() !== ($target->pairingStatus()?->__toString() ?? '')
-            || $this->getTransactionStatus() !== $target->transactionStatus()->__toString()
-            || $this->getStatus() !== $target->status()->__toString();
+            || $this->getTransactionStatus() !== $target->transactionStatus()
+                ->__toString()
+            || $this->getStatus() !== $target->status()
+                ->__toString();
     }
 
     public function toMonitorStatus(): MonitorStatus
@@ -221,7 +225,7 @@ class Pairing extends AbstractModel implements IdentityInterface
             $this->isFinished(),
             $this->isSuccessful() ? MonitorStatus::STATUS_PAID : MonitorStatus::STATUS_CANCELLED,
             [
-                'order' => $this->getOrderId()
+                'order' => $this->getOrderId(),
             ]
         );
     }

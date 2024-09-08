@@ -11,8 +11,7 @@ class ExpressCheckoutPlugin
 {
     public function __construct(
         protected UrlInterface $urlBuilder,
-    )
-    {
+    ) {
     }
 
     public function afterGetConfig(Sidebar $subject, array $result): array
@@ -20,10 +19,11 @@ class ExpressCheckoutPlugin
         return array_merge_recursive($result, $this->getConfig());
     }
 
-    private function getConfig(): array{
+    private function getConfig(): array
+    {
         return [
             'expressCheckoutUrl' => $this->urlBuilder->getUrl('twint/express/checkout'),
-            'expressStatusUrl' => $this->urlBuilder->getUrl('twint/express/status')
+            'expressStatusUrl' => $this->urlBuilder->getUrl('twint/express/status'),
         ];
     }
 }
