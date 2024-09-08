@@ -21,7 +21,6 @@ use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
 use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
-use Twint\Sdk\Exception\CancellationFailed;
 use Twint\Sdk\InvocationRecorder\InvocationRecordingClient;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;

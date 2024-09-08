@@ -55,7 +55,7 @@ class PollCommand extends Command
      * @throws Exception
      * @throws LocalizedException
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("Running");
         $pairingId = $input->getArgument('pairing-id');
@@ -82,6 +82,7 @@ class PollCommand extends Command
                 $this->pairing = $this->repository->getByPairingId($pairingId);
             }
         }catch (Throwable $e){
+            echo $e->getMessage();
             $this->logger->error("TWINT monitor error: {$pairingId} {$e->getMessage()} {$e->getFile()}:{$e->getLine()}");
             return 1;
         }
