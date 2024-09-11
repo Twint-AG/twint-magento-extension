@@ -1,4 +1,4 @@
-"ERROR_INVALID_INPUT","Certificate file and password are required"
+﻿"ERROR_INVALID_INPUT","Certificate file and password are required"
 "ERROR_INVALID_UNKNOWN","Certificate cannot be validated. Please try again"
 "ERROR_INVALID_CERTIFICATE_FORMAT","Invalid certificate format"
 "ERROR_INVALID_PASSPHRASE","Invalid certificate password"
@@ -7,13 +7,12 @@
 "ERROR_INVALID_EXPIRY_DATE","Invalid expiry date"
 "ERROR_CERTIFICATE_EXPIRED","Certificate expired"
 "ERROR_CERTIFICATE_NOT_YET_VALID","Certificate is not yet valid"
-
-View,View
-TWINT,TWINT
+"View","View"
+"TWINT","TWINT"
 "Switch to TWINT app now","Switch to TWINT app now"
-"Choose your TWINT app:","Choose your TWINT app:"
+"Choose your TWINT app","Choose your TWINT app"
 "Other banks","Other banks"
-or,or
+"or","or"
 "Enter this code in your TWINT app:","Enter this code in your TWINT app:"
 "Certificate validation successful","Certificate validation successful"
 "Something went wrong while processing the data.","Something went wrong while processing the data."
@@ -21,64 +20,55 @@ or,or
 "Request Log","Request Log"
 "Choose file","Choose file"
 "Only .p12 files are allowed","Only .p12 files are allowed"
-"Password is required for all TWINT certificates.","Password is required for all TWINT certificates."
-"Certificate encrypted and stored,","Certificate encrypted and stored,"
+"Certificate password is required","Certificate password is required"
+"Certificate encrypted and stored","Certificate encrypted and stored"
 "Upload new certificate","Upload new certificate"
-Production,Production
-Test,Test
+"Production","Production"
+"Test","Test"
 "Product detail page","Product detail page"
 "Product listing page","Product listing page"
 "Cart page","Cart page"
 "Cart flyout","Cart flyout"
 "Captured amount of CHF %1, Transaction ID %2","Captured amount of CHF %1, Transaction ID %2"
-"Refund amount has to greater than 0","Refund amount has to greater than 0"
-"Refund amount is exceed the transaction amount","Refund amount is exceed the transaction amount"
-"Custom Information for new tab","Custom Information for new tab"
-"Refund history","Refund history"
+"Amount to refund should be greater than 0","Amount to refund should be greater than 0"
+"Total amount should not exceed the maximum refundable amount","Total amount should not exceed the maximum refundable amount"
 "Transaction logs","Transaction logs"
 "API method","API method"
-Request,Request
-Response,Response
+"Request","Request"
+"Response","Response"
 "Express Checkout","Express Checkout"
 "Copy code","Copy code"
-"Open your bank's TWINT app on your smartphone.","Open your bank's TWINT app on your smartphone."
 "Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
 "Select a shipping address and complete the purchase in the app.","Select a shipping address and complete the purchase in the app."
 "TWINT Checkout","TWINT Checkout"
-"Place Order","Place Order"
 "Invalid Store UUID. Store UUID needs to be a UUIDv4","Invalid Store UUID. Store UUID needs to be a UUIDv4"
 "Validating credentials","Validating credentials"
-Saving...,Saving...
-Copied!,Copied!
+"Saving...","Saving..."
+"Copied!","Copied!"
 "Cancel checkout","Cancel checkout"
 "Payment method offered by TWINT","Payment method offered by TWINT"
-Configuration,Configuration
-Credentials,Credentials
-"Regular Checkout","Regular Checkout"
+"Configuration","Configuration"
+"Credentials","Credentials"
 "Store UUID","Store UUID"
-Environment,Environment
-Certificate,Certificate
-"TWINT Regular Checkout","TWINT Regular Checkout"
-"Sort Order","Sort Order"
+"Environment","Environment"
+"Certificate","Certificate"
 "TWINT Express Checkout","TWINT Express Checkout"
 "Display screens","Display screens"
 "Where users see the TWINT Express Checkout button","Where users see the TWINT Express Checkout button"
-"History ID","History ID"
-Order,Order
-Store,Store
-Amount,Amount
-Status,Status
+"Order","Order"
+"Store","Store"
+"Amount","Amount"
+"Status","Status"
 "Pairing Status","Pairing Status"
 "Transaction Status","Transaction Status"
 "Transaction Date","Transaction Date"
-Actions,Actions
+"Actions","Actions"
 "Reversal ID","Reversal ID"
 "Pairing ID","Pairing ID"
-"Reversal ID","Reversal ID"
 "Refunded by","Refunded by"
 "Refund Date","Refund Date"
-ID,ID
-Token,Token
+"ID","ID"
+"Token","Token"
 "TWINT Configuration","TWINT Configuration"
 "TWINT statuses","TWINT statuses"
 "Shipping Method","Shipping Method"
