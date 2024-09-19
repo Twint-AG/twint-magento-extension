@@ -55,8 +55,8 @@ class AddressService
 
         /** @var ShippingInformation $shipping */
         $shipping = $shippingInputs[1];
-        $shipping->setShippingCarrierCode($pairing->getShippingId());
-        $shipping->setShippingMethodCode($pairing->getShippingId());
+        $shipping->setShippingCarrierCode($pairing->getShippingCarrierCode());
+        $shipping->setShippingMethodCode($pairing->getShippingMethodCode());
 
         $this->saveAddress($shipping, $quote);
         $this->setPaymentMethod($quote);

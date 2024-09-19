@@ -88,7 +88,7 @@ class CheckoutService
             $amount = $quote->getGrandTotal() - $method->getAmount();
 
             $options[] = new ShippingMethod(
-                new ShippingMethodId($method->getMethodCode()),
+                new ShippingMethodId("{$method->getCarrierCode()}|{$method->getMethodCode()}"),
                 "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
                 Money::CHF($method->getAmount())
             );

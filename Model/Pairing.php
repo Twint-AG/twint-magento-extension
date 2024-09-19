@@ -123,6 +123,20 @@ class Pairing extends AbstractModel implements IdentityInterface
         return $this->getData('shipping_id');
     }
 
+    public function getShippingCarrierCode(): string
+    {
+        $parts = explode('|', $this->getShippingId());
+
+        return reset($parts);
+    }
+
+    public function getShippingMethodCode(): string
+    {
+        $parts = explode('|', $this->getShippingId());
+
+        return $parts[1] ?? $parts[0];
+    }
+
     public function getCustomerData(): ?string
     {
         return $this->getData('customer');
