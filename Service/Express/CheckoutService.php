@@ -48,30 +48,35 @@ class CheckoutService
         // Calculated when saving cart, just make sure here
         $quote->collectTotals();
 
-        $res = $this->callApi($quote);
-        list($pairing) = $this->pairingService->createForExpress($res, $quote, $currentQuote);
+        list($methods, $amount) = $this->getRequestParams($quote);
+        $res = $this->callApi($quote, $methods, $amount);
+
+        list($pairing) = $this->pairingService->createForExpress($res, $quote, $currentQuote, $amount);
         $this->monitor->status($pairing);
 
         return $pairing;
     }
 
-    private function callApi(Quote $quote): ApiResponse
+    /**
+     * @throws Throwable
+     */
+    private function callApi(Quote $quote, ShippingMethods $methods, float $amount): ApiResponse
     {
         $client = $this->connector->build($quote->getStoreId(), Version::NEXT);
-
         return $this->api->call(
             $client,
             'requestFastCheckOutCheckIn',
             [
-                Money::CHF($quote->getSubtotal()),
+                Money::CHF($amount),
                 new CustomerDataScopes(...CustomerDataScopes::all()),
-                $this->getShippingOptions($quote),
+                $methods,
             ]
         );
     }
 
-    protected function getShippingOptions($quote): ShippingMethods
+    protected function getRequestParams(Quote $quote): array
     {
+        $amount = $quote->getGrandTotal();
         $options = [];
 
         /** @var Address $address */
@@ -80,6 +85,8 @@ class CheckoutService
         $shippingMethods = $this->shipmentEstimation->estimateByExtendedAddress($quote->getId(), $address);
 
         foreach ($shippingMethods as $method) {
+            $amount = $quote->getGrandTotal() - $method->getAmount();
+
             $options[] = new ShippingMethod(
                 new ShippingMethodId($method->getMethodCode()),
                 "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
@@ -87,6 +94,6 @@ class CheckoutService
             );
         }
 
-        return new ShippingMethods(...$options);
+        return [new ShippingMethods(...$options), $amount];
     }
 }
