@@ -333,7 +333,7 @@ class PairingService
         $pairing->setData('pairing_id', (string) $checkIn->pairingUuid());
         $pairing->setData('token', (string) $checkIn->pairingToken());
         $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
-        $pairing->setData('amount', $quote->getGrandTotal());
+        $pairing->setData('amount', $quote->getSubtotal());
         $pairing->setData('store_id', $quote->getStoreId());
         $pairing->setData('quote_id', $quote->getId());
         $pairing->setData('org_quote_id', $orgQuote->getId());

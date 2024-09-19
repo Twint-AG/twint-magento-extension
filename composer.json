@@ -30,14 +30,16 @@
   "require": {
     "php": ">=8.1",
     "magento/framework": ">=103.0.4",
-    "twint-ag/sdk": "^1.0",
+    "twint-ag/sdk": "dev-latest",
     "symfony/process": "^6.4"
   },
   "require-dev": {
     "symplify/easy-coding-standard": "^12.1",
     "slevomat/coding-standard": "^8.15",
     "rector/rector": "^1.2",
-    "phpspec/prophecy-phpunit": "^2.2"
+    "phpspec/prophecy-phpunit": "^2.2",
+    "phpunit/phpunit": "^11.3",
+    "mockery/mockery": "^1.6"
   },
   "repositories": [
     {
