@@ -45,4 +45,6 @@ class TwintConstant
     public const PAIRING_TIMEOUT_REGULAR = 60 * 3; //3 mins
 
     public const PAIRING_TIMEOUT_EXPRESS = 60 * 5; //5 mins
+
+    public const SHIPPING_METHOD_SEPARATOR = '+';
 }

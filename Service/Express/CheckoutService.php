@@ -12,6 +12,7 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\MonitorService;
@@ -84,11 +85,15 @@ class CheckoutService
         $address->setCountryId('CH');
         $shippingMethods = $this->shipmentEstimation->estimateByExtendedAddress($quote->getId(), $address);
 
-        foreach ($shippingMethods as $method) {
-            $amount = $quote->getGrandTotal() - $method->getAmount();
+        foreach ($shippingMethods as $key => $method) {
+            if($key === 0) {
+                $amount = $quote->getGrandTotal() - $method->getAmount();
+            }
+
+            $separator = TwintConstant::SHIPPING_METHOD_SEPARATOR;
 
             $options[] = new ShippingMethod(
-                new ShippingMethodId("{$method->getCarrierCode()}|{$method->getMethodCode()}"),
+                new ShippingMethodId("{$method->getCarrierCode()}{$separator}{$method->getMethodCode()}"),
                 "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
                 Money::CHF($method->getAmount())
             );
