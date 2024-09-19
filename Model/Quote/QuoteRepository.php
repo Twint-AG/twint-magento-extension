@@ -60,7 +60,6 @@ class QuoteRepository
             }
 
             $cloned = clone $item;
-
             $cloned->setId(null);
             $cloned->setEntityId(null);
 
@@ -155,6 +154,7 @@ class QuoteRepository
             $clonedAddress->setId(null);
             $clonedAddress->setQuoteId($new->getId());
             $clonedAddress->setQuote($new);
+            $clonedAddress->setCountryId('CH');
 
             $this->addressModel->save($clonedAddress);
 
