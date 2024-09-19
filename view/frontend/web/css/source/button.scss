@@ -1,7 +1,7 @@
 .twint-button {
   width: max-content;
   min-width: 100%;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
   padding: 10px;
@@ -33,6 +33,27 @@
   .twint-icon {
     width: 35px;
     height: 35px;
+  }
+
+  &.pdp{
+    @apply my-2;
+    @media (min-width: 1024px) {
+      & {
+        width: 49%;
+        min-width: auto;
+        @apply my-0;
+      }
+
+      .twint-label {
+        &:before {
+          @container (width < 526px) {
+            & {
+              content: none;
+            }
+          }
+        }
+      }
+    }
   }
 
   &.box {
