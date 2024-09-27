@@ -1,10 +1,10 @@
 # TWINT Payment Module for Magento 2
 
-This module provides seamless integration of the TWINT payment gateway with your Magento 2 store. It supports both **Standard** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
+This module provides seamless integration of the TWINT payment gateway with your Magento 2 store. It supports both **Regualr** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
 
 ### Key Features
- - **Standard Payment**: Customers can use TWINT to complete purchases through the traditional checkout process.
- - **Express Checkout**: A faster checkout option for customers, allowing them to bypass multiple steps in the checkout process.
+ - **Regular Payment**: Customers can use TWINT to complete purchases through the standard checkout process.
+ - **Express Checkout**: A fast checkout option for customers, to shorten the checkout process.
 
 ### Language Support
 
@@ -20,7 +20,7 @@ This module supports the following languages:
 To customize or add language support, follow these steps:
 
 1. **Locate Language Files**: Translation files are located in the `i18n` folder.
-2. **Edit or Add Translations**: Preference to existing CSV files or create a new CSV for your desired language, following the **Magento 2** translation format.
+2. **Edit or Add Translations**: use existing CSV files or create a new CSV for your desired language, following the **Magento 2** translation format.
 3. **Deploy Static Content** (if in production mode):
    ```bash
    php bin/magento setup:static-content:deploy <language_code>
@@ -40,11 +40,11 @@ composer install twint-ag/twint-magento-extension
 ```bash
 bin/magento module:enable Twint_Magento
 ```
-3. Run setup Upgrade and recompile dependencies
+3. Run setup upgrade and recompile dependencies
 ```bash
 bin/magento setup:upgrade && bin/magento setup:di:compile
  ```
-4. Deploy Static Content (if in production mode)
+4. Deploy static content (if in production mode)
 ```bash
 bin/magento setup:static-content:deploy
  ```
@@ -54,17 +54,17 @@ bin/magento setup:static-content:deploy
 bin/magento cache:clean && bin/magento cache:flush
 ```
 ## Configuration
-1. **Navigate to TWINT Settings**:  
-In your Magento admin panel, and select **TWINT** from the main left sidebar.
+1. **Navigate to TWINT settings**:  
+In your Magento admin panel, select **TWINT** from the main left sidebar.
 2. **Set Up TWINT Credentials**:  
 Under the **TWINT Credentials** section, upload your TWINT certificate file and provide the necessary account details, including API credentials, to complete the integration setup.
 3. **Configure Payment Methods**:  
-Navigate to **TWINT Checkout** and **TWINT Express Checkout** sections to configure the available payment options. Customize settings such as payment flow, button placement for Express Checkout, and other relevant details based on your store’s needs.
+Navigate to **TWINT Checkout** and **TWINT Express Checkout** sections to configure the available payment options. Customize settings such as payment flow, button placement for Express Checkout, and other relevant details according to your store’s needs.
 4. **Save Configuration**:  
-After completing the setup in each section, ensure to click **Save** to apply the changes.
+After completing the setup in each section, click **Save** to apply the changes.
 
 ## Usage
-Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full checkout process or via the streamlined **Express Checkout** button.
+Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full regular checkout process or via the streamlined **Express Checkout** button.
 
 
 ## Support
