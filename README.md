@@ -1,35 +1,56 @@
-# Twint_Magento module
+# TWINT Payment Module for Magento 2
 
-<font color='red'>**The following example is a complete README for a module Magento_Default:** </font>
-# Magento_Default module
-The Magento_Default module enables you to add the Configurable Product updates to the existing store campaigns.
+This module provides seamless integration of the TWINT payment gateway with your Magento 2 store. It supports both **Standard** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
 
-The Magento_Default module is a part of the staging functionality in Magento EE. The module adds the “Configurations” tab and the configuration wizard to the Schedule Update form of a product. You can change the Configurable Product attributes in campaigns. These updates are shown on the campaign dashboard.
+### Key Features
+ - **Standard Payment**:Customers can use TWINT to complete purchases through the traditional checkout process.
+ - **Express Checkout**: A faster checkout option for customers, allowing them to bypass multiple steps in the checkout process.
 
-## Installation details
 
-The Magento_Default module makes irreversible changes in a database during installation. You cannot disable or uninstall this module.
+### Requirements
+- PHP `>= 8.1`
+- PHP extension: `soap`
+- Magento 2.x (`magento/framework` version as `>=103.0.4`)
+- TWINT account
 
-For information about a module installation in Magento 2, see [Enable or disable modules](https://devdocs.magento.com/guides/v2.4/install-gde/install/cli/install-cli-subcommands-enable.html).
+## Installation
+ 1. Install the Module via Composer:
+```bash
+composer install twint-ag/twint-magento-extension
+```
+ 2. Enable the Module
+```bash
+bin/magento module:enable Twint_Magento
+```
+3. Run setup Upgrade and recompile dependencies
+```bash
+bin/magento setup:upgrade && bin/magento setup:di:compile
+ ```
+4. Deploy Static Content (if in production mode)
+```bash
+bin/magento setup:static-content:deploy
+ ```
 
-## Extensibility
+5. Clear cache (if need):
+```bash
+bin/magento cache:clean && bin/magento cache:flush
+```
+## Configuration
+1. **Navigate to TWINT Settings**:  
+In your Magento admin panel, and select **TWINT** from the main left sidebar.
+2. **Set Up TWINT Credentials**:  
+Under the **TWINT Credentials** section, upload your TWINT certificate file and provide the necessary account details, including API credentials, to complete the integration setup.
+3. **Configure Payment Methods**:  
+Navigate to **TWINT Checkout** and **TWINT Express Checkout** sections to configure the available payment options. Customize settings such as payment flow, button placement for Express Checkout, and other relevant details based on your store’s needs.
+4. **Save Configuration**:  
+After completing the setup in each section, ensure to click **Save** to apply the changes.
 
-Extension developers can interact with the Magento_Default module. For more information about the Magento extension mechanism, see [Magento plug-ins](https://devdocs.magento.com/guides/v2.4/extension-dev-guide/plugins.html).
+## Usage
+Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full checkout process or via the streamlined **Express Checkout** button.
 
-[The Magento dependency injection mechanism](https://devdocs.magento.com/guides/v2.4/extension-dev-guide/depend-inj.html) enables you to override the functionality of the Magento_Default module.
 
-### Layouts
+## Support
+For any issues or feature requests, please submit a GitHub issue or contact our support team at [plugin@twint.ch](mailto:plugin@twint.ch).
 
-The module introduces layout handles in the `view/adminhtml/layout` directory.
-
-For more information about a layout in Magento 2, see the [Layout documentation](https://devdocs.magento.com/guides/v2.4/frontend-dev-guide/layouts/layout-overview.html).
-
-### UI components
-
-You can extend product and category updates using the UI components located in the `view/adminhtml/ui_component` directory.
-
-For information about a UI component in Magento 2, see [Overview of UI components](https://devdocs.magento.com/guides/v2.4/ui_comp_guide/bk-ui_comps.html).
-
-## Additional information
-
-For information about significant changes in patch releases, see [Release information](https://devdocs.magento.com/guides/v2.4/release-notes/bk-release-notes.html).
+## License
+This module is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://opensource.org/licenses/MIT) file for more details.
