@@ -6,6 +6,24 @@ This module provides seamless integration of the TWINT payment gateway with your
  - **Standard Payment**: Customers can use TWINT to complete purchases through the traditional checkout process.
  - **Express Checkout**: A faster checkout option for customers, allowing them to bypass multiple steps in the checkout process.
 
+### Language Support
+
+This module supports the following languages:
+
+- English (en_US/en_GB)
+- German (de_DE/de_CH)
+- French (fr_FR/fr_CH)
+- Italian (it_IT/it_CH)
+
+#### Adding or Customizing Languages
+
+To customize or add language support, follow these steps:
+
+1. **Locate Language Files**: Translation files are located in the `i18n` folder.
+2. **Edit or Add Translations**: Preference to existing CSV files or create a new CSV for your desired language, following the **Magento 2** translation format.
+3. **Deploy Static Content** (if in production mode):
+   ```bash
+   php bin/magento setup:static-content:deploy <language_code>
 
 ### Requirements
 - PHP `>= 8.1`
