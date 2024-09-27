@@ -40,6 +40,7 @@
 "Copy code","Copy code"
 "Scan this QR Code with your TWINT app to complete the checkout.","Scan this QR Code with your TWINT app to complete the checkout."
 "Select a shipping address and complete the purchase in the app.","Select a shipping address and complete the purchase in the app."
+"Follow the instructions in the app to confirm your order.","Follow the instructions in the app to confirm your order."
 "TWINT Checkout","TWINT Checkout"
 "Invalid Store UUID. Store UUID needs to be a UUIDv4","Invalid Store UUID. Store UUID needs to be a UUIDv4"
 "Validating credentials","Validating credentials"
