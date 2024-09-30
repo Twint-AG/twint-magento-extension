@@ -1,6 +1,6 @@
 # TWINT Payment Module for Magento 2
 
-This module provides seamless integration of the TWINT payment gateway with your Magento 2 store. It supports both **Reglar** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
+This module provides seamless integration of the TWINT payment gateway with your Magento 2 store. It supports both **Regular** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
 
 ### Key Features
  - **Regular Payment**: Customers can use TWINT to complete purchases through the standard checkout process.
