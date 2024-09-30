@@ -155,21 +155,14 @@ class QuoteRepository
             $clonedAddress->setQuoteId($new->getId());
             $clonedAddress->setQuote($new);
             $clonedAddress->setCountryId('CH');
+            $clonedAddress->setRegionCode(null);
+            $clonedAddress->setRegionId(null);
+            $clonedAddress->setPostcode(null);
+            $clonedAddress->setShippingMethod((string)null);
 
             $this->addressModel->save($clonedAddress);
 
             $map[$address->getId()] = $clonedAddress;
-
-            /** @var Address\Rate $rate */
-            foreach ($address->getAllShippingRates() as $rate) {
-                $clonedRate = clone $rate;
-
-                $clonedRate->setId(null);
-                $clonedRate->setAddressId($clonedAddress->getId());
-                $clonedRate->setAddress($clonedAddress);
-
-                $this->rateModel->save($clonedRate);
-            }
         }
 
         return $map;

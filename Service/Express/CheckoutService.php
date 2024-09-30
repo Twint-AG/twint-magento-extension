@@ -77,19 +77,17 @@ class CheckoutService
 
     protected function getRequestParams(Quote $quote): array
     {
+        $quote->setTotalsCollectedFlag(false);
+        $quote->collectTotals();
         $amount = $quote->getGrandTotal();
+
         $options = [];
 
-        /** @var Address $address */
         $address = $this->addressFactory->create();
         $address->setCountryId('CH');
         $shippingMethods = $this->shipmentEstimation->estimateByExtendedAddress($quote->getId(), $address);
 
-        foreach ($shippingMethods as $key => $method) {
-            if($key === 0) {
-                $amount = $quote->getGrandTotal() - $method->getAmount();
-            }
-
+        foreach ($shippingMethods as $method) {
             $separator = TwintConstant::SHIPPING_METHOD_SEPARATOR;
 
             $options[] = new ShippingMethod(
