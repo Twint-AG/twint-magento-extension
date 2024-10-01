@@ -21,7 +21,7 @@ Please refer to the `README.md` for the installation guide.
 
 <img src="./Screenshots/twint-credentials.png" alt="TWINT Credentials" width="900" height="auto">
 
->🚩 **Note:** 
+> 🚩 **Note:** 
 >
 > After entering the certification password, please wait for the message `Certificate encrypted and stored` to shows up in the `Certificate` field before clicking `Save Config`
 
@@ -40,21 +40,22 @@ Please refer to the `README.md` for the installation guide.
 - Ensure that `TWINT Express Checkout` payment method is enabled (`Yes` option is selected for `Enabled`downdown).
 - Under the `Display screens` section -> Choose the placement for displaying the `TWINT Express Checkout` button.
 
+> ⚠️ Disclaimer
+> 
+> Merchandise with variable shipping cost (e.g. Table Rate shipping) may not be eligible for `TWINT Express Checkout`.
+
 <img src="./Screenshots/twint-express-checkout-setting.png" alt="TWINT Expesss Checkout setting" width="900" height="auto">
 
-## Languages and Currency
+## Country and Currency
 
-### Configure multi-lingual store
+### Country
 
-- To support multi-languages, the coressponding language packs should be installed first (in the backend system).
-- Under `Stores -> All Stores` A dedicated store view must be created for each desired language (please see the screenshot below for your example).
+Under `Stores -> Configuration -> General`, ensure that:
 
-<img src="./Screenshots/store-views.png" alt="Store views" width="900" height="auto">
+- `Use system value` checkbox is unchecked.
+- And `Switzerland` is selected for `Default Country`.
 
-- Go to `Stores -> Configuration` -> select the corresponding store view under `Scope` (please confirm the scope switching popup).
-  - For each store view, under `General -> Locale` -> Uncheck the `Use system value` checkbox and select the corresponding country.
-
-<img src="./Screenshots/store-view-locales.png" alt="Store view locale setting" width="900" height="auto">
+<img src="./Screenshots/default-country.png" alt="Default Country" width="900" height="auto">
 
 ### Currency
 
