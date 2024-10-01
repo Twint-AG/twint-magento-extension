@@ -6,7 +6,7 @@ Please refer to the `README.md` for the installation steps.
 
 ## Configure the module
 
-### Enter the Credential
+### Enter the Credentials
 
 #### 1. Login to the Admin console panel
 
