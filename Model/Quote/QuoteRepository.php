@@ -36,12 +36,12 @@ class QuoteRepository
     /**
      * @throws NoSuchEntityException
      */
-    public function clone(Quote $original, Quote $new): Quote
+    public function clone(Quote $original, Quote $new, bool $expressCheckout = false): Quote
     {
         try {
             $this->resourceModel->save($new);
             $itemsMapping = $this->saveItems($original, $new);
-            $addressMapping = $this->saveAddresses($original, $new);
+            $addressMapping = $this->saveAddresses($original, $new, $expressCheckout);
             $this->shippingAddressItems($original, $itemsMapping, $addressMapping);
             $this->savePayment($original, $new);
         } catch (Throwable $e) {
@@ -145,7 +145,7 @@ class QuoteRepository
     /**
      * @throws AlreadyExistsException
      */
-    private function saveAddresses(Quote $original, Quote $new): array
+    private function saveAddresses(Quote $original, Quote $new, bool $expressCheckout): array
     {
         $map = [];
         foreach ($original->getAllAddresses() as $address) {
@@ -154,15 +154,33 @@ class QuoteRepository
             $clonedAddress->setId(null);
             $clonedAddress->setQuoteId($new->getId());
             $clonedAddress->setQuote($new);
-            $clonedAddress->setCountryId('CH');
-            $clonedAddress->setRegionCode(null);
-            $clonedAddress->setRegionId(null);
-            $clonedAddress->setPostcode(null);
-            $clonedAddress->setShippingMethod((string)null);
+
+            // only set country
+            if($expressCheckout) {
+                $clonedAddress->setCountryId('CH');
+                $clonedAddress->setRegionCode(null);
+                $clonedAddress->setRegionId(null);
+                $clonedAddress->setPostcode(null);
+                $clonedAddress->setShippingMethod((string)null);
+            }
 
             $this->addressModel->save($clonedAddress);
 
             $map[$address->getId()] = $clonedAddress;
+
+            // if express checkout skip all shipping rates
+            if(!$expressCheckout) {
+                /** @var Address\Rate $rate */
+                foreach ($address->getAllShippingRates() as $rate) {
+                    $clonedRate = clone $rate;
+
+                    $clonedRate->setId(null);
+                    $clonedRate->setAddressId($clonedAddress->getId());
+                    $clonedRate->setAddress($clonedAddress);
+
+                    $this->rateModel->save($clonedRate);
+                }
+            }
         }
 
         return $map;

@@ -40,7 +40,7 @@ class QuoteService
         }
 
         // Save the new quote
-        $cloned = $this->quoteRepository->clone($quote, $cloned);
+        $cloned = $this->quoteRepository->clone($quote, $cloned, true);
 
         return [$quote, $cloned];
     }
