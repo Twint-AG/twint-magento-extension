@@ -1,10 +1,10 @@
-<p align="center" style="font-size:150%"><b>TWINT Payment Extension Guideline</b></p>
+<p align="center" style="font-size:150%"><b>TWINT Payment Module Guideline</b></p>
 
-## Install the extension
+## Install the module
 
-Please refer to the `README.md` for the installation guide.
+Please refer to the `README.md` for the installation steps.
 
-## Configure the extension
+## Configure the module
 
 ### Enter the Credential
 
@@ -31,13 +31,13 @@ Please refer to the `README.md` for the installation guide.
 
 #### 1. Go to `TWINT -> TWINT Checkout`
 
-- Ensure that `TWINT Checkout` payment method is enabled (`Yes` option is selected for `Enabled`downdown).
+- Ensure that `TWINT Checkout` payment method is enabled (`Yes` option is selected for `Enabled` dropdown).
 
 <img src="./Screenshots/twint-checkout-setting.png" alt="TWINT Checkout setting" width="900" height="auto">
 
 #### 2. Go to `TWINT -> TWINT Express Checkout`
 
-- Ensure that `TWINT Express Checkout` payment method is enabled (`Yes` option is selected for `Enabled`downdown).
+- Ensure that `TWINT Express Checkout` payment method is enabled (`Yes` option is selected for `Enabled` dropdown).
 - Under the `Display screens` section -> Choose the placement for displaying the `TWINT Express Checkout` button.
 
 > ⚠️ Disclaimer
@@ -62,6 +62,6 @@ Under `Stores -> Configuration -> General`, ensure that:
 Under `Stores -> Configuration -> General -> Currency Setup`, ensure that:
 
 - `Use system value` checkbox is unchecked.
-- `Swiss Franc` is selected for at least base (and default) currency.
+- `Swiss Franc` is selected for Base (and Default) currency.
 
 <img src="./Screenshots/currency-setting.png" alt="Add CHF currency" width="900" height="auto">
