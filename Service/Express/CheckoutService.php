@@ -8,7 +8,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
@@ -67,11 +66,7 @@ class CheckoutService
         return $this->api->call(
             $client,
             'requestFastCheckOutCheckIn',
-            [
-                Money::CHF($amount),
-                new CustomerDataScopes(...CustomerDataScopes::all()),
-                $methods,
-            ]
+            [Money::CHF($amount), new CustomerDataScopes(...CustomerDataScopes::all()), $methods]
         );
     }
 

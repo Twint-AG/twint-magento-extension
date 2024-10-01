@@ -156,12 +156,12 @@ class QuoteRepository
             $clonedAddress->setQuote($new);
 
             // only set country
-            if($expressCheckout) {
+            if ($expressCheckout) {
                 $clonedAddress->setCountryId('CH');
                 $clonedAddress->setRegionCode(null);
                 $clonedAddress->setRegionId(null);
                 $clonedAddress->setPostcode(null);
-                $clonedAddress->setShippingMethod((string)null);
+                $clonedAddress->setShippingMethod((string) null);
             }
 
             $this->addressModel->save($clonedAddress);
@@ -169,7 +169,7 @@ class QuoteRepository
             $map[$address->getId()] = $clonedAddress;
 
             // if express checkout skip all shipping rates
-            if(!$expressCheckout) {
+            if (!$expressCheckout) {
                 /** @var Address\Rate $rate */
                 foreach ($address->getAllShippingRates() as $rate) {
                     $clonedRate = clone $rate;
