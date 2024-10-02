@@ -36,8 +36,18 @@ define([
       }
     }
 
+    isInCartPage(){
+      return window.location.pathname.indexOf('checkout/cart') !== -1;
+    }
+
     onPaid(response) {
       this.showSuccess(response.order);
+
+      if(this.isInCartPage()) {
+        setTimeout(function () {
+          location.reload()
+        }, 10);
+      }
     }
 
     setModal(modal) {

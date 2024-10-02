@@ -13,6 +13,7 @@ use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
+use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\MonitorService;
 use Twint\Magento\Service\PairingService;

@@ -42,7 +42,7 @@ class QuoteRepository
             $this->resourceModel->save($new);
             $itemsMapping = $this->saveItems($original, $new);
             $addressMapping = $this->saveAddresses($original, $new, $expressCheckout);
-            $this->shippingAddressItems($original, $itemsMapping, $addressMapping);
+//            $this->shippingAddressItems($original, $itemsMapping, $addressMapping);
             $this->savePayment($original, $new);
         } catch (Throwable $e) {
             $this->logger->error('Cannot save entity ' . $e->getMessage());
@@ -115,10 +115,13 @@ class QuoteRepository
         foreach ($original->getAllVisibleItems() as $item) {
             $clonedItem = clone $item;
 
+            $clonedItem->setId(null);
+            $clonedItem->setItemId(null);
             $clonedItem->setCreatedAt(null);
             $clonedItem->setUpdatedAt(null);
             $clonedItem->setQuoteId($new->getId());
             $clonedItem->setQuote($new);
+
             $this->itemModel->save($clonedItem);
 
             $map[$item->getId()] = $clonedItem;
@@ -127,6 +130,8 @@ class QuoteRepository
             foreach ($item->getChildren() as $child) {
                 $clonedChild = clone $child;
 
+                $clonedChild->setId(null);
+                $clonedChild->setItemId(null);
                 $clonedChild->setCreatedAt(null);
                 $clonedChild->setUpdatedAt(null);
                 $clonedChild->setQuoteId($new->getId());
