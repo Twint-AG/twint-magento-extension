@@ -125,14 +125,14 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function getShippingCarrierCode(): string
     {
-        $parts = explode(TwintConstant::SHIPPING_METHOD_SEPARATOR, $this->getShippingId());
+        $parts = explode(TwintConstant::SHIPPING_METHOD_SEPARATOR, $this->getShippingId() ?? '');
 
         return reset($parts);
     }
 
     public function getShippingMethodCode(): string
     {
-        $parts = explode(TwintConstant::SHIPPING_METHOD_SEPARATOR, $this->getShippingId());
+        $parts = explode(TwintConstant::SHIPPING_METHOD_SEPARATOR, $this->getShippingId() ?? '');
 
         return $parts[1] ?? $parts[0];
     }
