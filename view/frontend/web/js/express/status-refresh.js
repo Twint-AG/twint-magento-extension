@@ -12,6 +12,8 @@ define([
       this.url = window.checkout.expressStatusUrl;
       this.processing = false;
       this.stopped = false;
+
+      this.onClosedModalCallback = null;
     }
 
     restart(){
@@ -30,6 +32,8 @@ define([
       if (this.processing)
         return;
 
+      this.onClosedModalCallback = null;
+
       let interval = clock.interval();
       if (interval > 0) {
         setTimeout(this.check.bind(this), interval);
@@ -44,9 +48,9 @@ define([
       this.showSuccess(response.order);
 
       if(this.isInCartPage()) {
-        setTimeout(function () {
-          location.reload()
-        }, 10);
+        this.onClosedModalCallback = function () {
+          location.reload();
+        }
       }
     }
 
@@ -108,6 +112,10 @@ define([
 
     stop() {
       this.stopped = true;
+
+      if(typeof this.onClosedModalCallback === "function"){
+        this.onClosedModalCallback();
+      }
     }
   }
 
