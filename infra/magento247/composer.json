@@ -106,6 +106,10 @@
         {
             "type": "vcs",
             "url": "https://git.nfq.asia/twint-ag/twint-magento-extension.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
         }
     ],
     "extra": {
