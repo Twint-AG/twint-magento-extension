@@ -48,6 +48,18 @@ define([
       );
     }
 
+    cancelPayment(){
+      let serviceUrl = window.checkoutConfig.payment.twint.getCancelPaymentUrl + '?id=' + this.id;
+
+      return this.storage.get(serviceUrl).done(
+        function (response) {
+          if (response.success !== true) {
+            console.log("cannot cancel payment");
+          }
+        }
+      );
+    }
+
     onPaid() {
       this.redirectAction.execute();
     }
@@ -70,6 +82,8 @@ define([
 
     stop() {
       this.stopped = true;
+
+      this.cancelPayment();
     }
   }
 

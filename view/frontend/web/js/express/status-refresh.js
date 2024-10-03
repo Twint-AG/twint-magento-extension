@@ -10,6 +10,7 @@ define([
       this.customerData = customerData;
 
       this.url = window.checkout.expressStatusUrl;
+      this.cancelUrl = window.checkout.cancelCheckoutUrl;
       this.processing = false;
       this.stopped = false;
 
@@ -132,9 +133,23 @@ define([
     stop() {
       this.stopped = true;
 
+      this.cancelPayment();
+
       if(typeof this.onClosedModalCallback === "function"){
         this.onClosedModalCallback();
       }
+    }
+
+    cancelPayment(){
+      let serviceUrl = this.cancelUrl + '?id=' + this.id;
+
+      return this.storage.get(serviceUrl).done(
+        function (response) {
+          if (response.success !== true) {
+            console.log("cannot cancel payment");
+          }
+        }
+      );
     }
   }
 

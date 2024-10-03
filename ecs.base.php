@@ -62,6 +62,7 @@ use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
 use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
+use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 
 return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([__DIR__]);
@@ -107,6 +108,12 @@ return static function (ECSConfig $ecsConfig): void {
             LanguageConstructSpacingSniff::class,
         ]
     );
+
+    $ecsConfig->skip([
+        MethodChainingNewlineFixer::class,
+        PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class
+    ]);
+
     $ecsConfig->ruleWithConfiguration(ClassAttributesSeparationFixer::class, [
         'elements' => [
             'const' => 'one',

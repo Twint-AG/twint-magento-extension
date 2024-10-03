@@ -21,6 +21,7 @@ class RegularConfigProvider implements ConfigProviderInterface
                 'twint' => [
                     'getPairingInformationUrl' => $this->urlBuilder->getUrl('twint/regular/payment'),
                     'getPairingStatusUrl' => $this->urlBuilder->getUrl('twint/regular/status'),
+                    'getCancelPaymentUrl' => $this->urlBuilder->getUrl('twint/payment/cancel'),
                 ],
             ],
         ];

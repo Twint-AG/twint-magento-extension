@@ -21,6 +21,7 @@ use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
 use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
+use Twint\Sdk\Exception\CancellationFailed;
 use Twint\Sdk\InvocationRecorder\InvocationRecordingClient;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
 use Twint\Sdk\Value\InteractiveFastCheckoutCheckIn;
@@ -29,6 +30,7 @@ use Twint\Sdk\Value\Order;
 use Twint\Sdk\Value\OrderId;
 use Twint\Sdk\Value\PairingStatus;
 use Twint\Sdk\Value\PairingUuid;
+use Twint\Sdk\Value\TransactionStatus;
 use Twint\Sdk\Value\UnfiledMerchantTransactionReference;
 use Twint\Sdk\Value\Uuid;
 use Twint\Sdk\Value\Version;
@@ -37,18 +39,19 @@ use Zend_Db_Statement_Exception;
 class PairingService
 {
     public function __construct(
-        private readonly ClientBuilder $connector,
-        private readonly PairingFactory $pairingFactory,
-        private readonly PairingHistoryFactory $historyFactory,
-        private readonly PairingRepositoryInterface $pairingRepository,
+        private readonly ClientBuilder                     $connector,
+        private readonly PairingFactory                    $pairingFactory,
+        private readonly PairingHistoryFactory             $historyFactory,
+        private readonly PairingRepositoryInterface        $pairingRepository,
         private readonly PairingHistoryRepositoryInterface $historyRepository,
-        private readonly OrderService $orderService,
-        private readonly ApiService $api,
-        private readonly TransactionService $transactionService,
-        private readonly InvoiceService $invoiceService,
-        private readonly CartService $cartService,
-        private readonly Monolog $logger
-    ) {
+        private readonly OrderService                      $orderService,
+        private readonly ApiService                        $api,
+        private readonly TransactionService                $transactionService,
+        private readonly InvoiceService                    $invoiceService,
+        private readonly CartService                       $cartService,
+        private readonly Monolog                           $logger
+    )
+    {
     }
 
     /**
@@ -80,11 +83,12 @@ class PairingService
      * @throws Zend_Db_Statement_Exception
      */
     protected function recursiveMonitor(
-        Pairing $orgPairing,
-        Pairing $pairing,
+        Pairing                   $orgPairing,
+        Pairing                   $pairing,
         InvocationRecordingClient $client,
-        ApiResponse $res
-    ): MonitorStatus {
+        ApiResponse               $res
+    ): MonitorStatus
+    {
         /** @var Order $tOrder */
         $tOrder = $res->getReturn();
 
@@ -195,11 +199,12 @@ class PairingService
      * @throws Throwable
      */
     public function monitorExpressRecursive(
-        Pairing $pairing,
-        Pairing $cloned,
-        ApiResponse $res,
+        Pairing                   $pairing,
+        Pairing                   $cloned,
+        ApiResponse               $res,
         InvocationRecordingClient $client
-    ): MonitorStatus {
+    ): MonitorStatus
+    {
         /** @var FastCheckoutCheckIn $state */
         $state = $res->getReturn();
 
@@ -210,7 +215,7 @@ class PairingService
             // Because cancelFastCheckoutCheckIn API return void then need monitor in next loop
             if ($state->pairingStatus()->__toString() === PairingStatus::PAIRING_IN_PROGRESS && $pairing->isTimedOut()) {
                 $cancellationRes = $this->cancelFastCheckoutCheckIn($cloned, $client);
-                $this->pairingRepository->markAsMerchantCancelled((int) $cloned->getId());
+                $this->pairingRepository->markAsMerchantCancelled((int)$cloned->getId());
 
                 $cloned->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
                 $this->createHistory($cloned, $cancellationRes->getRequest());
@@ -249,12 +254,42 @@ class PairingService
                 "TWINT mark as cancelled {$pairing->getPairingStatus()} - {$cloned->getPairingStatus()}"
             );
 
-            $this->pairingRepository->markAsCancelled((int) $pairing->getId());
+            $this->pairingRepository->markAsCancelled((int)$pairing->getId());
             $finished = true;
             $status = MonitorStatus::STATUS_CANCELLED;
         }
 
         return MonitorStatus::fromValues($finished, $status);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function cancel(Pairing $pairing): bool
+    {
+        $client = $this->connector->build($pairing->getStoreId(), Version::NEXT);
+        if ($pairing->isExpress()) {
+            try {
+                $res = $this->cancelFastCheckoutCheckIn($pairing, $client);
+                $pairing->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
+
+                $this->createHistory($pairing, $res->getRequest());
+            } catch (CancellationFailed $e) {
+                $this->logger->info("TWINT cancel checkin failed {$pairing->getPairingId()}" . $e->getMessage());
+                return false;
+            }
+        } else {
+            $res = $this->cancelOrder($pairing, $client);
+            /** @var Order $order */
+            $order = $res->getReturn();
+
+            $this->update($pairing, $order, false);
+            $this->createHistory($pairing, $res->getRequest());
+
+            return $order->transactionStatus()->equals(TransactionStatus::MERCHANT_ABORT());
+        }
+
+        return true;
     }
 
     /**
@@ -284,17 +319,17 @@ class PairingService
         return $this->pairingRepository->save($pairing);
     }
 
-    public function update(Pairing $pairing, Order $order): Pairing
+    public function update(Pairing $pairing, Order $order, bool $persist = true): Pairing
     {
-        $pairing->setData('status', (string) $order->status());
-        $pairing->setData('transaction_status', (string) $order->transactionStatus());
-        $pairing->setData('pairing_status', (string) $order->pairingStatus());
+        $pairing->setData('status', (string)$order->status());
+        $pairing->setData('transaction_status', (string)$order->transactionStatus());
+        $pairing->setData('pairing_status', (string)$order->pairingStatus());
 
         $this->logger->info(
             "TWINT update: {$pairing->getPairingId()} {$pairing->getTransactionStatus()} {$pairing->getPairingStatus()}"
         );
 
-        return $this->pairingRepository->save($pairing);
+        return $persist ? $this->pairingRepository->save($pairing) : $pairing;
     }
 
     public function create($amount, ApiResponse $response, InfoInterface $payment, bool $captured = false): array
@@ -303,17 +338,17 @@ class PairingService
         $twintOrder = $response->getReturn();
 
         $pairing = $this->pairingFactory->create();
-        $pairing->setData('pairing_id', (string) $twintOrder->id());
-        $pairing->setData('status', (string) $twintOrder->status());
-        $pairing->setData('token', (string) $twintOrder->pairingToken());
-        $pairing->setData('transaction_status', (string) $twintOrder->transactionStatus());
-        $pairing->setData('pairing_status', (string) $twintOrder->pairingStatus());
+        $pairing->setData('pairing_id', (string)$twintOrder->id());
+        $pairing->setData('status', (string)$twintOrder->status());
+        $pairing->setData('token', (string)$twintOrder->pairingToken());
+        $pairing->setData('transaction_status', (string)$twintOrder->transactionStatus());
+        $pairing->setData('pairing_status', (string)$twintOrder->pairingStatus());
         $pairing->setData('amount', $amount);
 
-        $pairing->setData('order_id', (string) $twintOrder->merchantTransactionReference());
+        $pairing->setData('order_id', (string)$twintOrder->merchantTransactionReference());
         $pairing->setData('store_id', $payment->getOrder()->getStore()->getId());
 
-        $pairing->setData('captured', (int) $captured);
+        $pairing->setData('captured', (int)$captured);
 
         if ($pair = SubmitClonedQuotePlugin::$pair) {
             $pairing->setData('org_quote_id', $pair[0]->getId());
@@ -333,9 +368,9 @@ class PairingService
         $checkIn = $response->getReturn();
 
         $pairing = $this->pairingFactory->create();
-        $pairing->setData('pairing_id', (string) $checkIn->pairingUuid());
-        $pairing->setData('token', (string) $checkIn->pairingToken());
-        $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
+        $pairing->setData('pairing_id', (string)$checkIn->pairingUuid());
+        $pairing->setData('token', (string)$checkIn->pairingToken());
+        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
         $pairing->setData('amount', $amount);
         $pairing->setData('store_id', $quote->getStoreId());
         $pairing->setData('quote_id', $quote->getId());
@@ -352,7 +387,7 @@ class PairingService
     public function createHistory(Pairing $pairing, RequestLog $log, float $amount = null): PairingHistory
     {
         $history = $this->historyFactory->create();
-        $history->setData('parent_id', (string) $pairing->getId());
+        $history->setData('parent_id', (string)$pairing->getId());
         $history->setData('status', $pairing->getStatus());
         $history->setData('transaction_status', $pairing->getTransactionStatus());
         $history->setData('pairing_status', $pairing->getPairingStatus());
@@ -365,7 +400,7 @@ class PairingService
         $history->setData('shipping_id', $pairing->getShippingId());
         $history->setData('customer', $pairing->getCustomerData());
         $history->setData('request_id', $log->getId());
-        $history->setData('captured', (int) $pairing->getCaptured());
+        $history->setData('captured', (int)$pairing->getCaptured());
 
         return $this->historyRepository->save($history);
     }

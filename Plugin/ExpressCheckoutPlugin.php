@@ -24,6 +24,7 @@ class ExpressCheckoutPlugin
         return [
             'expressCheckoutUrl' => $this->urlBuilder->getUrl('twint/express/checkout'),
             'expressStatusUrl' => $this->urlBuilder->getUrl('twint/express/status'),
+            'cancelCheckoutUrl' => $this->urlBuilder->getUrl('twint/payment/cancel'),
         ];
     }
 }

@@ -2,59 +2,60 @@
 
 declare(strict_types=1);
 
-namespace Twint\Magento\Controller\Regular;
+namespace Twint\Magento\Controller\Payment;
 
+use Http\Message\Exception\UnexpectedValueException;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Webapi\Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
-use Twint\Magento\Model\Monitor\MonitorStatus;
+use Twint\Magento\Controller\Regular\BaseAction;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingRepository;
-use Twint\Magento\Service\MonitorService;
+use Twint\Magento\Service\PairingService;
 use Twint\Magento\Util\CryptoHandler;
 
-class Status extends BaseAction implements ActionInterface, HttpGetActionInterface
+class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterface
 {
     public function __construct(
         Context $context,
-        private readonly MonitorService $monitorService,
-        private readonly PairingRepository $repository,
+        private readonly PairingService $pairingService,
         private readonly CryptoHandler $cryptoHandler,
+        private readonly PairingRepository $repository
     ) {
         parent::__construct($context);
     }
 
     /**
      * @throws NoSuchEntityException
-     * @throws CouldNotSaveException
      * @throws Throwable
-     * @throws Exception
      * @throws LocalizedException
      */
-    public function execute()
+    public function execute(): Json|ResultInterface|ResponseInterface
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $id = $this->getRequest()
             ->getParam('id') ?? null;
-        $id = $this->cryptoHandler->unHash($id);
 
+        if (empty($id)) {
+            throw new UnexpectedValueException('Pairing Id is required');
+        }
+
+        $id = $this->cryptoHandler->unHash($id);
         $pairing = $this->repository->getByPairingId($id);
         if (!$pairing instanceof Pairing) {
             throw new NotFoundHttpException('Pairing not found');
         }
 
-        $status = $this->monitorService->status($pairing);
-
         return $json->setData([
-            'finish' => $status->getFinished(),
-            'paid' => $status->getStatus() === MonitorStatus::STATUS_PAID,
+            'success' => $this->pairingService->cancel($pairing)
         ]);
     }
 }

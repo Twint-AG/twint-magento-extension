@@ -17,6 +17,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Model\Method\TwintRegularMethod;
+use Twint\Magento\Util\CryptoHandler;
 
 class Payment extends BaseAction implements ActionInterface, HttpPostActionInterface
 {
@@ -26,7 +27,8 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         private OrderRepositoryInterface $orderRepository,
         private readonly PairingRepositoryInterface $repository,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
-        private readonly PriceHelper $priceHelper
+        private readonly PriceHelper $priceHelper,
+        private readonly CryptoHandler $cryptoHandler,
     ) {
         parent::__construct($context);
     }
@@ -52,7 +54,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         $pairing = $this->getPairing($order);
 
         $data = [
-            'id' => $pairing['pairing_id'],
+            'id' => $this->cryptoHandler->hash($pairing['pairing_id']),
             'token' => $pairing['token'],
             'orderNumber' => $order->getIncrementId(),
             'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false),
