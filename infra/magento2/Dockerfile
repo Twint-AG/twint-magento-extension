@@ -3,6 +3,7 @@ FROM php:8.1.29-fpm@sha256:2bd8edf9c7a1130ebd161a48a71412392b818c8ef46dbd9c83420
 ENV COMPOSER_HOME=/tmp/composer
 
 RUN apt-get update && apt-get install -y --no-install-recommends gnupg \
+    sendmail \
     vim \
     cron \
     git \
