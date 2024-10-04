@@ -19,7 +19,7 @@ class AppsService
     ) {
     }
 
-    public function buildLinks(string $storeCode, string $token = '--TOKEN--'): array
+    public function getLinks(string $storeCode, string $token = '--TOKEN--'): array
     {
         $links = [];
 
@@ -46,7 +46,7 @@ class AppsService
         return $links;
     }
 
-    public function getLinks(string $storeCode, string $token = '--TOKEN--'): array
+    public function getCachedLinks(string $storeCode, string $token = '--TOKEN--'): array
     {
         $key = ($_SERVER['HTTP_USER_AGENT'] ?? '') . $token . $storeCode;
 
@@ -55,7 +55,7 @@ class AppsService
             return unserialize($data);
         }
 
-        $data = $this->buildLinks($storeCode, $token);
+        $data = $this->getLinks($storeCode, $token);
         $this->cache->save(serialize($data), $key, [], self::CACHE_DURATION);
 
         return $data;
