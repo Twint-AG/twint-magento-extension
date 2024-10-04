@@ -69,7 +69,7 @@ class ScanQrModal extends Template
                         <a id="twint-addroid-button" class="block mb-1 bg-black text-white font-bold p-4 rounded-lg text-center hover:bg-gray-800 focus:outline-none focus:ring-gray-600 focus:ring-opacity-75
                             hover:text-white hover:no-underline
                         "
-                           data-href="javascript:window.location = ' . htmlentities($links['android']) . '"
+                           data-href="javascript:window.location = \'' . htmlentities($links['android']) . '\'"
                            href="#"
                            >
                             ' . __('Switch to TWINT app now') . '
