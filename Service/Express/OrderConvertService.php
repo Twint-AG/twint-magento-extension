@@ -36,7 +36,7 @@ class OrderConvertService
      * @throws CouldNotSaveException
      * @throws InputException
      */
-    public function convert(Pairing $pairing, PairingHistory $history): ?string
+    public function convert(Pairing $pairing, PairingHistory $history = null): ?string
     {
         /** @var Quote $quote */
         $quote = $this->quoteRepository->get($pairing->getQuoteId());

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service\Express;
 
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\AddressFactory;
+use Magento\Quote\Model\QuoteRepository;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
@@ -23,6 +25,7 @@ use Twint\Sdk\Value\ShippingMethod;
 use Twint\Sdk\Value\ShippingMethodId;
 use Twint\Sdk\Value\ShippingMethods;
 use Twint\Sdk\Value\Version;
+use Magento\Quote\Model\ResourceModel\Quote as ResourceModel;
 
 class CheckoutService
 {
@@ -33,7 +36,9 @@ class CheckoutService
         private ShipmentEstimationInterface $shipmentEstimation,
         private AddressFactory $addressFactory,
         private PairingService $pairingService,
-        private MonitorService $monitor
+        private MonitorService $monitor,
+        private ResourceModel $quoteModel,
+        private QuoteRepository $quoteRepository
     ) {
     }
 
@@ -42,9 +47,16 @@ class CheckoutService
      * @throws LocalizedException
      * @throws Throwable
      */
-    public function checkout()
+    public function checkout(Product|bool $product = null, $request = null)
     {
+        /** @var Quote $quote */
         list($currentQuote, $quote) = $this->cartService->clone();
+
+        if($product instanceof Product) {
+            $quote->addProduct($product, $request);
+            $this->quoteModel->save($quote);
+            $quote = $this->quoteRepository->get($quote->getId());
+        }
 
         // Calculated when saving cart, just make sure here
         $quote->collectTotals();
