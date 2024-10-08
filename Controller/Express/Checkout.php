@@ -13,7 +13,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
@@ -81,6 +80,11 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 
             /** @var Pairing $pairing */
             $pairing = $this->checkoutService->checkout($product, $request);
+
+            if($count === 0) {
+                $this->_checkoutSession->clearStorage();
+            }
+            $this->_checkoutSession->setQuoteId($pairing->getOriginalQuoteId());
 
             return $json->setData([
                 'success' => true,

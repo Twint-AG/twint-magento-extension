@@ -18,6 +18,8 @@ class Pairing extends AbstractModel implements IdentityInterface
 {
     public const EXPRESS_STATUS_PAID = 'PAID';
 
+    public const EXPRESS_STATUS_FAILED = 'FAILED';
+
     public const EXPRESS_STATUS_CANCELLED = 'CANCELLED';
 
     public const EXPRESS_STATUS_MERCHANT_CANCELLED = 'MERCHANT_CANCELLED';
@@ -49,7 +51,7 @@ class Pairing extends AbstractModel implements IdentityInterface
         return $this->getStatus() === OrderStatus::SUCCESS;
     }
 
-    public function isFailure(): bool
+    public function isCancelled(): bool
     {
         if ($this->isExpress()) {
             return $this->getPairingStatus() === PairingStatus::NO_PAIRING;
@@ -61,6 +63,11 @@ class Pairing extends AbstractModel implements IdentityInterface
     public function getPairingStatus(): string
     {
         return $this->getData('pairing_status');
+    }
+
+    public function isFailed(): bool
+    {
+        return $this->isExpress() && $this->getStatus() === self::EXPRESS_STATUS_FAILED;
     }
 
     protected function _construct()
@@ -89,7 +96,7 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isExpressFinish(): bool
     {
-        return in_array($this->getStatus(), [self::EXPRESS_STATUS_PAID, self::EXPRESS_STATUS_CANCELLED], true);
+        return in_array($this->getStatus(), [self::EXPRESS_STATUS_PAID, self::EXPRESS_STATUS_CANCELLED, self::EXPRESS_STATUS_FAILED], true);
     }
 
     public function isRegularFinish(): bool
@@ -235,12 +242,6 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function toMonitorStatus(): MonitorStatus
     {
-        return MonitorStatus::fromValues(
-            $this->isFinished(),
-            $this->isSuccessful() ? MonitorStatus::STATUS_PAID : MonitorStatus::STATUS_CANCELLED,
-            [
-                'order' => $this->getOrderId(),
-            ]
-        );
+        return MonitorStatus::fromPairing($this);
     }
 }

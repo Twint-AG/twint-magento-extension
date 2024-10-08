@@ -62,6 +62,20 @@ define([
       this.modal.close();
     }
 
+    onFailed() {
+      let modal = $('#qr-modal-content');
+      let pay = modal.find('.to-pay');
+      let success = modal.find('.on-success');
+      let failedDiv = modal.find('.on-failed');
+
+      pay.css('display', 'none');
+      success.css('display', 'none');
+      failedDiv.css('display', 'block');
+
+      let label = $('#twint-close span');
+      label.html($.mage.__('Continue shopping'));
+    }
+
     onFinish(response) {
       let sections = ['cart'];
       this.customerData.invalidate(sections);
@@ -72,6 +86,9 @@ define([
       }
 
       if (response.finish && response.status < 0) {
+        if (response.status  === -2){
+          return this.onFailed();
+        }
         return this.onCancelled();
       }
     }
@@ -99,8 +116,10 @@ define([
       let modal = $('#qr-modal-content');
       let pay = modal.find('.to-pay');
       let success = modal.find('.on-success');
+      let failedDiv = modal.find('.on-failed');
 
       pay.css('display', 'none');
+      failedDiv.css('display', 'none');
       success.css('display', 'block');
 
       let span = success.find('span');

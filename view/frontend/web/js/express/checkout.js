@@ -73,7 +73,7 @@ define([
 
         complete: function (res) {
           if (res.state() === 'rejected') {
-            location.reload();
+            console.error("cannot perform express checkout")
           }
         }
       });

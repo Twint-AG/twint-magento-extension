@@ -14,11 +14,31 @@ class MonitorStatus
 
     public const STATUS_CANCELLED = -1;
 
+    public const STATUS_FAILED = -2;
+
     public function __construct(
         private readonly bool $finished,
         private readonly int $status = self::STATUS_IN_PROGRESS,
         private array $args = []
     ) {
+    }
+
+    public static function fromPairing(Pairing $pairing): static
+    {
+        $instance =  new static(
+            $pairing->isFinished(),
+            self::extractStatus($pairing)
+        );
+
+        if($instance->status === self::STATUS_FAILED){
+            $instance->args['message'] = __("Payment did not succeed, please try another payment method.");
+        }
+
+        if($instance->status === self::STATUS_PAID){
+            $instance->args['order'] = $pairing->getOrderId();
+        }
+
+        return $instance;
     }
 
     public static function fromValues(bool $finished, int $status, array $args = []): static
@@ -31,9 +51,12 @@ class MonitorStatus
         if ($pairing->isSuccessful()) {
             return self::STATUS_PAID;
         }
-        if ($pairing->isFailure()) {
+        if ($pairing->isCancelled()) {
             return self::STATUS_CANCELLED;
         }
+
+        if ($pairing->isFailed())
+            return self::STATUS_FAILED;
 
         return self::STATUS_IN_PROGRESS;
     }

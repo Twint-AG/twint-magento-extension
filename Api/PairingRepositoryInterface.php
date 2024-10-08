@@ -40,5 +40,7 @@ interface PairingRepositoryInterface
 
     public function markAsCancelled(int $id);
 
+    public function markAsFailed(int $id);
+
     public function markAsMerchantCancelled(int $id);
 }

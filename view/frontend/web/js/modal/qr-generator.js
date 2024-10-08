@@ -74,9 +74,11 @@ define([
     showPaySection() {
       let pay = this.$target.find('.to-pay');
       let success = this.$target.find('.on-success');
+      let failedDiv = this.$target.find('.on-failed');
 
       pay.css('display', 'block');
       success.css('display', 'none');
+      failedDiv.css('display', 'none');
 
       let label = $('#twint-close span');
       label.html($.mage.__('Cancel checkout'));

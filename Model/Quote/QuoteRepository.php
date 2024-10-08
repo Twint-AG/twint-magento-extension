@@ -40,52 +40,15 @@ class QuoteRepository
     {
         try {
             $this->resourceModel->save($new);
-            $itemsMapping = $this->saveItems($original, $new);
-            $addressMapping = $this->saveAddresses($original, $new, $expressCheckout);
-//            $this->shippingAddressItems($original, $itemsMapping, $addressMapping);
+            $this->saveItems($original, $new);
+            $this->saveAddresses($original, $new, $expressCheckout);
+
             $this->savePayment($original, $new);
         } catch (Throwable $e) {
             $this->logger->error('Cannot save entity ' . $e->getMessage());
         }
 
         return $this->getById($new->getId());
-    }
-
-    private function shippingAddressItems(Quote $original, array $itemsMapping, array $addressMapping)
-    {
-        /** @var Address\Item $item */
-        foreach ($original->getShippingAddressesItems() as $item) {
-            if ($item instanceof Item) {
-                continue;
-            }
-
-            $cloned = clone $item;
-            $cloned->setId(null);
-            $cloned->setEntityId(null);
-
-            $cloned->setQuoteItemId($itemsMapping[$item->getQuoteItemId()]->getId());
-
-            $cloned->setQuoteAddressId($addressMapping[$item->getQuoteAddressId()]->getId());
-            $cloned->setAddress($addressMapping[$item->getQuoteAddressId()]);
-
-            $this->addressItemModel->save($cloned);
-
-            foreach ($item->getChildren() as $child) {
-                $clonedChild = clone $item;
-
-                $clonedChild->setId(null);
-                $clonedChild->setEntityId(null);
-
-                $clonedChild->setQuoteItemId($itemsMapping[$item->getQuoteItemId()]->getId());
-
-                $clonedChild->setQuoteAddressId($addressMapping[$item->getQuoteAddressId()]->getId());
-                $clonedChild->setAddress($addressMapping[$item->getQuoteAddressId()]);
-
-                $clonedChild->setParentItemId($cloned->getId());
-
-                $this->addressItemModel->save($clonedChild);
-            }
-        }
     }
 
     /**

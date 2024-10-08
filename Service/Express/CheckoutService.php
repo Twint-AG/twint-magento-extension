@@ -15,7 +15,6 @@ use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
-use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\MonitorService;
 use Twint\Magento\Service\PairingService;
@@ -26,6 +25,7 @@ use Twint\Sdk\Value\ShippingMethodId;
 use Twint\Sdk\Value\ShippingMethods;
 use Twint\Sdk\Value\Version;
 use Magento\Quote\Model\ResourceModel\Quote as ResourceModel;
+use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 
 class CheckoutService
 {
@@ -38,7 +38,9 @@ class CheckoutService
         private PairingService $pairingService,
         private MonitorService $monitor,
         private ResourceModel $quoteModel,
-        private QuoteRepository $quoteRepository
+        private QuoteRepository $quoteRepository,
+        private AddressModel $addresResourceModel,
+
     ) {
     }
 
@@ -87,7 +89,7 @@ class CheckoutService
     {
         $quote->setTotalsCollectedFlag(false);
         $quote->collectTotals();
-        $amount = $quote->getGrandTotal();
+        $baseAmount = $quote->getGrandTotal();
 
         $options = [];
 
@@ -96,15 +98,35 @@ class CheckoutService
         $shippingMethods = $this->shipmentEstimation->estimateByExtendedAddress($quote->getId(), $address);
 
         foreach ($shippingMethods as $method) {
+            $shipping = $quote->getShippingAddress();
+            if(!$shipping){
+                $shipping = clone  $address;
+                $shipping->setSameAsBilling(1);
+                $shipping->setQuoteId($quote->getId());
+            }
+            $shipping->setShippingMethod("{$method->getCarrierCode()}_{$method->getMethodCode()}");
+
+            $this->addresResourceModel->save($shipping);
+
+            $quote = $this->quoteRepository->get($quote->getId());
+
+            $quote->setTotalsCollectedFlag(false);
+            $quote->collectTotals();
+
+            $amount = $quote->getGrandTotal();
+
             $separator = TwintConstant::SHIPPING_METHOD_SEPARATOR;
 
             $options[] = new ShippingMethod(
                 new ShippingMethodId("{$method->getCarrierCode()}{$separator}{$method->getMethodCode()}"),
                 "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
-                Money::CHF($method->getAmount())
+                Money::CHF(max($amount-$baseAmount, 0))
             );
         }
 
-        return [new ShippingMethods(...$options), $amount];
+        $shipping->setShippingMethod((string) null);
+        $this->addresResourceModel->save($shipping);
+
+        return [new ShippingMethods(...$options), $baseAmount];
     }
 }

@@ -4,22 +4,28 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Service\Express;
 
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Logger\Monolog;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 use Twint\Magento\Model\Method\TwintExpressMethod;
 use Twint\Magento\Model\Pairing;
+use Magento\Quote\Model\Quote\AddressFactory;
 
 class AddressService
 {
     public function __construct(
         private readonly CartRepositoryInterface $quoteRepository,
         private readonly AddressModel $addressResourceModel,
+        private readonly AddressFactory $factory,
+        private readonly Monolog $logger
     ) {
     }
 
     public function handle(Pairing $pairing, Quote $quote): void
     {
+         $this->logger->info("data: " . $pairing->getCustomerData());
         $this->handleAddresses($quote, $pairing);
         $this->setPaymentMethod($quote);
     }
@@ -43,21 +49,41 @@ class AddressService
         ];
     }
 
+    /**
+     * @throws AlreadyExistsException
+     */
     private function handleAddresses(Quote $quote, Pairing $pairing): void
     {
         $shippingMethod = str_replace('+', '_',$pairing->getShippingId());
         $addressData = $this->getPaymentAddress($pairing);
 
+        $shipping = $quote->getShippingAddress();
+        if(!$shipping){
+            /** @var Quote\Address $shipping */
+            $shipping = $this->factory->create();
+            $shipping->setAddressType('shipping');
+            $shipping->setQuoteId($quote->getId());
+            $shipping->setCustomerId($quote->getCustomerId());
+            $shipping->setSameAsBilling(1);
+        }
+
+        $billing = $quote->getBillingAddress();
+        if(!$billing){
+            $billing = clone $shipping;
+            $billing->setAddressType('billing');
+        }
+
         /** @var Quote\Address $address */
-        foreach ($quote->getAllAddresses() as $address){
+        foreach ([$shipping, $billing] as $address){
+            $this->logger->info("add id : " . $address->getEntityId());
+
             $address->setPostcode($addressData['postcode'] ?? '');
+            $address->setCountryId('CH');
             $address->setEmail($addressData['email'] ?? '');
             $address->setCity($addressData['city'] ?? '');
             $address->setFirstname($addressData['firstname'] ?? '');
             $address->setLastname($addressData['lastname'] ?? '');
             $address->setStreet($addressData['street'][0] ?? '');
-
-
 
             $address->setShippingMethod($shippingMethod);
 

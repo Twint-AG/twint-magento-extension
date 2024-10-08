@@ -317,6 +317,11 @@ class PairingRepository implements PairingRepositoryInterface
         return $this->updateStatus($id, Pairing::EXPRESS_STATUS_CANCELLED);
     }
 
+    public function markAsFailed(int $id): Zend_Db_Statement_Interface
+    {
+        return $this->updateStatus($id, Pairing::EXPRESS_STATUS_FAILED);
+    }
+
     public function markAsMerchantCancelled(int $id): Zend_Db_Statement_Interface
     {
         return $this->updateStatus($id, Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);

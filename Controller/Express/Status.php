@@ -60,6 +60,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
             'finish' => $monitorStatus->getFinished(),
             'status' => $monitorStatus->getStatus(),
             'order' => $monitorStatus->getAdditionalInformation('order'),
+            'errorMessage' => $monitorStatus->getAdditionalInformation('message'),
         ]);
     }
 }

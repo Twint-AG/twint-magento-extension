@@ -143,7 +143,7 @@ class PairingService
             return MonitorStatus::fromValues(true, MonitorStatus::STATUS_PAID);
         }
 
-        if ($tOrder->isFailure() && !$orgPairing->isFailure()) {
+        if ($tOrder->isFailure() && !$orgPairing->isCancelled()) {
             if (!$orgPairing->getCaptured()) {
                 $order = $this->orderService->getOrder($pairing->getOrderId());
                 $transaction = $this->transactionService->createVoid($order, $pairing, $history);
@@ -272,9 +272,12 @@ class PairingService
     public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn): Pairing
     {
         $pairing->setData('version', $pairing->getVersion());
-        $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
-        $pairing->setData('shipping_id', (string) $checkIn->shippingMethodId());
         $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
+
+        if(!$checkIn->pairingStatus()->equals(PairingStatus::NO_PAIRING())) {
+            $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
+            $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
+        }
 
         $this->logger->info("TWINT update: {$pairing->getPairingId()} {$pairing->getPairingStatus()}");
 
