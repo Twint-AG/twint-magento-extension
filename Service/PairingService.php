@@ -272,21 +272,27 @@ class PairingService
             try {
                 $res = $this->cancelFastCheckoutCheckIn($pairing, $client);
                 $pairing->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
+                $this->pairingRepository->markAsMerchantCancelled($pairing->getId());
 
                 $this->createHistory($pairing, $res->getRequest());
             } catch (CancellationFailed $e) {
-                $this->logger->info("TWINT cancel checkin failed {$pairing->getPairingId()}" . $e->getMessage());
+                $this->logger->error("PairingService::cancel: TWINT cancel checkin failed {$pairing->getPairingId()}" . $e->getMessage());
                 return false;
             }
         } else {
-            $res = $this->cancelOrder($pairing, $client);
-            /** @var Order $order */
-            $order = $res->getReturn();
+            try {
+                $res = $this->cancelOrder($pairing, $client);
+                /** @var Order $order */
+                $order = $res->getReturn();
 
-            $this->update($pairing, $order, false);
-            $this->createHistory($pairing, $res->getRequest());
+                $this->update($pairing, $order, false);
+                $this->createHistory($pairing, $res->getRequest());
 
-            return $order->transactionStatus()->equals(TransactionStatus::MERCHANT_ABORT());
+                return $order->transactionStatus()->equals(TransactionStatus::MERCHANT_ABORT());
+            } catch (Throwable $e) {
+                $this->logger->error("PairingService::cancel: {$pairing->getPairingId()}" . $e->getMessage());
+                return false;
+            }
         }
 
         return true;
@@ -307,9 +313,9 @@ class PairingService
     public function updateForExpress(Pairing $pairing, FastCheckoutCheckIn $checkIn): Pairing
     {
         $pairing->setData('version', $pairing->getVersion());
-        $pairing->setData('pairing_status', (string) $checkIn->pairingStatus());
+        $pairing->setData('pairing_status', (string)$checkIn->pairingStatus());
 
-        if(!$checkIn->pairingStatus()->equals(PairingStatus::NO_PAIRING())) {
+        if (!$checkIn->pairingStatus()->equals(PairingStatus::NO_PAIRING())) {
             $pairing->setData('customer', $checkIn->hasCustomerData() ? json_encode($checkIn->customerData()) : null);
             $pairing->setData('shipping_id', (string)$checkIn->shippingMethodId());
         }

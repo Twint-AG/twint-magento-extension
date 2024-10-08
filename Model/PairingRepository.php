@@ -32,17 +32,18 @@ use Zend_Db_Statement_Interface;
 class PairingRepository implements PairingRepositoryInterface
 {
     public function __construct(
-        private PairingFactory $factory,
-        private readonly ResourceModel $resourceModel,
-        private CollectionFactory $collectionFactory,
-        private SearchResultsFactory $searchResultsFactory,
+        private PairingFactory                 $factory,
+        private readonly ResourceModel         $resourceModel,
+        private CollectionFactory              $collectionFactory,
+        private SearchResultsFactory           $searchResultsFactory,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
-        private readonly SortOrderBuilder $sortOrderBuilder,
-        private readonly FilterGroupBuilder $filterGroupBuilder,
-        private readonly FilterBuilder $filterBuilder,
-        private readonly ResourceConnection $resource,
-        private ?CollectionProcessorInterface $collectionProcessor = null
-    ) {
+        private readonly SortOrderBuilder      $sortOrderBuilder,
+        private readonly FilterGroupBuilder    $filterGroupBuilder,
+        private readonly FilterBuilder         $filterBuilder,
+        private readonly ResourceConnection    $resource,
+        private ?CollectionProcessorInterface  $collectionProcessor = null
+    )
+    {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );
@@ -141,7 +142,7 @@ class PairingRepository implements PairingRepositoryInterface
     public function getByOrderId(string $id): ?Pairing
     {
         $criteria = $this->criteriaBuilder->addFilter('order_id', $id)
-            ->addSortOrder($this->sortOrderBuilder ->setField('id') ->setDescendingDirection() ->create())
+            ->addSortOrder($this->sortOrderBuilder->setField('id')->setDescendingDirection()->create())
             ->create();
         $items = $this->getList($criteria)
             ->getItems();

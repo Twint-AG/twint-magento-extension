@@ -30,8 +30,8 @@ define([
       this.id = value;
     }
 
-    check() {
-      if (this.stopped)
+    check(oneTime = false) {
+      if (this.stopped && !oneTime)
         return;
 
       const self = this;
@@ -43,18 +43,19 @@ define([
           if (response.finish === true) {
             return response.paid ? self.onPaid() : self.onCancelled();
           }
-          return self.onProcessing();
+          return !oneTime && self.onProcessing();
         }
       );
     }
 
     cancelPayment(){
+      const self = this;
       let serviceUrl = window.checkoutConfig.payment.twint.getCancelPaymentUrl + '?id=' + this.id;
 
       return this.storage.get(serviceUrl).done(
         function (response) {
           if (response.success !== true) {
-            console.log("cannot cancel payment");
+            self.check(true);
           }
         }
       );

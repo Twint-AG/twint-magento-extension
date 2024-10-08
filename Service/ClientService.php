@@ -57,14 +57,13 @@ class ClientService
         /** @var Order $twintOrder */
         $twintOrder = $res->getReturn();
 
-        list($pairing, $history) = $this->pairingService->create($amount, $res, $payment, true);
-
-        $success = $this->monitorOrder($pairing);
+        list($newPairing, $history) = $this->pairingService->create($amount, $res, $payment, true);
+        $success = $this->monitorOrder($newPairing);
         if (!$success) {
             throw new PaymentException('TWINT: Your balance is insufficient.');
         }
 
-        return [$twintOrder, $pairing, $history];
+        return [$twintOrder, $newPairing, $history];
     }
 
     /**

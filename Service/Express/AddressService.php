@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Twint\Magento\Service\Express;
 
 use Magento\Framework\Exception\AlreadyExistsException;
-use Magento\Framework\Logger\Monolog;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 use Twint\Magento\Model\Method\TwintExpressMethod;
 use Twint\Magento\Model\Pairing;
-use Magento\Quote\Model\Quote\AddressFactory;
 
 class AddressService
 {
@@ -19,13 +18,11 @@ class AddressService
         private readonly CartRepositoryInterface $quoteRepository,
         private readonly AddressModel $addressResourceModel,
         private readonly AddressFactory $factory,
-        private readonly Monolog $logger
     ) {
     }
 
     public function handle(Pairing $pairing, Quote $quote): void
     {
-         $this->logger->info("data: " . $pairing->getCustomerData());
         $this->handleAddresses($quote, $pairing);
         $this->setPaymentMethod($quote);
     }
@@ -75,8 +72,6 @@ class AddressService
 
         /** @var Quote\Address $address */
         foreach ([$shipping, $billing] as $address){
-            $this->logger->info("add id : " . $address->getEntityId());
-
             $address->setPostcode($addressData['postcode'] ?? '');
             $address->setCountryId('CH');
             $address->setEmail($addressData['email'] ?? '');
