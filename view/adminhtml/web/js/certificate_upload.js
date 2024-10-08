@@ -190,10 +190,16 @@ class TwintCertificateHandler extends TwintBase {
 
   isValidUUIDv4(uuid) {
     // Regular expression to match UUID v4 format
-    var uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     // Check if the string matches the UUID v4 format
     return uuidRegex.test(uuid);
+  }
+
+  onChangedStoreUuid(event){
+    const uuidValue = event.target.value;
+
+    this.validateStoreUuid(uuidValue);
   }
 
   validateStoreUuid(value) {
@@ -341,7 +347,7 @@ class TwintCertificateHandler extends TwintBase {
     this.uploadNewLabel.addEventListener('click', this.onChangeCertificate.bind(this));
     this.clonedSaveButton.addEventListener('click', this.onStartValidate.bind(this), true);
     this.passwordInput.addEventListener('change', this.uploadCertificate.bind(this));
-    this.storeInput.addEventListener('change', this.validateStoreUuid.bind(this));
+    this.storeInput.addEventListener('change', this.onChangedStoreUuid.bind(this));
 
     if (this.inherit.certCheckbox)
       this.inherit.certCheckbox.addEventListener('change', this.disableInputs.bind(this));
