@@ -7,6 +7,7 @@
         "AFL-3.0"
     ],
     "config": {
+        "discard-changes": true,
         "platform": {
             "php": "8.2.12"
         },
