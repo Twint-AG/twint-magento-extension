@@ -1,9 +1,10 @@
 define([
   'jquery',
   'mage/storage',
+  'Twint_Magento/js/utils/storage',
   'Magento_Customer/js/customer-data',
   'Twint_Magento/js/modal/interval'
-], function ($, storage, customerData, clock) {
+], function ($, storage,timeoutStorage, customerData, clock) {
   class StatusRefresher {
     constructor() {
       this.$ = $;
@@ -40,14 +41,21 @@ define([
       this.count++;
       let serviceUrl = window.checkoutConfig.payment.twint.getPairingStatusUrl + '?id=' + this.id;
 
-      return this.storage.get(serviceUrl).done(
+      return timeoutStorage.get(serviceUrl).done(
         function (response) {
           if (response.finish === true) {
             return response.paid ? self.onPaid() : self.onCancelled();
           }
           return !oneTime && self.onProcessing();
         }
-      );
+      ).fail(function(jqXHR, textStatus) {
+        if (textStatus === 'timeout') {
+          self.check(oneTime);
+        } else {
+          console.error('Request failed: ' + textStatus);
+          // Handle other errors
+        }
+      });
     }
 
     cancelPayment(){
