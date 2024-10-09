@@ -67,6 +67,7 @@ class MonitorService
                     $this->logger->error('TWINT payment error: ' . $e->getMessage());
                     $this->pairingRepository->markAsFailed((int) $pairing->getId());
                 }catch (Throwable $e){
+                    $this->logger->error("MonitorService::monitor ". $e->getMessage());
                     $this->pairingRepository->markAsFailed((int) $pairing->getId());
                 }
             }

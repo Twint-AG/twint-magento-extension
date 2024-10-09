@@ -124,8 +124,10 @@ class CheckoutService
             );
         }
 
-        $shipping->setShippingMethod((string) null);
-        $this->addresResourceModel->save($shipping);
+        if(isset($shipping) && $shipping instanceof Quote\Address) {
+            $shipping->setShippingMethod((string)null);
+            $this->addresResourceModel->save($shipping);
+        }
 
         return [new ShippingMethods(...$options), $baseAmount];
     }

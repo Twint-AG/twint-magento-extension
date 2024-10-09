@@ -51,7 +51,7 @@ class AddressService
      */
     private function handleAddresses(Quote $quote, Pairing $pairing): void
     {
-        $shippingMethod = str_replace('+', '_',$pairing->getShippingId());
+        $shippingMethod = str_replace('+', '_',$pairing->getShippingId() ?? '');
         $addressData = $this->getPaymentAddress($pairing);
 
         $shipping = $quote->getShippingAddress();
