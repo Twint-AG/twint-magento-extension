@@ -137,4 +137,3 @@ COPY --chown=www-data run.sh run.sh
 COPY --chown=www-data mount-folders.txt mount-folders.txt
 RUN chmod +x update_module.sh mount-folders.sh run.sh
 
-RUN ./run.sh
