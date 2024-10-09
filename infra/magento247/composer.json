@@ -16,7 +16,9 @@
             "magento/*": true,
             "php-http/discovery": true
         },
-        "preferred-install": "dist",
+        "preferred-install": {
+            "*": "dist"
+        },
         "sort-packages": true
     },
     "version": "2.4.7",
