@@ -79,6 +79,7 @@ class AddressService
             $address->setFirstname($addressData['firstname'] ?? '');
             $address->setLastname($addressData['lastname'] ?? '');
             $address->setStreet($addressData['street'][0] ?? '');
+            $address->setTelephone($addressData['telephone'] ?? '');
 
             $address->setShippingMethod($shippingMethod);
 

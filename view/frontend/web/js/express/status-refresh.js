@@ -15,10 +15,12 @@ define([
       this.stopped = false;
 
       this.onClosedModalCallback = null;
+      this.finished = false;
     }
 
     restart(){
       this.stopped = false;
+      this.finished = false;
     }
 
     setId(value) {
@@ -30,6 +32,7 @@ define([
     }
 
     onProcessing() {
+      this.finished = false;
       if (this.processing)
         return;
 
@@ -46,6 +49,7 @@ define([
     }
 
     onPaid(response) {
+      this.finished = true;
       this.showSuccess(response.order);
 
       if(this.isInCartPage()) {
@@ -60,10 +64,13 @@ define([
     }
 
     onCancelled() {
+      this.finished = true;
       this.modal.close();
     }
 
     onFailed() {
+      this.finished = true;
+
       let modal = $('#qr-modal-content');
       let pay = modal.find('.to-pay');
       let success = modal.find('.on-success');
@@ -133,7 +140,9 @@ define([
     stop() {
       this.stopped = true;
 
-      this.cancelPayment();
+      if(!this.finished) {
+        this.cancelPayment();
+      }
 
       if(typeof this.onClosedModalCallback === "function"){
         this.onClosedModalCallback();

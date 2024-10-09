@@ -215,7 +215,7 @@ class PairingService
             // Because cancelFastCheckoutCheckIn API return void then need monitor in next loop
             if ($state->pairingStatus()->__toString() === PairingStatus::PAIRING_IN_PROGRESS && $pairing->isTimedOut()) {
                 $cancellationRes = $this->cancelFastCheckoutCheckIn($cloned, $client);
-                $this->pairingRepository->markAsMerchantCancelled((int)$cloned->getId());
+                $this->pairingRepository->markAsMerchantCancelled((int) $cloned->getId());
 
                 $cloned->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
                 $this->createHistory($cloned, $cancellationRes->getRequest());
@@ -272,7 +272,7 @@ class PairingService
             try {
                 $res = $this->cancelFastCheckoutCheckIn($pairing, $client);
                 $pairing->setData('status', Pairing::EXPRESS_STATUS_MERCHANT_CANCELLED);
-                $this->pairingRepository->markAsMerchantCancelled($pairing->getId());
+                $this->pairingRepository->markAsMerchantCancelled((int) $pairing->getId());
 
                 $this->createHistory($pairing, $res->getRequest());
             } catch (CancellationFailed $e) {

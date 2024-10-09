@@ -11,9 +11,11 @@ define([
 
       this.count = 0;
       this.stopped = false;
+      this.finished = false;
     }
 
     restart(){
+      this.finished = false;
       this.stopped = false;
     }
 
@@ -62,10 +64,12 @@ define([
     }
 
     onPaid() {
+      this.finished = true;
       this.redirectAction.execute();
     }
 
     onProcessing() {
+      this.finished = false;
       let interval = clock.interval();
 
       if (interval > 0) {
@@ -78,13 +82,16 @@ define([
     }
 
     onCancelled() {
+      this.finished = true;
       this.modal.close();
     }
 
     stop() {
       this.stopped = true;
 
-      this.cancelPayment();
+      if(!this.finished) {
+        this.cancelPayment();
+      }
     }
   }
 
