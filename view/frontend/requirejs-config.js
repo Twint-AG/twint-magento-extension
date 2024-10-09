@@ -29,6 +29,7 @@ const config = {
       'Twint_Magento/js/modal/interval': 'Twint_Magento/js/modal/interval',
 
       'Twint_Magento/js/refresh-cart': 'Twint_Magento/js/refresh-cart',
+      'Twint_Magento/js/utils/storage': 'Twint_Magento/js/utils/storage',
     }
   }
 };

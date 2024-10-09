@@ -1,9 +1,10 @@
 define([
   'jquery',
   'mage/storage',
+  'Twint_Magento/js/utils/storage',
   'Magento_Customer/js/customer-data',
   'Twint_Magento/js/modal/interval'
-], function ($, storage, customerData, clock) {
+], function ($, storage, timeoutStorage, customerData, clock) {
   class ExpressStatusRefresh {
     constructor(storage) {
       this.storage = storage;
@@ -108,7 +109,7 @@ define([
       const self = this;
       this.processing = true;
 
-      return this.storage.get(this.url + '?id=' + this.id).done(
+      return timeoutStorage.get(this.url + '?id=' + this.id).done(
         function (response) {
           self.processing = false;
 
@@ -117,7 +118,14 @@ define([
 
           return self.onProcessing();
         }
-      );
+      ).fail(function(jqXHR, textStatus) {
+        if (textStatus === 'timeout') {
+          self.check();
+        } else {
+          console.error('Request failed: ' + textStatus);
+          // Handle other errors
+        }
+      });
     }
 
     showSuccess(order) {
