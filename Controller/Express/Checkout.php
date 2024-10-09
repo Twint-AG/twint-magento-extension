@@ -62,6 +62,8 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             $count = is_array($items) ? count($items) : $items->count();
 
             if (!$wholeCart && $count > 0) {
+                parent::execute();
+
                 $this->messageManager->addSuccessMessage(
                     __('You have existing products in the shopping cart. Please review your shopping cart before continue.')
                 );
