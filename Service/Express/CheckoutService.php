@@ -57,8 +57,8 @@ class CheckoutService
         if($product instanceof Product) {
             $quote->addProduct($product, $request);
             $this->quoteModel->save($quote);
-            $quote = $this->quoteRepository->get($quote->getId());
         }
+        $quote = $this->quoteRepository->get($quote->getId());
 
         // Calculated when saving cart, just make sure here
         $quote->collectTotals();
