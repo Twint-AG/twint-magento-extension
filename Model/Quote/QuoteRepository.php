@@ -12,25 +12,26 @@ use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
-use Magento\Quote\Model\ResourceModel\Quote\Address\Item as AddressItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Address\Rate as RateModel;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
 use Magento\Quote\Model\ResourceModel\Quote\Item as ItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Payment as PaymentModel;
+use Magento\Quote\Model\Quote\AddressFactory;
 use Throwable;
 
 class QuoteRepository
 {
     public function __construct(
-        private readonly QuoteModel $resourceModel,
-        private readonly AddressModel $addressModel,
-        private readonly ItemModel $itemModel,
-        private readonly AddressItemModel $addressItemModel,
-        private readonly RateModel $rateModel,
-        private readonly PaymentModel $paymentModel,
-        private readonly QuoteFactory $factory,
-        private readonly Monolog $logger
-    ) {
+        private readonly QuoteModel       $resourceModel,
+        private readonly AddressModel     $addressModel,
+        private readonly ItemModel        $itemModel,
+        private readonly RateModel        $rateModel,
+        private readonly PaymentModel     $paymentModel,
+        private readonly QuoteFactory     $factory,
+        private readonly Monolog          $logger,
+        private readonly AddressFactory   $addressFactory
+    )
+    {
     }
 
     /**
@@ -113,45 +114,70 @@ class QuoteRepository
     /**
      * @throws AlreadyExistsException
      */
-    private function saveAddresses(Quote $original, Quote $new, bool $expressCheckout): array
+    private function saveAddresses(Quote $original, Quote $new, bool $expressCheckout): void
     {
-        $map = [];
-        foreach ($original->getAllAddresses() as $address) {
-            $clonedAddress = clone $address;
+        $addresses = [
+            'shipping' => $original->getShippingAddress(),
+            'billing' => $original->getBillingAddress()
+        ];
 
-            $clonedAddress->setId(null);
-            $clonedAddress->setQuoteId($new->getId());
-            $clonedAddress->setQuote($new);
-
-            // only set country
-            if ($expressCheckout) {
-                $clonedAddress->setCountryId('CH');
-                $clonedAddress->setRegionCode(null);
-                $clonedAddress->setRegionId(null);
-                $clonedAddress->setPostcode(null);
-                $clonedAddress->setShippingMethod((string) null);
-            }
-
-            $this->addressModel->save($clonedAddress);
-
-            $map[$address->getId()] = $clonedAddress;
-
-            // if express checkout skip all shipping rates
-            if (!$expressCheckout) {
-                /** @var Address\Rate $rate */
-                foreach ($address->getAllShippingRates() as $rate) {
-                    $clonedRate = clone $rate;
-
-                    $clonedRate->setId(null);
-                    $clonedRate->setAddressId($clonedAddress->getId());
-                    $clonedRate->setAddress($clonedAddress);
-
-                    $this->rateModel->save($clonedRate);
-                }
+        foreach ($addresses as $type => $address) {
+            if ($address instanceof Address) {
+                $this->cloneAddress($new, $address, $expressCheckout);
+            } else {
+                $address = $this->buildAddress($new);
+                $address->setAddressType($type);
+                $this->addressModel->save($address);
             }
         }
+    }
 
-        return $map;
+    private function cloneAddress(Quote $new, Address $address, bool $expressCheckout): void
+    {
+        $clonedAddress = clone $address;
+
+        $clonedAddress->setId(null);
+        $clonedAddress->setQuoteId($new->getId());
+        $clonedAddress->setQuote($new);
+
+        // only set country
+        if ($expressCheckout) {
+            $clonedAddress->setCountryId('CH');
+            $clonedAddress->setRegionCode(null);
+            $clonedAddress->setRegionId(null);
+            $clonedAddress->setPostcode(null);
+            $clonedAddress->setShippingMethod((string)null);
+        }
+
+        $this->addressModel->save($clonedAddress);
+
+        // if express checkout skip all shipping rates
+        if (!$expressCheckout) {
+            /** @var Address\Rate $rate */
+            foreach ($address->getAllShippingRates() as $rate) {
+                $clonedRate = clone $rate;
+
+                $clonedRate->setId(null);
+                $clonedRate->setAddressId($clonedAddress->getId());
+                $clonedRate->setAddress($clonedAddress);
+
+                $this->rateModel->save($clonedRate);
+            }
+        }
+    }
+
+    private function buildAddress(Quote $quote): Address
+    {
+        $address = $this->addressFactory->create();
+        $address->setQuoteId($quote->getId());
+        $address->setQuote($quote);
+        $address->setCountryId('CH');
+        $address->setRegionCode(null);
+        $address->setRegionId(null);
+        $address->setPostcode(null);
+        $address->setShippingMethod((string)null);
+
+        return $address;
     }
 
     /**

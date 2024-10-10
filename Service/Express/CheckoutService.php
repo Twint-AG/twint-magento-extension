@@ -60,9 +60,6 @@ class CheckoutService
         }
         $quote = $this->quoteRepository->get($quote->getId());
 
-        // Calculated when saving cart, just make sure here
-        $quote->collectTotals();
-
         list($methods, $amount) = $this->getRequestParams($quote);
         $res = $this->callApi($quote, $methods, $amount);
 
