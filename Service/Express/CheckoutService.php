@@ -14,6 +14,7 @@ use Magento\Quote\Model\QuoteRepository;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
+use Twint\Magento\Exception\CheckoutException;
 use Twint\Magento\Model\Api\ApiResponse;
 use Twint\Magento\Service\ApiService;
 use Twint\Magento\Service\MonitorService;
@@ -55,7 +56,10 @@ class CheckoutService
         list($currentQuote, $quote) = $this->cartService->clone();
 
         if($product instanceof Product) {
-            $quote->addProduct($product, $request);
+            $result = $quote->addProduct($product, $request);
+            if(is_string($result)){
+                throw new CheckoutException($result);
+            }
             $this->quoteModel->save($quote);
         }
         $quote = $this->quoteRepository->get($quote->getId());

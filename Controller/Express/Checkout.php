@@ -23,6 +23,7 @@ use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
+use Twint\Magento\Exception\CheckoutException;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
 use Twint\Magento\Util\CryptoHandler;
@@ -81,7 +82,14 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             }
 
             /** @var Pairing $pairing */
-            $pairing = $this->checkoutService->checkout($product, $request);
+            try {
+                $pairing = $this->checkoutService->checkout($product, $request);
+            }catch (CheckoutException $e){
+                $this->messageManager->addWarningMessage($e->getMessage());
+                return $json->setData([
+                    'backUrl' => $product->getProductUrl(),
+                ]);
+            }
 
             if($count === 0) {
                 $this->_checkoutSession->clearStorage();
