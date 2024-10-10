@@ -24,8 +24,11 @@ define([
       }
 
       this.appLinksElements = this.container.querySelector('select');
-      if (this.appLinksElements)
-        this.appLinksElements.addEventListener('change', this.onChangeAppList.bind(this))
+
+      if (this.appLinksElements) {
+        this.appLinksElements.selectedIndex = 0;
+        this.appLinksElements.addEventListener('change', this.onChangeAppList.bind(this));
+      }
 
       this.showMobileQrCode();
     }
