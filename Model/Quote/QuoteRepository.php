@@ -9,6 +9,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Logger\Monolog;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
+use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
@@ -16,7 +17,6 @@ use Magento\Quote\Model\ResourceModel\Quote\Address\Rate as RateModel;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
 use Magento\Quote\Model\ResourceModel\Quote\Item as ItemModel;
 use Magento\Quote\Model\ResourceModel\Quote\Payment as PaymentModel;
-use Magento\Quote\Model\Quote\AddressFactory;
 use Throwable;
 
 class QuoteRepository
@@ -30,8 +30,7 @@ class QuoteRepository
         private readonly QuoteFactory     $factory,
         private readonly Monolog          $logger,
         private readonly AddressFactory   $addressFactory
-    )
-    {
+    ) {
     }
 
     /**
@@ -118,7 +117,7 @@ class QuoteRepository
     {
         $addresses = [
             'shipping' => $original->getShippingAddress(),
-            'billing' => $original->getBillingAddress()
+            'billing' => $original->getBillingAddress(),
         ];
 
         foreach ($addresses as $type => $address) {
@@ -146,7 +145,7 @@ class QuoteRepository
             $clonedAddress->setRegionCode(null);
             $clonedAddress->setRegionId(null);
             $clonedAddress->setPostcode(null);
-            $clonedAddress->setShippingMethod((string)null);
+            $clonedAddress->setShippingMethod((string) null);
         }
 
         $this->addressModel->save($clonedAddress);
@@ -175,7 +174,7 @@ class QuoteRepository
         $address->setRegionCode(null);
         $address->setRegionId(null);
         $address->setPostcode(null);
-        $address->setShippingMethod((string)null);
+        $address->setShippingMethod((string) null);
 
         return $address;
     }

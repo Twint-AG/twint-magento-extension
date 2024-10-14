@@ -25,16 +25,13 @@ class MonitorStatus
 
     public static function fromPairing(Pairing $pairing): static
     {
-        $instance =  new static(
-            $pairing->isFinished(),
-            self::extractStatus($pairing)
-        );
+        $instance = new static($pairing->isFinished(), self::extractStatus($pairing));
 
-        if($instance->status === self::STATUS_FAILED){
-            $instance->args['message'] = __("Payment did not succeed, please try another payment method.");
+        if ($instance->status === self::STATUS_FAILED) {
+            $instance->args['message'] = __('Payment did not succeed, please try another payment method.');
         }
 
-        if($instance->status === self::STATUS_PAID){
+        if ($instance->status === self::STATUS_PAID) {
             $instance->args['order'] = $pairing->getOrderId();
         }
 
@@ -55,8 +52,9 @@ class MonitorStatus
             return self::STATUS_CANCELLED;
         }
 
-        if ($pairing->isFailed())
+        if ($pairing->isFailed()) {
             return self::STATUS_FAILED;
+        }
 
         return self::STATUS_IN_PROGRESS;
     }

@@ -55,7 +55,7 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
         }
 
         return $json->setData([
-            'success' => $this->pairingService->cancel($pairing)
+            'success' => $this->pairingService->cancel($pairing),
         ]);
     }
 }

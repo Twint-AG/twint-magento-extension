@@ -42,8 +42,7 @@ class PairingRepository implements PairingRepositoryInterface
         private readonly FilterBuilder         $filterBuilder,
         private readonly ResourceConnection    $resource,
         private ?CollectionProcessorInterface  $collectionProcessor = null
-    )
-    {
+    ) {
         $this->collectionProcessor = $collectionProcessor ?: ObjectManager::getInstance()->get(
             CollectionProcessorInterface::class
         );

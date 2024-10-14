@@ -96,7 +96,11 @@ class Pairing extends AbstractModel implements IdentityInterface
 
     public function isExpressFinish(): bool
     {
-        return in_array($this->getStatus(), [self::EXPRESS_STATUS_PAID, self::EXPRESS_STATUS_CANCELLED, self::EXPRESS_STATUS_FAILED], true);
+        return in_array(
+            $this->getStatus(),
+            [self::EXPRESS_STATUS_PAID, self::EXPRESS_STATUS_CANCELLED, self::EXPRESS_STATUS_FAILED],
+            true
+        );
     }
 
     public function isRegularFinish(): bool

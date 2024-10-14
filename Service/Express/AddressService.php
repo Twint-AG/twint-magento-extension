@@ -51,11 +51,11 @@ class AddressService
      */
     private function handleAddresses(Quote $quote, Pairing $pairing): void
     {
-        $shippingMethod = str_replace('+', '_',$pairing->getShippingId() ?? '');
+        $shippingMethod = str_replace('+', '_', $pairing->getShippingId() ?? '');
         $addressData = $this->getPaymentAddress($pairing);
 
         $shipping = $quote->getShippingAddress();
-        if(!$shipping){
+        if (!$shipping) {
             /** @var Quote\Address $shipping */
             $shipping = $this->factory->create();
             $shipping->setAddressType('shipping');
@@ -65,13 +65,13 @@ class AddressService
         }
 
         $billing = $quote->getBillingAddress();
-        if(!$billing){
+        if (!$billing) {
             $billing = clone $shipping;
             $billing->setAddressType('billing');
         }
 
         /** @var Quote\Address $address */
-        foreach ([$shipping, $billing] as $address){
+        foreach ([$shipping, $billing] as $address) {
             $address->setPostcode($addressData['postcode'] ?? '');
             $address->setCountryId('CH');
             $address->setEmail($addressData['email'] ?? '');

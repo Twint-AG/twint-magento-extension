@@ -84,14 +84,14 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             /** @var Pairing $pairing */
             try {
                 $pairing = $this->checkoutService->checkout($product, $request);
-            }catch (CheckoutException $e){
+            } catch (CheckoutException $e) {
                 $this->messageManager->addWarningMessage($e->getMessage());
                 return $json->setData([
                     'backUrl' => $product->getProductUrl(),
                 ]);
             }
 
-            if($count === 0) {
+            if ($count === 0) {
                 $this->_checkoutSession->clearStorage();
             }
             $this->_checkoutSession->setQuoteId($pairing->getOriginalQuoteId());

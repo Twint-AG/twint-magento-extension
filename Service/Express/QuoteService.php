@@ -9,8 +9,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteFactory;
-use Twint\Magento\Model\Quote\QuoteRepository;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteModel;
+use Twint\Magento\Model\Quote\QuoteRepository;
 
 class QuoteService
 {
@@ -19,7 +19,6 @@ class QuoteService
         private readonly CheckoutSession $checkoutSession,
         private readonly QuoteRepository $quoteRepository,
         private readonly QuoteModel $resourceModel,
-
     ) {
     }
 
@@ -31,7 +30,7 @@ class QuoteService
     {
         // Get the current quote (cart)
         $quote = $this->checkoutSession->getQuote();
-        if(!$quote->getId()){
+        if (!$quote->getId()) {
             $this->resourceModel->save($quote);
         }
 

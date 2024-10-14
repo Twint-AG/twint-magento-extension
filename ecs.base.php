@@ -59,10 +59,10 @@ use SlevomatCodingStandard\Sniffs\Attributes\DisallowAttributesJoiningSniff;
 use SlevomatCodingStandard\Sniffs\Attributes\DisallowMultipleAttributesPerLineSniff;
 use SlevomatCodingStandard\Sniffs\Attributes\RequireAttributeAfterDocCommentSniff;
 use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
+use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 use Symplify\CodingStandard\Fixer\Spacing\StandaloneLinePromotedPropertyFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
-use Symplify\CodingStandard\Fixer\Spacing\MethodChainingNewlineFixer;
 
 return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([__DIR__]);
@@ -109,10 +109,7 @@ return static function (ECSConfig $ecsConfig): void {
         ]
     );
 
-    $ecsConfig->skip([
-        MethodChainingNewlineFixer::class,
-        PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer::class
-    ]);
+    $ecsConfig->skip([MethodChainingNewlineFixer::class, FunctionTypehintSpaceFixer::class]);
 
     $ecsConfig->ruleWithConfiguration(ClassAttributesSeparationFixer::class, [
         'elements' => [

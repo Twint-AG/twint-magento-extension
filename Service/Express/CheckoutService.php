@@ -11,6 +11,8 @@ use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteRepository;
+use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
+use Magento\Quote\Model\ResourceModel\Quote as ResourceModel;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
@@ -25,8 +27,6 @@ use Twint\Sdk\Value\ShippingMethod;
 use Twint\Sdk\Value\ShippingMethodId;
 use Twint\Sdk\Value\ShippingMethods;
 use Twint\Sdk\Value\Version;
-use Magento\Quote\Model\ResourceModel\Quote as ResourceModel;
-use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 
 class CheckoutService
 {
@@ -41,7 +41,6 @@ class CheckoutService
         private ResourceModel $quoteModel,
         private QuoteRepository $quoteRepository,
         private AddressModel $addresResourceModel,
-
     ) {
     }
 
@@ -55,9 +54,9 @@ class CheckoutService
         /** @var Quote $quote */
         list($currentQuote, $quote) = $this->cartService->clone();
 
-        if($product instanceof Product) {
+        if ($product instanceof Product) {
             $result = $quote->addProduct($product, $request);
-            if(is_string($result)){
+            if (is_string($result)) {
                 throw new CheckoutException($result);
             }
             $this->quoteModel->save($quote);
@@ -100,8 +99,8 @@ class CheckoutService
 
         foreach ($shippingMethods as $method) {
             $shipping = $quote->getShippingAddress();
-            if(!$shipping){
-                $shipping = clone  $address;
+            if (!$shipping) {
+                $shipping = clone $address;
                 $shipping->setSameAsBilling(1);
                 $shipping->setQuoteId($quote->getId());
             }
@@ -121,12 +120,12 @@ class CheckoutService
             $options[] = new ShippingMethod(
                 new ShippingMethodId("{$method->getCarrierCode()}{$separator}{$method->getMethodCode()}"),
                 "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
-                Money::CHF(max($amount-$baseAmount, 0))
+                Money::CHF(max($amount - $baseAmount, 0))
             );
         }
 
-        if(isset($shipping) && $shipping instanceof Quote\Address) {
-            $shipping->setShippingMethod((string)null);
+        if (isset($shipping) && $shipping instanceof Quote\Address) {
+            $shipping->setShippingMethod((string) null);
             $this->addresResourceModel->save($shipping);
         }
 
