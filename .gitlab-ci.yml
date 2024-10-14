@@ -87,12 +87,12 @@ test:
         sleep 5
       done
 
-    - bin/magento setup:install --base-url=http://ci.magento.com --backend-frontname=admin --language=en_GB --timezone=Europe/Berlin
+    - bin/magento setup:install --base-url=http://ci.magento.local --backend-frontname=admin --language=en_GB --timezone=Europe/Berlin
       --currency=CHF --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --use-secure=0
       --base-url-secure=0 --use-secure-admin=0 --admin-firstname=First --admin-lastname=Last --admin-email=admin@magento.com
       --admin-user=admin --admin-password=passw0rd --search-engine=elasticsearch7 --elasticsearch-enable-auth=1
       --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic --elasticsearch-password=e_password
-      --elasticsearch-index-prefix=magento2 --cleanup-database --use-rewrites=1 > /dev/null
+      --elasticsearch-index-prefix=magento2
 
     - |
       bin/magento cache:clean > /dev/null
