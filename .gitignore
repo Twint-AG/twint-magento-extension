@@ -67,11 +67,3 @@ generated/
 
 #Exclude CSS files
 **/*.css.map
-
-# Infra
-/zinfra
-/infra
-
-
-# Tests
-/Test
