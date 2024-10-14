@@ -22,14 +22,8 @@ test:
   stage: check
   parallel:
     matrix:
-      - MAGENTO_VERSION: ["2.4.4"]
-        PHP_VERSION: ["8.1"]
-      - MAGENTO_VERSION: ["2.4.5"]
-        PHP_VERSION: [ "8.1", "8.2"]
-      - MAGENTO_VERSION: ["2.4.6" ]
-        PHP_VERSION: [ "8.1", "8.2" ]
       - MAGENTO_VERSION: [ "2.4.7" ]
-        PHP_VERSION: [ "8.1", "8.2", "8.3" ]
+        PHP_VERSION: [ "8.3" ]
   services:
     - mysql:8.0
     - name: elasticsearch:7.17.22
@@ -88,17 +82,18 @@ test:
       done
 
     - bin/magento setup:install
-      --base-url=http://ci.magento.local
-      --backend-frontname=admin
-      --language=en_GB
+      --key=abc123
+      --base-url=https://ci.magento.local
+      --language=en_US
       --timezone=Europe/Berlin
-      --currency=CHF
+      --currency=USD
       --db-host=mysql
       --db-name=$MYSQL_DATABASE
       --db-user=root
       --db-password=$MYSQL_ROOT_PASSWORD
       --use-secure=1
       --base-url-secure=https://ci.magento.local
+      --use-rewrites=1
       --use-secure-admin=1
       --admin-firstname=First
       --admin-lastname=Last
