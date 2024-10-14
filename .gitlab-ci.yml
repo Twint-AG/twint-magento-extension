@@ -92,7 +92,7 @@ test:
       --base-url-secure=0 --use-secure-admin=0 --admin-firstname=First --admin-lastname=Last --admin-email=admin@magento.com
       --admin-user=admin --admin-password=passw0rd --search-engine=elasticsearch7 --elasticsearch-enable-auth=1
       --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic --elasticsearch-password=e_password
-      --elasticsearch-index-prefix=magento2 > /dev/null
+      --elasticsearch-index-prefix=magento2 --cleanup-database > /dev/null
 
     - |
       bin/magento cache:clean > /dev/null
