@@ -3,7 +3,7 @@ image: shivammathur/node:jammy
 variables:
   COMPOSER_ALLOW_SUPERUSER: "1"
   MYSQL_ROOT_PASSWORD: root
-  MYSQL_DATABASE: m2_test
+  MYSQL_DATABASE: magento2_test
 
 stages:
   - check
