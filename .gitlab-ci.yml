@@ -67,7 +67,7 @@ test:
       composer config minimum-stability dev
       composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
       composer config repositories.twint-extension vcs git@git.nfq.asia:twint-ag/twint-magento-extension.git
-      composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-dev --no-update --no-progress --no-interaction > /dev/null 2>&1
+      composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-dev --no-update --no-progress --no-interaction > /dev/null
 
     # Remove zinfra folder to avoid issue during di compile
     - rm -rf vendor/twint-ag/twint-magento-extension/zinfra
@@ -79,7 +79,7 @@ test:
         sleep 5
       done
 
-    - bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null 2>&1
+    - bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
   
     - bin/magento cache:clean && bin/magento cache:flush > /dev/null
 
