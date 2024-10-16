@@ -17,13 +17,13 @@ stages:
 
 test:
   only:
-    - merge_requests
+    - feature/minimal-soap
   extends: .base
   stage: check
   parallel:
     matrix:
-      - MAGENTO_VERSION: [ "2.4.7" ]
-        PHP_VERSION: [ "8.3" ]
+      - MAGENTO_VERSION: [ "2.4.5", "2.4.4" ]
+        PHP_VERSION: [ "8.1" ]
   services:
     - mysql:8.0
     - name: elasticsearch:7.17.22
@@ -40,7 +40,8 @@ test:
     # Setup PHP
     - spc --php-version "$PHP_VERSION"
       --extensions "bcmath, ctype, curl, dom, fileinfo, filter,gd, hash, iconv, intl, json, libxml, mbstring, openssl, pcre, pdo_mysql, simplexml, soap, sockets, sodium, xsl, tokenizer, xmlwriter, xsl, zlib, libxml"
-
+  
+    - composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
 
@@ -65,6 +66,7 @@ test:
     - |
       composer config prefer-stable true
       composer config minimum-stability dev
+      composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
       composer config repositories.twint-extension vcs git@git.nfq.asia:twint-ag/twint-magento-extension.git
     - composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-update
     - |
