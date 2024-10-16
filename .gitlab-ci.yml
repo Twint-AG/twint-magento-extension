@@ -84,6 +84,9 @@ test:
     - bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
   
     - composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-update  > /dev/null
+    - |
+      rm -f composer.lock
+      composer install --prefer-dist --no-progress --no-interaction
 
     - bin/magento cache:clean && bin/magento cache:flush > /dev/null
 
