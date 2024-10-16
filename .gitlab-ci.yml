@@ -67,8 +67,11 @@ test:
       composer config minimum-stability dev
       composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
       composer config repositories.twint-extension vcs git@git.nfq.asia:twint-ag/twint-magento-extension.git
-      composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-update --no-progress --no-interaction > /dev/null
-
+    - composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-update  > /dev/null
+    - |
+      rm -f composer.lock
+      composer install --prefer-dist --no-progress --no-interaction
+  
     # Remove zinfra folder to avoid issue during di compile
     - rm -rf vendor/twint-ag/twint-magento-extension/zinfra
 
