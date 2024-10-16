@@ -17,7 +17,7 @@ stages:
 
 test:
   only:
-    - feature/minimal-soap
+    - merge_requests
   extends: .base
   stage: check
   parallel:
