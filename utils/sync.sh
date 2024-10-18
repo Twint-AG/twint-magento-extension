@@ -3,7 +3,7 @@
 set -euo pipefail
 
 RELEASE_HOST=github.com
-RELEASE_REPOSITORY=git@${RELEASE_HOST}:Twint-AG/twint-magento-plugin.git
+RELEASE_REPOSITORY=git@${RELEASE_HOST}:Twint-AG/twint-magento-extension.git
 
 echo "Syncing release ${CI_COMMIT_TAG}"
 mkdir -p ~/.ssh
