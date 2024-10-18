@@ -43,60 +43,65 @@ test:
 
     # Setup PHP
     - spc --php-version "$PHP_VERSION" --extensions "bcmath, ctype, curl, dom, fileinfo, filter,gd, hash, iconv, intl, json, libxml, mbstring, openssl, pcre, pdo_mysql, simplexml, soap, sockets, sodium, xsl, tokenizer, xmlwriter, xsl, zlib, libxml"
-  
-    - composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
+    
+    - extension_path="/tmp/$CI_COMMIT_SHA"
+    - rm -rf "$extension_path"
+    - mkdir "$extension_path"
+    - rm -rf zinfra infra
+    - cp -R ./* "$extension_path"
+    
+    - cd "$extension_path"
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
-
+    
     # Install dependencies for plugin itself
     - |
       rm -f composer.lock
       composer config prefer-stable true
       composer config minimum-stability dev
       composer install --prefer-dist --no-progress --no-interaction
-
+    
     # Run coding standard
     - ./vendor/bin/ecs --no-progress-bar
     - vendor/bin/rector process --dry-run
-
+    
     # Checkout Magento Community template, and change working directory to magento root folder
+    - cd -
     - composer create-project --repository-url=https://repo.magento.com/
       magento/project-community-edition=$MAGENTO_VERSION magento > /dev/null
     - cd magento
-
-    - |
-      composer config prefer-stable true
-      composer config minimum-stability dev
-      composer config repositories.twint-sdk vcs https://git.nfq.asia/twint-ag/php-sdk.git
-      composer config repositories.twint-extension vcs git@git.nfq.asia:twint-ag/twint-magento-extension.git
-    - |
-      rm -f composer.lock
-      composer install --prefer-dist --no-progress --no-interaction
-
+    
+    - composer install --prefer-dist --no-progress --no-interaction
+    
     # Make sure elastic search is ready
     - |
       until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
         echo 'Waiting for Elasticsearch to be ready...'
         sleep 5
       done
-
+    
     - bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
-  
-    - composer require twint-ag/twint-magento-extension:dev-$CI_COMMIT_REF_NAME --no-update
+    
     - |
-      rm -f composer.lock
-      composer install --prefer-dist --no-progress --no-interaction
-  
-    # Remove zinfra folder to avoid issue during di compile
-    - rm -rf vendor/twint-ag/twint-magento-extension/zinfra
-
+      composer config prefer-stable true
+      composer config minimum-stability dev
+      composer config repositories.twint-ag/twint-magento-extension path "$extension_path"
+      sed -i 's#"/tmp/extension"#"/tmp/extension", "symlink": true#g' composer.json
+    
+    - rm -rf "$extension_path/vendor"
+    - rm -rf "$extension_path/Test"
+    - ls -al "$extension_path"
+    
+    - composer require twint-ag/twint-magento-extension:1.0.0
+    - composer install --prefer-dist --no-progress --no-interaction
+    
     - bin/magento cache:clean && bin/magento cache:flush > /dev/null
-
+    
     - bin/magento module:enable Twint_Magento
     - bin/magento setup:upgrade | grep Twint
-    - bin/magento setup:di:compile > /dev/null
-#    - bin/magento setup:static-content:deploy -f > /dev/null
-
+    - bin/magento setup:di:compile
+  #    - bin/magento setup:static-content:deploy -f > /dev/null
+  
   cache:
     key: $CI_COMMIT_REF_SLUG-${CI_JOB_NAME}
     paths:
