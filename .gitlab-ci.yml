@@ -18,6 +18,8 @@ stages:
 test:
   only:
     - merge_requests
+    - master
+    - staging
   extends: .base
   stage: check
   parallel:
