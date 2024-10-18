@@ -1,6 +1,5 @@
 {
   "name": "twint-ag/twint-magento-extension",
-  "version": "1.0.0",
   "description": "TWINT payment extension for Magento 2",
   "homepage": "https://twint.ch",
   "type": "magento2-module",
