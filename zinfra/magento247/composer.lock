@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6089339b8ea85a8aaa4a80bae0141b5f",
+    "content-hash": "b5a4c16d0f16e1bab779f8914b5bee29",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -1506,6 +1506,65 @@
             "time": "2024-05-06T16:37:16+00:00"
         },
         {
+            "name": "danielburger1337/sha3-shake",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielburger1337/sha3-shake-php.git",
+                "reference": "71d64273df7f9d6adec2075ee3e585d9c8f36236"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielburger1337/sha3-shake-php/zipball/71d64273df7f9d6adec2075ee3e585d9c8f36236",
+                "reference": "71d64273df7f9d6adec2075ee3e585d9c8f36236",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.50.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "danielburger1337\\SHA3Shake\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Burger",
+                    "homepage": "https://github.com/danielburger1337"
+                }
+            ],
+            "description": "SHA-3 SHAKE implementation in PHP",
+            "homepage": "https://github.com/danielburger1337/sha3-shake-php",
+            "keywords": [
+                "sha-3",
+                "sha3",
+                "shake",
+                "shake-128",
+                "shake-256"
+            ],
+            "support": {
+                "issues": "https://github.com/danielburger1337/sha3-shake-php/issues",
+                "source": "https://github.com/danielburger1337/sha3-shake-php/tree/v1.1.1"
+            },
+            "time": "2024-09-08T15:49:44+00:00"
+        },
+        {
             "name": "dasprid/enum",
             "version": "1.0.6",
             "source": {
@@ -1930,80 +1989,6 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v6.10.1"
             },
             "time": "2024-05-18T18:05:11+00:00"
-        },
-        {
-            "name": "goetas-webservices/xsd-reader",
-            "version": "0.4.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/goetas-webservices/xsd-reader.git",
-                "reference": "51558f69e61e75caa32a196eeeb23345ebcdea23"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/goetas-webservices/xsd-reader/zipball/51558f69e61e75caa32a196eeeb23345ebcdea23",
-                "reference": "51558f69e61e75caa32a196eeeb23345ebcdea23",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.14",
-                "phpstan/phpstan": "^1.9",
-                "phpunit/phpunit": "^9.6",
-                "sebastian/phpcpd": "^6.0",
-                "vimeo/psalm": "^5.6"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GoetasWebservices\\CS\\": "./php-cs-fixer/",
-                    "GoetasWebservices\\XML\\XSDReader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Asmir Mustafic",
-                    "email": "goetas@lignano.it"
-                }
-            ],
-            "description": "Read any XML Schema (XSD) programmatically with PHP",
-            "keywords": [
-                "parser",
-                "php",
-                "xml",
-                "xmlschema",
-                "xsd"
-            ],
-            "support": {
-                "issues": "https://github.com/goetas-webservices/xsd-reader/issues",
-                "source": "https://github.com/goetas-webservices/xsd-reader/tree/0.4.6"
-            },
-            "funding": [
-                {
-                    "url": "https://www.goetas.com/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/goetas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/goetas",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2024-06-07T06:19:16+00:00"
         },
         {
             "name": "google/recaptcha",
@@ -21071,69 +21056,6 @@
             "time": "2024-08-21T12:06:05+00:00"
         },
         {
-            "name": "php-soap/wsdl-reader",
-            "version": "0.17.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-soap/wsdl-reader.git",
-                "reference": "33c96b0a29e99a0580abfdd1def2b3fb898dcda0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-soap/wsdl-reader/zipball/33c96b0a29e99a0580abfdd1def2b3fb898dcda0",
-                "reference": "33c96b0a29e99a0580abfdd1def2b3fb898dcda0",
-                "shasum": ""
-            },
-            "require": {
-                "azjezz/psl": "^2.4",
-                "ext-dom": "*",
-                "goetas-webservices/xsd-reader": "^0.4.6",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "php-soap/engine": "^2.10.1",
-                "php-soap/wsdl": "^1.4",
-                "php-soap/xml": "^1.6.0",
-                "symfony/console": "^5.4 || ^6.0 || ^7.0",
-                "veewee/xml": "^3.0",
-                "webmozart/assert": "^1.11"
-            },
-            "require-dev": {
-                "php-soap/engine-integration-tests": "^1.5.0",
-                "php-standard-library/psalm-plugin": "^2.2",
-                "phpunit/phpunit": "^10.1",
-                "psalm/plugin-symfony": "^5.0",
-                "symfony/var-dumper": "^6.1",
-                "vimeo/psalm": "^5.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Soap\\WsdlReader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Toon Verwerft",
-                    "email": "toonverwerft@gmail.com"
-                }
-            ],
-            "description": "A WSDL reader in PHP",
-            "support": {
-                "issues": "https://github.com/php-soap/wsdl-reader/issues",
-                "source": "https://github.com/php-soap/wsdl-reader/tree/0.17.0"
-            },
-            "funding": [
-                {
-                    "url": "https://opencollective.com/php-soap",
-                    "type": "open_collective"
-                }
-            ],
-            "time": "2024-07-26T12:46:08+00:00"
-        },
-        {
             "name": "php-soap/xml",
             "version": "1.7.0",
             "source": {
@@ -21389,82 +21311,6 @@
                 }
             ],
             "time": "2021-03-23T12:46:44+00:00"
-        },
-        {
-            "name": "phpro/soap-client",
-            "version": "3.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpro/soap-client.git",
-                "reference": "66eb9620084ea08f5dca1170bcd099d5b156c2d4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpro/soap-client/zipball/66eb9620084ea08f5dca1170bcd099d5b156c2d4",
-                "reference": "66eb9620084ea08f5dca1170bcd099d5b156c2d4",
-                "shasum": ""
-            },
-            "require": {
-                "azjezz/psl": "^2.1",
-                "laminas/laminas-code": "^4.8.0",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "php-soap/engine": "^2.7",
-                "php-soap/ext-soap-engine": "^1.4",
-                "php-soap/psr18-transport": "^1.3",
-                "php-soap/wsdl-reader": "~0.6",
-                "psr/event-dispatcher": "^1.0",
-                "psr/log": "^1.0 || ^2.0 || ^3.0",
-                "symfony/console": "~5.4 || ~6.0 || ~7.0",
-                "symfony/event-dispatcher": "~5.4 || ~6.0 || ~7.0",
-                "symfony/filesystem": "~5.4 || ~6.0 || ~7.0",
-                "symfony/validator": "~5.4 || ~6.0 || ~7.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^7.5.0",
-                "nyholm/psr7": "^1.5",
-                "php-http/vcr-plugin": "^1.2",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpro/grumphp-shim": "^2.3",
-                "phpspec/phpspec": "~7.2",
-                "phpspec/prophecy-phpunit": "^2.0.1",
-                "phpstan/phpstan": "^1.10.15",
-                "phpunit/phpunit": "~9.5",
-                "squizlabs/php_codesniffer": "^3.7.1"
-            },
-            "bin": [
-                "bin/soap-client"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Phpro\\SoapClient\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Toon Verwerft",
-                    "email": "toon.verwerft@phpro.be"
-                }
-            ],
-            "description": "A general purpose SoapClient library",
-            "keywords": [
-                "soap"
-            ],
-            "support": {
-                "issues": "https://github.com/phpro/soap-client/issues",
-                "source": "https://github.com/phpro/soap-client/tree/3.3.0"
-            },
-            "funding": [
-                {
-                    "url": "https://opencollective.com/php-soap",
-                    "type": "open_collective"
-                }
-            ],
-            "time": "2024-05-21T17:03:36+00:00"
         },
         {
             "name": "phpseclib/mcrypt_compat",
@@ -25195,181 +25041,6 @@
             "time": "2024-07-22T10:21:14+00:00"
         },
         {
-            "name": "symfony/translation-contracts",
-            "version": "v3.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "b9d2189887bb6b2e0367a9fc7136c5239ab9b05a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/b9d2189887bb6b2e0367a9fc7136c5239ab9b05a",
-                "reference": "b9d2189887bb6b2e0367a9fc7136c5239ab9b05a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "3.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\Translation\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Test/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Generic abstractions related to translation",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/v3.5.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-04-18T09:32:20+00:00"
-        },
-        {
-            "name": "symfony/validator",
-            "version": "v7.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/validator.git",
-                "reference": "0d7e0dfd41702d6b9356214b76110421c1e74368"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/0d7e0dfd41702d6b9356214b76110421c1e74368",
-                "reference": "0d7e0dfd41702d6b9356214b76110421c1e74368",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.2",
-                "symfony/deprecation-contracts": "^2.5|^3",
-                "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-mbstring": "~1.0",
-                "symfony/polyfill-php83": "^1.27",
-                "symfony/translation-contracts": "^2.5|^3"
-            },
-            "conflict": {
-                "doctrine/lexer": "<1.1",
-                "symfony/dependency-injection": "<6.4",
-                "symfony/doctrine-bridge": "<7.0",
-                "symfony/expression-language": "<6.4",
-                "symfony/http-kernel": "<6.4",
-                "symfony/intl": "<6.4",
-                "symfony/property-info": "<6.4",
-                "symfony/translation": "<6.4.3|>=7.0,<7.0.3",
-                "symfony/yaml": "<6.4"
-            },
-            "require-dev": {
-                "egulias/email-validator": "^2.1.10|^3|^4",
-                "symfony/cache": "^6.4|^7.0",
-                "symfony/config": "^6.4|^7.0",
-                "symfony/console": "^6.4|^7.0",
-                "symfony/dependency-injection": "^6.4|^7.0",
-                "symfony/expression-language": "^6.4|^7.0",
-                "symfony/finder": "^6.4|^7.0",
-                "symfony/http-client": "^6.4|^7.0",
-                "symfony/http-foundation": "^6.4|^7.0",
-                "symfony/http-kernel": "^6.4|^7.0",
-                "symfony/intl": "^6.4|^7.0",
-                "symfony/mime": "^6.4|^7.0",
-                "symfony/property-access": "^6.4|^7.0",
-                "symfony/property-info": "^6.4|^7.0",
-                "symfony/translation": "^6.4.3|^7.0.3",
-                "symfony/type-info": "^7.1",
-                "symfony/yaml": "^6.4|^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Validator\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/",
-                    "/Resources/bin/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Provides tools to validate values",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/validator/tree/v7.1.4"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2024-08-30T15:58:06+00:00"
-        },
-        {
             "name": "symfony/var-dumper",
             "version": "v7.1.3",
             "source": {
@@ -25719,47 +25390,47 @@
         },
         {
             "name": "twint-ag/sdk",
-            "version": "1.0.0",
+            "version": "dev-dev/advanced-tracking",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Twint-AG/sdk.git",
-                "reference": "a077d17d8254d6ec598154243cb0ab2bbef8f341"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Twint-AG/sdk/zipball/a077d17d8254d6ec598154243cb0ab2bbef8f341",
-                "reference": "a077d17d8254d6ec598154243cb0ab2bbef8f341",
-                "shasum": ""
+                "url": "https://git.nfq.asia/twint-ag/php-sdk.git",
+                "reference": "712f80e78756352613d742b7e2b9d39bb61b5a62"
             },
             "require": {
                 "azjezz/psl": "^2.5.0",
+                "danielburger1337/sha3-shake": "^1.0",
                 "ext-dom": "*",
                 "ext-openssl": "*",
                 "ext-xsl": "*",
                 "guzzlehttp/guzzle": "^7.4",
                 "php": ">=8.1",
-                "php-soap/engine": "^2.4.0",
+                "php-soap/engine": "^2.7",
+                "php-soap/ext-soap-engine": "^1.4",
                 "php-soap/psr18-transport": "^1.5.0",
-                "phpro/soap-client": "^3.3.0",
                 "psr/clock": "^1.0",
                 "veewee/xml": "^3.0.0",
                 "webimpress/safe-writer": "^2.0"
             },
+            "conflict": {
+                "phpro/soap-client": "<3.3.0 || >=4.0.0"
+            },
             "require-dev": {
                 "ext-xdebug": "*",
                 "laminas/laminas-code": "^4.14.0",
+                "nikic/php-parser": "^4.19.4",
                 "php-soap/wsdl-reader": "^0.17.0",
-                "php-standard-library/phpstan-extension": "^1.0",
-                "phpstan/phpstan": "^1.11.9",
-                "phpstan/phpstan-strict-rules": "^1.6.0",
-                "phpunit/phpunit": "^10.5.29",
+                "php-standard-library/phpstan-extension": "^1.1.0",
+                "phpro/soap-client": "^3.3.0",
+                "phpstan/phpstan": "^1.12.7",
+                "phpstan/phpstan-strict-rules": "^1.6.1",
+                "phpunit/phpunit": "^10.5.37",
                 "roave/better-reflection": "^6.25.0",
                 "slevomat/coding-standard": "^8.15.0",
                 "symfony/clock": "^6.4.8",
-                "symfony/dotenv": "^6.4.10",
+                "symfony/dotenv": "^6.4.12",
                 "symfony/event-dispatcher": "^6.4.8",
-                "symfony/finder": "^6.4.10",
-                "symplify/easy-coding-standard": "^12.3.4",
+                "symfony/finder": "^6.4.11",
+                "symplify/easy-coding-standard": "^12.3.6",
                 "wiremock-php/wiremock-php": "dev-cloud-support as 2.39.0"
             },
             "type": "library",
@@ -25768,10 +25439,17 @@
                     "src/polyfill.php"
                 ],
                 "psr-4": {
-                    "Twint\\Sdk\\": "src/"
+                    "Twint\\Sdk\\": "src/",
+                    "Phpro\\SoapClient\\": "vendor-bundled/phpro/soap-client-minimal/src/Phpro/SoapClient"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Twint\\Sdk\\Tests\\Integration\\": "tests/integration",
+                    "Twint\\Sdk\\Tests\\Unit\\": "tests/unit",
+                    "Twint\\Sdk\\Tools\\": "tools/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -25795,11 +25473,7 @@
                 "twint",
                 "twint.ch"
             ],
-            "support": {
-                "issues": "https://github.com/Twint-AG/sdk/issues",
-                "source": "https://github.com/Twint-AG/sdk/tree/1.0.0"
-            },
-            "time": "2024-08-05T09:54:46+00:00"
+            "time": "2024-10-21T13:51:38+00:00"
         },
         {
             "name": "twint-ag/twint-magento-extension",
@@ -25807,16 +25481,18 @@
             "dist": {
                 "type": "path",
                 "url": "/var/www/plugin",
-                "reference": "a86ca220936fa7a2e0afeb266eaa845a16245b59"
+                "reference": "a4860ab066c07d82da55b597f1946e82d6a4d682"
             },
             "require": {
                 "magento/framework": ">=103.0.4",
                 "php": ">=8.1",
-                "symfony/process": "^6.4",
-                "twint-ag/sdk": "^1.0"
+                "symfony/process": ">=5.4",
+                "twint-ag/sdk": "dev-dev/advanced-tracking"
             },
             "require-dev": {
+                "mockery/mockery": "^1.6",
                 "phpspec/prophecy-phpunit": "^2.2",
+                "phpunit/phpunit": "^10.5",
                 "rector/rector": "^1.2",
                 "slevomat/coding-standard": "^8.15",
                 "symplify/easy-coding-standard": "^12.1"
@@ -27768,6 +27444,57 @@
             "time": "2024-08-28T10:47:21+00:00"
         },
         {
+            "name": "hamcrest/hamcrest-php",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hamcrest/hamcrest-php.git",
+                "reference": "8c3d0a3f6af734494ad8f6fbbee0ba92422859f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/8c3d0a3f6af734494ad8f6fbbee0ba92422859f3",
+                "reference": "8c3d0a3f6af734494ad8f6fbbee0ba92422859f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3|^7.0|^8.0"
+            },
+            "replace": {
+                "cordoval/hamcrest-php": "*",
+                "davedevelopment/hamcrest-php": "*",
+                "kodova/hamcrest-php": "*"
+            },
+            "require-dev": {
+                "phpunit/php-file-iterator": "^1.4 || ^2.0",
+                "phpunit/phpunit": "^4.8.36 || ^5.7 || ^6.5 || ^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "hamcrest"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "This is the PHP port of Hamcrest Matchers",
+            "keywords": [
+                "test"
+            ],
+            "support": {
+                "issues": "https://github.com/hamcrest/hamcrest-php/issues",
+                "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.0.1"
+            },
+            "time": "2020-07-09T08:09:16+00:00"
+        },
+        {
             "name": "laminas/laminas-diactoros",
             "version": "3.3.1",
             "source": {
@@ -28140,6 +27867,89 @@
                 "source": "https://github.com/PHPCompatibility/PHPCompatibility"
             },
             "time": "2023-11-29T22:34:17+00:00"
+        },
+        {
+            "name": "mockery/mockery",
+            "version": "1.6.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mockery/mockery.git",
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/1f4efdd7d3beafe9807b08156dfcb176d18f1699",
+                "reference": "1f4efdd7d3beafe9807b08156dfcb176d18f1699",
+                "shasum": ""
+            },
+            "require": {
+                "hamcrest/hamcrest-php": "^2.0.1",
+                "lib-pcre": ">=7.0",
+                "php": ">=7.3"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5 || ^9.6.17",
+                "symplify/easy-coding-standard": "^12.1.14"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "library/helpers.php",
+                    "library/Mockery.php"
+                ],
+                "psr-4": {
+                    "Mockery\\": "library/Mockery"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "https://github.com/padraic",
+                    "role": "Author"
+                },
+                {
+                    "name": "Dave Marshall",
+                    "email": "dave.marshall@atstsolutions.co.uk",
+                    "homepage": "https://davedevelopment.co.uk",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Nathanael Esayeas",
+                    "email": "nathanael.esayeas@protonmail.com",
+                    "homepage": "https://github.com/ghostwriter",
+                    "role": "Lead Developer"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework",
+            "homepage": "https://github.com/mockery/mockery",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "library",
+                "mock",
+                "mock objects",
+                "mockery",
+                "stub",
+                "test",
+                "test double",
+                "testing"
+            ],
+            "support": {
+                "docs": "https://docs.mockery.io/",
+                "issues": "https://github.com/mockery/mockery/issues",
+                "rss": "https://github.com/mockery/mockery/releases.atom",
+                "security": "https://github.com/mockery/mockery/security/advisories",
+                "source": "https://github.com/mockery/mockery"
+            },
+            "time": "2024-05-16T03:13:13+00:00"
         },
         {
             "name": "mustache/mustache",

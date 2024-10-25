@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Constant;
 
+use Twint\Sdk\Value\InstallSource;
+
 class TwintConstant
 {
+    public const MODULE_VERSION = 'dev-9.9.9';
+
+    public const INSTALL_SOURCE = InstallSource::DIRECT;
+
     public const PLATFORM = 'Magento';
 
     public const SECTION = 'twint';
@@ -47,4 +53,9 @@ class TwintConstant
     public const PAIRING_TIMEOUT_EXPRESS = 60 * 10; //10 mins
 
     public const SHIPPING_METHOD_SEPARATOR = '+';
+
+    public static function installSource(): InstallSource
+    {
+        return new InstallSource(self::INSTALL_SOURCE);
+    }
 }

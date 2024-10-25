@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Builder;
 
+use Magento\Framework\App\ProductMetadataInterface;
 use Soap\Engine\Transport;
 use Throwable;
 use Twint\Magento\Constant\TwintConstant;
@@ -19,7 +20,8 @@ use Twint\Sdk\InvocationRecorder\Soap\MessageRecorder;
 use Twint\Sdk\InvocationRecorder\Soap\RecordingTransport;
 use Twint\Sdk\Io\InMemoryStream;
 use Twint\Sdk\Value\Environment;
-use Twint\Sdk\Value\PrefixedCashRegisterId;
+use Twint\Sdk\Value\ShopPlatform;
+use Twint\Sdk\Value\ShopPluginInformation;
 use Twint\Sdk\Value\StoreUuid;
 use Twint\Sdk\Value\Version;
 
@@ -29,7 +31,8 @@ class ClientBuilder
 
     public function __construct(
         private readonly ConfigHelper $configHelper,
-        private readonly CryptoHandler $cryptoService
+        private readonly CryptoHandler $cryptoService,
+        private readonly ProductMetadataInterface $system
     ) {
     }
 
@@ -73,7 +76,13 @@ class ClientBuilder
             $client = new InvocationRecordingClient(
                 new Client(
                     CertificateContainer::fromPkcs12(new Pkcs12Certificate(new InMemoryStream($cert), $passphrase)),
-                    new PrefixedCashRegisterId(StoreUuid::fromString($uuid), TwintConstant::PLATFORM),
+                    new ShopPluginInformation(
+                        StoreUuid::fromString($uuid),
+                        ShopPlatform::MAGENTO(),
+                        $this->system->getVersion(),
+                        TwintConstant::MODULE_VERSION,
+                        TwintConstant::installSource()
+                    ),
                     // @phpstan-ignore-next-line
                     new Version($version),
                     $environment,

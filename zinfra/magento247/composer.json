@@ -109,6 +109,10 @@
                     "twint-ag/twint-magento-extension": "1.0.0"
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
         }
     ],
     "extra": {
