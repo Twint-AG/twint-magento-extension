@@ -117,4 +117,4 @@ release:
     GIT_DEPTH: 0
   script:
     - apk add --no-cache git openssh bash
-    - ./utils/sync.sh
+    - ./bin/sync.sh
