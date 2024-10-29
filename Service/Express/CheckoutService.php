@@ -77,7 +77,7 @@ class CheckoutService
      */
     private function callApi(Quote $quote, ShippingMethods $methods, float $amount): ApiResponse
     {
-        $client = $this->connector->build($quote->getStoreId(), Version::NEXT);
+        $client = $this->connector->build($quote->getStoreId(), Version::LATEST);
         return $this->api->call(
             $client,
             'requestFastCheckOutCheckIn',

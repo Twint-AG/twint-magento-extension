@@ -180,7 +180,7 @@ class PairingService
      */
     public function monitorExpress(Pairing $pairing, Pairing $cloned): MonitorStatus
     {
-        $client = $this->connector->build($cloned->getStoreId(), Version::NEXT);
+        $client = $this->connector->build($cloned->getStoreId(), Version::LATEST);
 
         $res = $this->api->call(
             $client,
@@ -264,7 +264,7 @@ class PairingService
      */
     public function cancel(Pairing $pairing): bool
     {
-        $client = $this->connector->build($pairing->getStoreId(), Version::NEXT);
+        $client = $this->connector->build($pairing->getStoreId(), Version::LATEST);
         if ($pairing->isExpress()) {
             try {
                 $res = $this->cancelFastCheckoutCheckIn($pairing, $client);
