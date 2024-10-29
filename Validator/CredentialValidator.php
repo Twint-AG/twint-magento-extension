@@ -13,6 +13,8 @@ use Twint\Sdk\Certificate\Pkcs12Certificate;
 use Twint\Sdk\Client;
 use Twint\Sdk\Io\InMemoryStream;
 use Twint\Sdk\Value\Environment;
+use Twint\Sdk\Value\PlatformVersion;
+use Twint\Sdk\Value\PluginVersion;
 use Twint\Sdk\Value\ShopPlatform;
 use Twint\Sdk\Value\ShopPluginInformation;
 use Twint\Sdk\Value\StoreUuid;
@@ -41,8 +43,8 @@ class CredentialValidator
                 new ShopPluginInformation(
                     StoreUuid::fromString($storeUuid),
                     ShopPlatform::MAGENTO(),
-                    $this->system->getVersion(),
-                    TwintConstant::MODULE_VERSION,
+                    new PlatformVersion($this->system->getVersion()),
+                    new PluginVersion(TwintConstant::MODULE_VERSION),
                     TwintConstant::installSource()
                 ),
                 Version::latest(),

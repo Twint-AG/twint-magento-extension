@@ -20,6 +20,8 @@ use Twint\Sdk\InvocationRecorder\Soap\MessageRecorder;
 use Twint\Sdk\InvocationRecorder\Soap\RecordingTransport;
 use Twint\Sdk\Io\InMemoryStream;
 use Twint\Sdk\Value\Environment;
+use Twint\Sdk\Value\PlatformVersion;
+use Twint\Sdk\Value\PluginVersion;
 use Twint\Sdk\Value\ShopPlatform;
 use Twint\Sdk\Value\ShopPluginInformation;
 use Twint\Sdk\Value\StoreUuid;
@@ -79,8 +81,8 @@ class ClientBuilder
                     new ShopPluginInformation(
                         StoreUuid::fromString($uuid),
                         ShopPlatform::MAGENTO(),
-                        $this->system->getVersion(),
-                        TwintConstant::MODULE_VERSION,
+                        new PlatformVersion($this->system->getVersion()),
+                        new PluginVersion(TwintConstant::MODULE_VERSION),
                         TwintConstant::installSource()
                     ),
                     // @phpstan-ignore-next-line
