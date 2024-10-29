@@ -87,6 +87,6 @@ class Test_Unit_ClientBuilderTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(InvalidConfigException::ERROR_NOT_VALIDATED);
 
-        $clientBuilder->build('store1', Version::NEXT);
+        $clientBuilder->build('store1', Version::LATEST);
     }
 }
