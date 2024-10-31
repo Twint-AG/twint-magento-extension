@@ -1,4 +1,4 @@
-<p align="center" style="font-size:150%"><b>TWINT Payment Module Guideline</b></p>
+# TWINT Magento Extension Guide
 
 ## Install the module
 
