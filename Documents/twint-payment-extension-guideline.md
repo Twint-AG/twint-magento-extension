@@ -2,7 +2,26 @@
 
 ## Install the module
 
-Please refer to the `README.md` for the installation steps.
+1. Install the Module via Composer:
+```bash
+composer require twint-ag/twint-magento-extension
+```
+2. Enable the Module
+```bash
+bin/magento module:enable Twint_Magento
+```
+3. Run setup upgrade and recompile dependencies
+```bash
+bin/magento setup:upgrade && bin/magento setup:di:compile
+```
+4. Deploy static content (if in production mode)
+```bash
+bin/magento setup:static-content:deploy
+```
+5. Clear cache (if needed):
+```bash
+bin/magento cache:clean && bin/magento cache:flush
+```
 
 ## Configure the module
 

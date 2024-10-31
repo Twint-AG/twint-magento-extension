@@ -32,24 +32,23 @@ To customize or add language support, follow these steps:
 - TWINT account
 
 ## Installation
- 1. Install the Module via Composer:
+1. Install the Module via Composer:
 ```bash
-composer install twint-ag/twint-magento-extension
+composer require twint-ag/twint-magento-extension
 ```
- 2. Enable the Module
+2. Enable the Module
 ```bash
 bin/magento module:enable Twint_Magento
 ```
 3. Run setup upgrade and recompile dependencies
 ```bash
 bin/magento setup:upgrade && bin/magento setup:di:compile
- ```
+```
 4. Deploy static content (if in production mode)
 ```bash
 bin/magento setup:static-content:deploy
- ```
-
-5. Clear cache (if need):
+```
+5. Clear cache (if needed):
 ```bash
 bin/magento cache:clean && bin/magento cache:flush
 ```
