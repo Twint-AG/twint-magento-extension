@@ -15,6 +15,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
+use Throwable;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Service\PairingService;
@@ -50,8 +51,12 @@ class OrderConvertService
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
         $order = $this->orderRepository->get($orderId);
 
-        if (!$order->getEmailSent()) {
-            $this->orderSender->send($order);
+        try {
+            if (!$order->getEmailSent()) {
+                $this->orderSender->send($order);
+            }
+        }catch (Throwable $e){
+            //silence when error sending email
         }
 
         //Update Pairing and History
