@@ -92,7 +92,7 @@ test:
     - rm -rf "$extension_path/Test"
     - ls -al "$extension_path"
     
-    - composer require twint-ag/twint-magento-extension:1.0.0
+    - composer require twint-ag/twint-magento-extension:dev-9.9.9-dev
     - composer install --prefer-dist --no-progress --no-interaction
     
     - bin/magento cache:clean && bin/magento cache:flush > /dev/null
