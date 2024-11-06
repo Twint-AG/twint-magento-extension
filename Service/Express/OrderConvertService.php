@@ -13,6 +13,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
@@ -26,7 +27,8 @@ class OrderConvertService
         private AddressService $addressService,
         private QuoteService $quoteService,
         private OrderRepository $orderRepository,
-        private QuoteRepository $quoteRepository
+        private QuoteRepository $quoteRepository,
+        private OrderSender $orderSender
     ) {
     }
 
@@ -47,6 +49,10 @@ class OrderConvertService
         // Convert to Order
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
         $order = $this->orderRepository->get($orderId);
+
+        if (!$order->getEmailSent()) {
+            $this->orderSender->send($order);
+        }
 
         //Update Pairing and History
         $this->updateOrderIdForPairing($order, $quote->getId());
