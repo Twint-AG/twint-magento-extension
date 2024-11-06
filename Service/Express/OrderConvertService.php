@@ -55,7 +55,7 @@ class OrderConvertService
             if (!$order->getEmailSent()) {
                 $this->orderSender->send($order);
             }
-        }catch (Throwable $e){
+        } catch (Throwable $e) {
             //silence when error sending email
         }
 
