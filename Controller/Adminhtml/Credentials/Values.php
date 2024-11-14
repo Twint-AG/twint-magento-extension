@@ -14,14 +14,16 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Helper\ConfigHelper;
+use Twint\Magento\Validator\Input\ScopeInputValidator;
 
 class Values extends Action implements ActionInterface, HttpPostActionInterface
 {
     public function __construct(
-        Action\Context $context,
-        private JsonFactory $jsonFactory,
-        private Http $request,
-        private ConfigHelper $helper,
+        Action\Context              $context,
+        private JsonFactory         $jsonFactory,
+        private Http                $request,
+        private ConfigHelper        $helper,
+        private ScopeInputValidator $inputValidator,
     ) {
         parent::__construct($context);
     }
@@ -33,14 +35,23 @@ class Values extends Action implements ActionInterface, HttpPostActionInterface
 
     public function execute(): Json|ResultInterface|ResponseInterface
     {
-        $resultJson = $this->jsonFactory->create();
+        $json = $this->jsonFactory->create();
         $scope = $this->request->get('scope') ?? '';
+
+        $errors = $this->inputValidator->validate($scope);
+        if ($errors !== []) {
+            return $json->setData([
+                'success' => false,
+                'message' => __('Invalid input'),
+                'errors' => $errors,
+            ]);
+        }
 
         try {
             $credentials = $this->helper->getCredentials($scope);
-            return $resultJson->setData($credentials);
+            return $json->setData($credentials);
         } catch (Exception $e) {
-            return $resultJson->setData([
+            return $json->setData([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
