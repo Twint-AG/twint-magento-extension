@@ -1,8 +1,9 @@
 class TwintBase {
-  constructor($, $t, urlBuilder) {
+  constructor($, $t, urlBuilder, domPurifier) {
     this.$ = $;
     this.$t = $t;
     this.urlBuilder = urlBuilder;
+    this.domPurifier = domPurifier;
 
     this.urlBuilder.setBaseUrl(this.baseUrl());
 
@@ -136,7 +137,7 @@ class TwintCertificateHandler extends TwintBase {
       fileName = this.fileNameLabel.getAttribute('data-empty-title');
     }
 
-    this.fileNameLabel.innerHTML = fileName;
+    this.fileNameLabel.innerHTML = this.domPurifier.sanitize(fileName);
   }
 
   uploadCertificate() {
@@ -185,7 +186,7 @@ class TwintCertificateHandler extends TwintBase {
   }
 
   handleError(hrx, text, throwable) {
-    console.log("Upload Certificate error: " + text);
+    console.error("Upload Certificate error: " + text);
   }
 
   isValidUUIDv4(uuid) {
@@ -241,7 +242,7 @@ class TwintCertificateHandler extends TwintBase {
     }
 
     this.testing = true;
-    this.clonedSaveButton.innerHTML = '<span>' + this.$t('Validating credentials') + '</span>';
+    this.clonedSaveButton.innerHTML = this.domPurifier.sanitize('<span>' + this.$t('Validating credentials') + '</span>');
     this.$.ajax({
       url: this.urlBuilder.build('/index.php/admin/twint/credentials/validation'),
       type: 'POST',
@@ -252,7 +253,7 @@ class TwintCertificateHandler extends TwintBase {
         this.clonedSaveButton.innerHTML = this.saveButton.innerHTML;
 
         if (data.success) {
-          this.clonedSaveButton.innerHTML = '<span>' + this.$t('Saving...') + '</span>';
+          this.clonedSaveButton.innerHTML = this.domPurifier.sanitize('<span>' + this.$t('Saving...') + '</span>');
           this.saveButton.click();
         } else {
           this.showValidationError(data.message);
@@ -366,9 +367,9 @@ class TwintCertificateHandler extends TwintBase {
   }
 }
 
-define(['jquery', 'mage/translate', 'mage/url'], function ($, $t, urlBuilder) {
+define(['jquery', 'mage/translate', 'mage/url', 'dompurify'], function ($, $t, urlBuilder, domPurifier) {
   'use strict';
 
-  const handler = new TwintCertificateHandler($, $t, urlBuilder);
+  const handler = new TwintCertificateHandler($, $t, urlBuilder, domPurifier);
   handler.init();
 });

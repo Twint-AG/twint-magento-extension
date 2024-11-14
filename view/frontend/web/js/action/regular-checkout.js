@@ -22,7 +22,7 @@ define(
         serviceUrl, JSON.stringify(payload), true, 'application/json', {}
       ).fail(
         function (response) {
-          console.log('error');
+          console.error('error');
         }
       ).done(
         function (response) {

@@ -64,7 +64,7 @@ define([
 
         error: function (res) {
           self.loader.stop();
-          console.log("Express checkout error: " + res.responseText);
+          console.error("Express checkout error: " + res.responseText);
 
           if (typeof onError == 'function') {
             onError(res);

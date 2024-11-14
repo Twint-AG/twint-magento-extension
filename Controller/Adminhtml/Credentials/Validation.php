@@ -14,26 +14,19 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Validator\CredentialValidator;
+use Twint\Magento\Validator\Input\CredentialsInputValidator;
 use Twint\Sdk\Value\Environment;
 
 class Validation extends Action implements ActionInterface, HttpPostActionInterface
 {
-    protected JsonFactory $jsonFactory;
-
-    protected Http $request;
-
-    protected CredentialValidator $validator;
-
     public function __construct(
-        Action\Context $context,
-        JsonFactory $jsonFactory,
-        Http $request,
-        CredentialValidator $validator,
+        private readonly JsonFactory $jsonFactory,
+        private readonly Http $request,
+        private readonly CredentialValidator $validator,
+        private readonly CredentialsInputValidator $inputValidator,
+        Action\Context $context
     ) {
         parent::__construct($context);
-        $this->jsonFactory = $jsonFactory;
-        $this->request = $request;
-        $this->validator = $validator;
     }
 
     public function _isAllowed(): bool
@@ -43,19 +36,28 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
 
     public function execute(): Json|ResultInterface|ResponseInterface
     {
-        $resultJson = $this->jsonFactory->create();
+        $json = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
         $environment = (string) $this->request->get('environment') ?? Environment::TESTING;
         $storeUuid = $this->request->get('storeUuid') ?? '';
 
+        $errors = $this->inputValidator->validate($cert, $environment, $storeUuid);
+        if ($errors !== []) {
+            return $json->setData([
+                'success' => false,
+                'message' => __('Invalid input'),
+                'errors' => $errors,
+            ]);
+        }
+
         try {
             $valid = $this->validator->validate($cert, $storeUuid, $environment);
-            return $resultJson->setData([
+            return $json->setData([
                 'success' => $valid,
                 'message' => $valid ? '' : __('Invalid credentials. Please check again: Store UUID, certificate and environment (mode)'),
             ]);
         } catch (Exception $e) {
-            return $resultJson->setData([
+            return $json->setData([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);

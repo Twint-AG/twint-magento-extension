@@ -14,7 +14,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Twint\Magento\Util\CertificateReader;
 use Twint\Magento\Util\CryptoHandler;
-use Twint\Magento\Validator\Certificate\CertificateFileValidator;
+use Twint\Magento\Validator\Input\CertificateFileValidator;
 use Twint\Sdk\Certificate\Pkcs12Certificate;
 
 class Upload extends Action implements ActionInterface, HttpPostActionInterface
@@ -23,7 +23,7 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface
 
     protected Http $request;
 
-    protected CertificateFileValidator $fileValidator;
+    protected CertificateFileValidator $inputValidator;
 
     protected CertificateReader $certificateReader;
 
@@ -40,7 +40,7 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface
         parent::__construct($context);
         $this->jsonFactory = $jsonFactory;
         $this->request = $request;
-        $this->fileValidator = $fileValidator;
+        $this->inputValidator = $fileValidator;
         $this->certificateReader = $certificateReader;
         $this->crypto = $crypto;
     }
@@ -59,14 +59,16 @@ class Upload extends Action implements ActionInterface, HttpPostActionInterface
     {
         $resultJson = $this->jsonFactory->create();
         try {
-            $file = $this->request->getFiles()['file'] ?? null;
-            $password = $this->request->get('password') ?? null;
+            $file = $this->request->getFiles()['file'] ?? [];
+            $password = $this->request->get('password') ?? '';
 
-            $validated = $this->fileValidator->validate($file);
-            if (is_string($validated)) {
+            $errors = $this->inputValidator->validate($file, $password);
+
+            if ($errors !== []) {
                 return $resultJson->setData([
                     'success' => false,
-                    'message' => __($validated),
+                    'message' => __('Invalid input'),
+                    'errors' => $errors,
                 ]);
             }
 
