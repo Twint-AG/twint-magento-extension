@@ -186,7 +186,7 @@ class TwintCertificateHandler extends TwintBase {
   }
 
   handleError(hrx, text, throwable) {
-    console.log("Upload Certificate error: " + text);
+    console.error("Upload Certificate error: " + text);
   }
 
   isValidUUIDv4(uuid) {

@@ -163,7 +163,7 @@ define([
       return this.storage.get(serviceUrl).done(
         function (response) {
           if (response.success !== true) {
-            console.log("cannot cancel payment");
+            console.error("cannot cancel payment");
           }
         }
       );
