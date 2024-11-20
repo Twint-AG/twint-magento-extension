@@ -4,7 +4,7 @@
     </head>
     <body>
         <referenceContainer name="main">
-            <block class="Twint\Magento\Block\Frontend\ScanQrModal" name="twint-qr-modal" template="qr.phtml" cacheable="false" />
+            <block class="Twint\Magento\Block\Frontend\Loading" name="twint-loading" template="loading.phtml"/>
         </referenceContainer>
     </body>
 </page>

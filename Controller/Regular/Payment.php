@@ -16,6 +16,7 @@ use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Twint\Magento\Api\PairingRepositoryInterface;
+use Twint\Magento\Block\Frontend\ScanQrModal;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 use Twint\Magento\Util\CryptoHandler;
 
@@ -52,12 +53,16 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         }
 
         $pairing = $this->getPairing($order);
+        /** @var ScanQrModal $block */
+        $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
+        $block->setTemplate('Twint_Magento::qr.phtml');
 
         $data = [
             'id' => $this->cryptoHandler->hash($pairing['pairing_id']),
             'token' => $pairing['token'],
             'orderNumber' => $order->getIncrementId(),
             'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false),
+            'modal' => $block->toHtml(),
         ];
 
         return $json->setData($data);

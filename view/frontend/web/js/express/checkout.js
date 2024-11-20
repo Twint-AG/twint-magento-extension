@@ -87,6 +87,7 @@ define([
           id: data.pairingId,
           token: data.token,
           amount: data.amount,
+          modal: data.modal,
           mode: 'express'
         }
       );
