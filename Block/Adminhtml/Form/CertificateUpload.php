@@ -4,17 +4,39 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Block\Adminhtml\Form;
 
+use Magento\Backend\Model\UrlInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Data\Form\Element\CollectionFactory;
+use Magento\Framework\Data\Form\Element\Factory;
+use Magento\Framework\Escaper;
+use Magento\Framework\Math\Random;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 class CertificateUpload extends AbstractElement
 {
-    public function getElementHtml()
+    public function __construct(
+        private readonly UrlInterface $backendUrl,
+        Factory $factoryElement,
+        CollectionFactory $factoryCollection,
+        Escaper $escaper,
+        $data = [],
+        ?SecureHtmlRenderer $secureRenderer = null,
+        ?Random $random = null
+    ) {
+        parent::__construct($factoryElement, $factoryCollection, $escaper, $data, $secureRenderer, $random);
+    }
+
+    public function getElementHtml(): string
     {
         $value = $this->getEscapedValue();
         $hiddenInput = '<input type="hidden" id="' . $this->getHtmlId() . '" name="' . $this->getName() . '" ' . $this->_getUiId()
             . ' value="' . $value . '" ' . $this->serialize($this->getHtmlAttributes()) . '/>';
 
-        return '<div id="twint-certificate-container"> 
+        return '<div id="twint-certificate-container" 
+                data-upload-url="' . $this->backendUrl->getRouteUrl('twint/certificate/upload') . '"
+                data-validation-url="' . $this->backendUrl->getRouteUrl('twint/credentials/validation') . '"
+                data-value-url="' . $this->backendUrl->getRouteUrl('twint/credentials/values') . '"
+            > 
             <script>
                 requirejs(["twintCertificateUpload"], function($){});
             </script>

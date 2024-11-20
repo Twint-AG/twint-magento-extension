@@ -23,6 +23,7 @@ use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
+use Twint\Magento\Block\Frontend\ScanQrModal;
 use Twint\Magento\Exception\CheckoutException;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Service\Express\CheckoutService;
@@ -96,12 +97,17 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             }
             $this->_checkoutSession->setQuoteId($pairing->getOriginalQuoteId());
 
+            /** @var ScanQrModal $block */
+            $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
+            $block->setTemplate('Twint_Magento::qr.phtml');
+
             return $json->setData([
                 'success' => true,
                 'id' => $pairing->getId(),
                 'pairingId' => $this->cryptoHandler->hash($pairing->getPairingId()),
                 'token' => $pairing->getToken(),
                 'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
+                'modal' => $block->toHtml(),
             ]);
         } catch (Throwable $e) {
             $this->logger->error('TWINT EC error: ' . $e->getMessage());

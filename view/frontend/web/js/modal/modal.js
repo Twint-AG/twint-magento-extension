@@ -8,10 +8,6 @@ define([
 ], function ($, TokenCopier, AndroidConnector, IosConnector, QrGenerator, StatusRefresher ) {
 
   return {
-    copier: new TokenCopier('qr-token', 'twint-copy'),
-    androidConnector: new AndroidConnector(),
-    iosConnector: new IosConnector(),
-    modal: new QrGenerator(),
     statusRefresher: new StatusRefresher(),
     setStatusRefresher: function (refresher){
       this.statusRefresher = refresher;
@@ -20,6 +16,15 @@ define([
       this.statusRefresher.setOnSuccess(onSuccess);
     },
     init: function (config) {
+      if (!document.getElementById('qr-modal-content')) {
+        document.body.insertAdjacentHTML('beforeend', config.modal);
+      }
+
+      this.copier = new TokenCopier('qr-token', 'twint-copy');
+      this.androidConnector = new AndroidConnector();
+      this.iosConnector = new IosConnector();
+      this.modal = new QrGenerator();
+
       this.modal.setValues(config);
       this.modal.init();
 

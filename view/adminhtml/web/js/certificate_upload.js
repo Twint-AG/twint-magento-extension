@@ -1,12 +1,8 @@
 class TwintBase {
-  constructor($, $t, urlBuilder, domPurifier) {
+  constructor($, $t, domPurifier) {
     this.$ = $;
     this.$t = $t;
-    this.urlBuilder = urlBuilder;
     this.domPurifier = domPurifier;
-
-    this.urlBuilder.setBaseUrl(this.baseUrl());
-
     this.getElements();
   }
 
@@ -14,13 +10,7 @@ class TwintBase {
   }
 
   baseUrl() {
-    let fullUrl = window.location.href;
-
-    // Create a new URL object
-    let url = new URL(fullUrl);
-
-    // Extract the protocol, hostname, and port (if any) to form the base URL
-    return url.protocol + "//" + url.hostname + (url.port ? ':' + url.port : '');
+    return document.getElementById('twint-certificate-container')?.getAttribute('data-admin-url');
   }
 }
 
@@ -74,8 +64,9 @@ class TwintConfigInherit extends TwintBase {
   }
 
   getInheritValues() {
+    const url = document.getElementById('twint-certificate-container')?.getAttribute('data-value-url');
     this.$.ajax({
-      url: this.urlBuilder.build('/index.php/admin/twint/credentials/values'),
+      url: url,
       type: 'POST',
       data: {
         scope: this.getScope(),
@@ -109,7 +100,7 @@ class TwintCertificateHandler extends TwintBase {
 
   init() {
     this.testing = false;
-    this.inherit = new TwintConfigInherit(this.$, this.$t, this.urlBuilder);
+    this.inherit = new TwintConfigInherit(this.$, this.$t);
     this.inherit.init();
 
     this.storeInput.setAttribute('placeholder', 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
@@ -162,8 +153,10 @@ class TwintCertificateHandler extends TwintBase {
     formData.append('password', password.trim());
     formData.append('form_key', formKey);
 
+    const url = document.getElementById('twint-certificate-container')?.getAttribute('data-upload-url');
+
     this.$.ajax({
-      url: this.urlBuilder.build('/index.php/admin/twint/certificate/upload'),
+      url: url,
       type: 'POST',
       data: formData,
       contentType: false,
@@ -243,8 +236,11 @@ class TwintCertificateHandler extends TwintBase {
 
     this.testing = true;
     this.clonedSaveButton.innerHTML = this.domPurifier.sanitize('<span>' + this.$t('Validating credentials') + '</span>');
+
+    const url = document.getElementById('twint-certificate-container')?.getAttribute('data-validation-url');
+
     this.$.ajax({
-      url: this.urlBuilder.build('/index.php/admin/twint/credentials/validation'),
+      url: url,
       type: 'POST',
       data: finalValues,
       showLoader: true,
@@ -367,9 +363,9 @@ class TwintCertificateHandler extends TwintBase {
   }
 }
 
-define(['jquery', 'mage/translate', 'mage/url', 'dompurify'], function ($, $t, urlBuilder, domPurifier) {
+define(['jquery', 'mage/translate', 'dompurify'], function ($, $t, domPurifier) {
   'use strict';
 
-  const handler = new TwintCertificateHandler($, $t, urlBuilder, domPurifier);
+  const handler = new TwintCertificateHandler($, $t, domPurifier);
   handler.init();
 });

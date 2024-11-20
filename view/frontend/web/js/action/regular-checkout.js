@@ -31,6 +31,7 @@ define(
               id: response.id,
               token: response.token,
               amount: response.amount,
+              modal: response.modal,
               mode: 'regular'
             }
           );
