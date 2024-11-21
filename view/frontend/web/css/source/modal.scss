@@ -1,11 +1,11 @@
 .twint {
   &.modal-inner-wrap {
-    background-color: rgb(243 244 246);
+    background-color: rgb(243 244 246) !important;
     padding: 0 !important;
 
     @media (min-width: 1024px) {
       & {
-        width: 800px;
+        width: 800px !important;
       }
     }
   }
@@ -13,36 +13,36 @@
   header {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    border-bottom: solid 1px rgba(0, 0, 0, 0.25);
-    padding-bottom: 1.2rem;
-    padding-top: 1.2rem;
+    border-bottom: solid 1px rgba(0, 0, 0, 0.25) !important;
+    padding-bottom: 1.2rem !important;
+    padding-top: 1.2rem !important;
   }
 
   &-logo {
-    width: 139px;
-    height: 53px;
+    width: 139px !important;
+    height: 53px !important;
   }
 
-  #twint-close {
-    border: none;
-    background-color: inherit;
-    color: #262626;
-    display: flex;
-    align-items: center;
-    vertical-align: middle;
-    font-weight: 400;
+  #tw-close {
+    border: none !important;
+    background-color: inherit !important;
+    color: #262626 !important;
+    display: flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+    font-weight: 400 !important;
     box-shadow: none !important;
 
     span {
-      display: inline-block;
+      display: inline-block !important;
       box-shadow: none !important;
     }
 
     &:hover, &:focus {
-      background-color: inherit;
-      border: none;
-      color: #262626;
-      font-weight: 400;
+      background-color: inherit !important;
+      border: none !important;
+      color: #262626 !important;
+      font-weight: 400 !important;
     }
   }
 
@@ -51,68 +51,68 @@
   }
 
   #qr-token {
-    text-align: center;
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 41px;
-    letter-spacing: 4px;
-    color: black;
-    border: none;
-    opacity: 1;
-    text-transform: uppercase;
+    text-align: center !important;
+    font-weight: 600 !important;
+    font-size: 30px !important;
+    line-height: 41px !important;
+    letter-spacing: 4px !important;
+    color: black !important;
+    border: none !important;
+    opacity: 1 !important;
+    text-transform: uppercase !important;
   }
 
-  #twint-copy {
-    color: #262626;
+  #tw-copy {
+    color: #262626 !important;
 
     &.copied {
-      color: rgb(34 197 94 / var(--tw-text-opacity));
+      color: rgb(34 197 94 / var(--tw-text-opacity)) !important;
     }
   }
 
   &-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE0Ljg3NSAxLjU2MjVMOCA4LjQzNzVMMS4xMjUgMS41NjI1IiBzdHJva2U9IiMyNjI2MjYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==');
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
-    text-align-last: center;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE0Ljg3NSAxLjU2MjVMOCA4LjQzNzVMMS4xMjUgMS41NjI1IiBzdHJva2U9IiMyNjI2MjYiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==') !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 1em !important;
+    text-align-last: center !important;
   }
 }
 
-.twint-mobile{
+.tw-mobile{
   #qrcode{
-    display: none;
+    display: none !important;
   }
 }
 
-.twint-modal:has(.twint-mobile){
-  width: 100%;
-  height: 100%;
+.tw-modal:has(.tw-mobile){
+  width: 100% !important;
+  height: 100% !important;
   margin: 0 !important;
   max-height: 100% !important;
   overflow-y: scroll !important;
 
-  .twint-logo{
-    display: none;
+  .tw-logo{
+    display: none !important;
   }
 
-  #twint-close > span{
-    order: 9999;
-    margin-left: 1em;
+  #tw-close > span{
+    order: 9999 !important;
+    margin-left: 1em !important;
   }
 }
 
-.twint-mobile{
+.tw-mobile{
   @media (orientation: landscape) {
-    display: flex;
-    justify-content: center;
+    display: flex !important;
+    justify-content: center !important;
 
     & > * {
-      width: 50%;
-      max-width: 100vh;
+      width: 50% !important;
+      max-width: 100vh !important;
     }
   }
 

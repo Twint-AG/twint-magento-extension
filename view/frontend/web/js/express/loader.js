@@ -7,7 +7,7 @@ define([
     static container = document.getElementById('twintAnimation');
 
     constructor() {
-      this.element = document.getElementById('twint-loading')
+      this.element = document.getElementById('tw-loading')
     }
 
     start(){

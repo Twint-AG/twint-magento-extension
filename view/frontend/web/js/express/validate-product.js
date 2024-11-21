@@ -8,7 +8,7 @@ define([
   $.widget('mage.twintProductValidate', $.mage.productValidate, {
     options: {
       ...$.mage.productValidate.prototype.options,
-      expressButtonSelector: 'button.twint-button.express'
+      expressButtonSelector: 'button.tw-button.express'
     },
 
     _create: function (event) {

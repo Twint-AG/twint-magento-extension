@@ -32,7 +32,7 @@ class ScanQrModal extends Template
 
     public function getMobileClass(): string
     {
-        return $this->getIsMobile() ? 'twint-mobile' : '';
+        return $this->getIsMobile() ? 'tw-mobile' : '';
     }
 
     public function getDisplayClass(): string

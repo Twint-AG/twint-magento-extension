@@ -9,7 +9,7 @@ define([
   $.widget('mage.twintExpress', $.mage.catalogAddToCart, {
     options: {
       ...$.mage.catalogAddToCart.prototype.options,
-      expressButtonSelector: 'button.twint-button.express'
+      expressButtonSelector: 'button.tw-button.express'
     },
     _create: function () {
       this._super();
@@ -74,7 +74,7 @@ define([
     _getExpressButton: function (){
         let container = this.element.closest('.product-item-actions').get(0);
         if(container){
-          return container.querySelector('.twint-button.express');
+          return container.querySelector('.tw-button.express');
         }
 
         return null;

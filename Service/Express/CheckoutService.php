@@ -13,6 +13,7 @@ use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Quote\Model\ResourceModel\Quote\Address as AddressModel;
 use Magento\Quote\Model\ResourceModel\Quote as ResourceModel;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Throwable;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
@@ -119,7 +120,7 @@ class CheckoutService
 
             $options[] = new ShippingMethod(
                 new ShippingMethodId("{$method->getCarrierCode()}{$separator}{$method->getMethodCode()}"),
-                "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
+                $this->sanitizeString("{$method->getMethodTitle()}-{$method->getCarrierTitle()}"),
                 Money::CHF(max($amount - $baseAmount, 0))
             );
         }
@@ -130,5 +131,14 @@ class CheckoutService
         }
 
         return [new ShippingMethods(...$options), $baseAmount];
+    }
+
+    private function sanitizeString(string $string): string
+    {
+        $slugger = new AsciiSlugger();
+        // Transliterate non-Latin characters to ASCII
+        $sanitized = $slugger->slug($string, ' '); // Use space as separator
+
+        return $sanitized->toString();
     }
 }

@@ -4,7 +4,7 @@
     </head>
     <body>
         <referenceContainer name="main">
-            <block class="Twint\Magento\Block\Frontend\Loading" name="twint-loading" template="loading.phtml"/>
+            <block class="Twint\Magento\Block\Frontend\Loading" name="tw-loading" template="loading.phtml"/>
         </referenceContainer>
     </body>
 </page>

@@ -80,7 +80,7 @@ define([
       success.css('display', 'none');
       failedDiv.css('display', 'none');
 
-      let label = $('#twint-close span');
+      let label = $('#tw-close span');
       label.html($.mage.__('Cancel checkout'));
     }
 

@@ -1,14 +1,14 @@
-.twint-button {
-  min-width: 100%;
+.tw-button {
+  min-width: 100% !important;
   display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
   border: none !important;
-  border-radius: 6px;
-  height: 52px;
+  border-radius: 6px !important;
+  height: 52px !important;
   background-color: #262626 !important;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease !important;
   color: white !important;
 
   &:disabled {
@@ -19,35 +19,35 @@
     background-color: #3d3d3d !important;
   }
 
-  .icon-block {
-    border-radius: 4px;
-    margin-right: 6px;
-    padding: 4px;
+  .tw-icon-block {
+    border-radius: 4px !important;
+    margin-right: 6px !important;
+    padding: 4px !important;
   }
 
-  &:disabled .icon-block {
-    background-color: #9E9E9E;
+  &:disabled .tw-icon-block {
+    background-color: #9E9E9E !important;
   }
 
-  .twint-icon {
-    width: 35px;
-    height: 35px;
+  .tw-icon {
+    width: 35px !important;
+    height: 35px !important;
   }
 
   &.pdp{
     @apply my-2;
     @media (min-width: 1024px) {
       & {
-        width: 49%;
-        min-width: auto;
+        width: 49% !important;
+        min-width: auto !important;
         @apply my-0;
       }
 
-      .twint-label {
+      .tw-label {
         &:before {
           @container (width < 526px) {
             & {
-              content: none;
+              content: none !important;
             }
           }
         }
@@ -56,50 +56,50 @@
   }
 
   &.box {
-    height: auto;
-    padding: 3px 10px;
-    font-size: inherit;
+    height: auto !important;
+    padding: 3px 10px !important;
+    font-size: inherit !important;
 
-    position: absolute;
-    left: 0;
-    bottom: 0;
+    position: absolute !important;
+    left: 0 !important;
+    bottom: 0 !important;
 
     .products-list & {
       width: auto;
     }
 
-    .icon-block {
-      height: 30px;
-      padding: 1px;
+    .tw-icon-block {
+      height: 30px !important;
+      padding: 1px !important;
     }
 
-    .twint-icon {
-      width: 30px;
-      height: 30px;
+    .tw-icon {
+      width: 30px !important;
+      height: 30px !important;
     }
 
-    .twint-label {
-      font-size: inherit;
+    .tw-label {
+      font-size: inherit !important;
     }
   }
 
-  .twint-label {
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 19px;
-    letter-spacing: 0.43px;
-    text-align: center;
+  .tw-label {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 19px !important;
+    letter-spacing: 0.43px !important;
+    text-align: center !important;
     color: #ffffff !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 
     &:before {
       content: "TWINT ";
 
       @container (width < 258px) {
         & {
-          content: none;
+          content: none !important;
         }
       }
     }
@@ -114,8 +114,8 @@
   }
 
   .product-item-actions:has(&.express.box) {
-    position: relative;
-    padding-bottom: 45px;
+    position: relative !important;
+    padding-bottom: 45px !important;
     container-type: inline-size;
   }
 }

@@ -81,7 +81,7 @@ define([
       success.css('display', 'none');
       failedDiv.css('display', 'block');
 
-      let label = $('#twint-close span');
+      let label = $('#tw-close span');
       label.html($.mage.__('Continue shopping'));
     }
 
@@ -141,7 +141,7 @@ define([
       let span = success.find('span');
       span.html(order);
 
-      let label = $('#twint-close span');
+      let label = $('#tw-close span');
       label.html($.mage.__('Continue shopping'));
     }
 

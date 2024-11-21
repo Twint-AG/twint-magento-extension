@@ -20,7 +20,7 @@ define([
         document.body.insertAdjacentHTML('beforeend', config.modal);
       }
 
-      this.copier = new TokenCopier('qr-token', 'twint-copy');
+      this.copier = new TokenCopier('qr-token', 'tw-copy');
       this.androidConnector = new AndroidConnector();
       this.iosConnector = new IosConnector();
       this.modal = new QrGenerator();
