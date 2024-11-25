@@ -17,7 +17,7 @@
         <column xsi:type="int" name="quote_id" unsigned="true" nullable="true" comment="Quote ID"/>
         <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID"/>
         <column xsi:type="varchar" name="shipping_id" length="255" nullable="true" comment="Shipping ID"/>
-        <column xsi:type="json" name="customer" nullable="true" comment="Customer Data"/>
+        <column xsi:type="longtext" name="customer" nullable="true" comment="Customer Data"/>
         <column xsi:type="smallint" name="captured" unsigned="true" nullable="false" identity="false" default="0" comment="Captured"/>
         <column xsi:type="smallint" name="is_express" unsigned="true" nullable="false" identity="false" default="0" comment="Is Express Pairing"/>
 
@@ -67,9 +67,9 @@
         <column xsi:type="varchar" length="138" name="method" nullable="false" comment="API method"/>
         <column xsi:type="text" name="request" nullable="false" comment="Request"/>
         <column xsi:type="text" name="response" nullable="true" comment="Response"/>
-        <column xsi:type="json" name="soap_request" nullable="true" comment="SOAP Request"/>
-        <column xsi:type="json" name="soap_action" nullable="true" comment="SOAP Action"/>
-        <column xsi:type="json" name="soap_response" nullable="true" comment="SOAP Response"/>
+        <column xsi:type="longtext" name="soap_request" nullable="true" comment="SOAP Request"/>
+        <column xsi:type="longtext" name="soap_action" nullable="true" comment="SOAP Action"/>
+        <column xsi:type="longtext" name="soap_response" nullable="true" comment="SOAP Response"/>
         <column xsi:type="text" name="exception" nullable="true" comment="Exception"/>
 
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
@@ -95,7 +95,7 @@
         <column xsi:type="int" name="quote_id" unsigned="true" nullable="true" comment="Quote ID"/>
         <column xsi:type="int" name="org_quote_id" unsigned="true" nullable="true" comment="Original Quote ID"/>
         <column xsi:type="varchar" name="shipping_id" length="255" nullable="true" comment="Shipping ID"/>
-        <column xsi:type="json" name="customer" nullable="true" comment="Customer Data"/>
+        <column xsi:type="longtext" name="customer" nullable="true" comment="Customer Data"/>
         <column xsi:type="smallint" name="captured" unsigned="true" nullable="false" identity="false" default="0" comment="Captured"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
