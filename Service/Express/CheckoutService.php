@@ -120,7 +120,7 @@ class CheckoutService
 
             $options[] = new ShippingMethod(
                 new ShippingMethodId("{$method->getCarrierCode()}{$separator}{$method->getMethodCode()}"),
-                $this->sanitizeString("{$method->getMethodTitle()}-{$method->getCarrierTitle()}"),
+                "{$method->getMethodTitle()}-{$method->getCarrierTitle()}",
                 Money::CHF(max($amount - $baseAmount, 0))
             );
         }

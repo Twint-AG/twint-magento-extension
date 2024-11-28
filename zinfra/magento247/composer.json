@@ -41,6 +41,7 @@
         "magento/module-wishlist-sample-data": "100.4.*",
         "magento/product-community-edition": "2.4.7",
         "magento/sample-data-media": "100.4.*",
+        "mageplaza/module-smtp": "^4.7",
         "symfony/process": "^6.4",
         "twint-ag/twint-magento-extension": "^1.0"
     },
