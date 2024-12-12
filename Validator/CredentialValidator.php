@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Validator;
 
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Logger\Monolog;
 use Throwable;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Util\CryptoHandler;
@@ -24,7 +25,8 @@ class CredentialValidator
 {
     public function __construct(
         readonly CryptoHandler $crypto,
-        private readonly ProductMetadataInterface $system
+        private readonly ProductMetadataInterface $system,
+        private readonly Monolog $logger,
     ) {
     }
 
@@ -52,9 +54,32 @@ class CredentialValidator
             );
             $status = $client->checkSystemStatus();
         } catch (Throwable $e) {
+            $this->logger->error($this->buildLogMessage($e));
             return false;
         }
 
         return $status->isOk();
+    }
+
+    private function buildLogMessage(Throwable $e, string $message = ''): string
+    {
+        // Set a default message if none is provided
+        if ($message === '' || $message === '0') {
+            $message = 'TWINT verify certificate error: ' . $e->getMessage();
+        }
+
+        // Append details about previous exceptions recursively
+        $previous = $e->getPrevious();
+        if ($previous instanceof Throwable) {
+            $message .= sprintf(
+                "\n %s:%d %s -> %s",
+                $previous->getFile(),
+                $previous->getLine(),
+                get_class($previous),
+                $this->buildLogMessage($previous)
+            );
+        }
+
+        return $message;
     }
 }
