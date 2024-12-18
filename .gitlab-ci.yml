@@ -60,6 +60,7 @@ test:
       composer config prefer-stable true
       composer config minimum-stability dev
       composer install --prefer-dist --no-progress --no-interaction
+    - composer outdated --no-dev || true
     
     # Run coding standard
     - ./vendor/bin/ecs --no-progress-bar
