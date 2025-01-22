@@ -8,7 +8,7 @@ use Twint\Sdk\Value\InstallSource;
 
 class TwintConstant
 {
-    public const MODULE_VERSION = '9.9.9-dev';
+    public const MODULE_VERSION = '1.0.0';
 
     public const INSTALL_SOURCE = InstallSource::DIRECT;
 
