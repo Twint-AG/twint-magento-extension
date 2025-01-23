@@ -15,6 +15,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Store\Model\App\Emulation;
 use Throwable;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
@@ -29,7 +30,8 @@ class OrderConvertService
         private QuoteService $quoteService,
         private OrderRepository $orderRepository,
         private QuoteRepository $quoteRepository,
-        private OrderSender $orderSender
+        private OrderSender $orderSender,
+        private Emulation $emulate
     ) {
     }
 
@@ -53,7 +55,12 @@ class OrderConvertService
 
         try {
             if (!$order->getEmailSent()) {
+                $storeId = $order->getStoreId();
+                // Emulate the store's environment to ensure the correct language is applied
+                $this->emulate->startEnvironmentEmulation($storeId);
                 $this->orderSender->send($order);
+                // Stop the emulation after sending the email
+                $this->emulate->stopEnvironmentEmulation();
             }
         } catch (Throwable $e) {
             //silence when error sending email
