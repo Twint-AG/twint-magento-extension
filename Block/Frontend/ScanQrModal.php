@@ -80,20 +80,22 @@ class ScanQrModal extends Template
         if ($isIos) {
             $refinedApps = [
                 'UBS TWINT' => 'bank-ubs',
-                'Raiffeisen TWINT' => 'bank-raiffeisen',
                 'PostFinance TWINT' => 'bank-pf',
-                'ZKB TWINT' => 'bank-zkb',
+                'Raiffeisen TWINT' => 'bank-raiffeisen',
                 'Credit Suisse TWINT' => 'bank-cs',
+                'ZKB TWINT' => 'bank-zkb',
                 'BCV TWINT' => 'bank-bcv',
             ];
 
-            $app = '';
+            $apps = [];
             $else = '';
 
             foreach ($links['ios'] as $link) {
                 $icon = $refinedApps[$link['name']] ?? null;
                 if ($icon) {
-                    $app .= '<img src="' . $this->getViewFileUrl("Twint_Magento/images/apps/{$icon}.png") . '" 
+                    $apps[$link['name']] = '<img src="' . $this->getViewFileUrl(
+                        "Twint_Magento/images/apps/{$icon}.png"
+                    ) . '" 
                     class="shadow-2xl w-64 h-64 rounded-3xl mx-auto"
                     data-link="' . htmlentities($link['link']) . '"
                     alt="' . htmlentities($link['name']) . '">';
@@ -104,6 +106,8 @@ class ScanQrModal extends Template
                 }
             }
 
+            $sortedApps = array_merge(array_intersect_key($refinedApps, $apps), $apps);
+
             $html .= '
                 <div id="twint-ios-container">
                     <div class="my-6 text-center">
@@ -111,7 +115,7 @@ class ScanQrModal extends Template
                     </div>
         
                     <div class="twint-app-container w-3/4 mx-auto justify-center max-w-screen-md mx-auto grid grid-cols-3 gap-4">
-                        ' . $app . '
+                        ' . implode('', $sortedApps) . '
                     </div>
                     
                     <select class="twint-select h-55 block my-4 w-full p-4 bg-white text-center appearance-none border-none focus:outline-none focus:ring-0">
