@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Plugin;
 
 use Closure;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
 use Twint\Magento\Model\Method\TwintRegularMethod;
@@ -15,7 +16,8 @@ class SubmitClonedQuotePlugin
     public static array $pair = [];
 
     public function __construct(
-        private readonly CartService $cartService
+        private readonly CartService $cartService,
+        private readonly CheckoutSession $checkoutSession
     ) {
     }
 
@@ -26,15 +28,13 @@ class SubmitClonedQuotePlugin
         array $orderData = [],
     ) {
         $payment = $quote->getPayment();
-        if ($payment->getMethod() !== TwintRegularMethod::CODE) {
-            return $proceed($quote, $orderData);
+        if ($payment->getMethod() === TwintRegularMethod::CODE) {
+            $cloned = $this->cartService->clone($quote);
+
+            self::$pair = [$quote, $cloned];
+            $this->checkoutSession->replaceQuote($cloned);
         }
 
-        $cloned = $this->cartService->clone($quote);
-
-        self::$pair = [$quote, $cloned];
-
-        // Call the original method
-        return $proceed($cloned, $orderData);
+        return $proceed($quote, $orderData);
     }
 }
