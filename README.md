@@ -56,7 +56,7 @@ bin/magento cache:clean && bin/magento cache:flush
 1. **Navigate to TWINT settings**:  
 In your Magento admin panel, select **TWINT** from the main left sidebar.
 2. **Set Up TWINT Credentials**:  
-Under the **TWINT Credentials** section, upload your TWINT certificate file and provide the necessary account details, including API credentials, to complete the integration setup.
+Under the **TWINT Credentials** section, upload your TWINT certificate file and provide the necessary account details, including API credentials, to complete the integration setup. To see the **TESTING option** in Environment config, you need to add `showTwintEnvOptions=1` in the URL of the Magento admin panel.
 3. **Configure Payment Methods**:  
 Navigate to **TWINT Checkout** and **TWINT Express Checkout** sections to configure the available payment options. Customize settings such as payment flow, button placement for Express Checkout, and other relevant details according to your store’s needs.
 4. **Save Configuration**:  
