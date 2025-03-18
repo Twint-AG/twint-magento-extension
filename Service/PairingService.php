@@ -140,7 +140,7 @@ class PairingService
             $this->orderService->pay($pairing, $transaction);
             $this->invoiceService->create($order, $transaction);
             $pairing = $this->markAsCaptured($pairing);
-            $this->cartService->removeAllItems($pairing->getOriginalQuoteId());
+            $this->cartService->removeAllItems($pairing->getQuoteId());
 
             return MonitorStatus::fromValues(true, MonitorStatus::STATUS_PAID);
         }

@@ -63,10 +63,11 @@ define([
       let serviceUrl = window.checkoutConfig.payment.twint.getCancelPaymentUrl + '?id=' + this.id;
 
       return this.storage.get(serviceUrl).done(
-        function (response) {
+        function (response) {          
           if (response.success !== true) {
             self.check(true);
           }
+          location.reload();
         }
       );
     }
