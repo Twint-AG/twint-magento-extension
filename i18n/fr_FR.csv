@@ -16,7 +16,7 @@
 "Enter this code in your TWINT app:","Inserisci questo codice nella tua app TWINT:"
 "Certificate validation successful","Convalida certificato andata a buon fine"
 "Something went wrong while processing the data.","Une erreur est survenue lors du traitement des données."
-"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Invalid credentials. Please check again: Store UUID, certificate and environment (mode)"
+"Invalid credentials. Please check again: Store UUID and certificate.","Identifiants invalides. Veuillez vérifier à nouveau : UUID du magasin et certificat."
 "Request Log","Journal des demandes"
 "Choose file","Choisir un fichier"
 "Only .p12 files are allowed","Seuls les fichiers .p12 sont autorisés"

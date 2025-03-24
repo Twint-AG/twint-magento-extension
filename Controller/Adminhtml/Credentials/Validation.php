@@ -54,7 +54,7 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
             $valid = $this->validator->validate($cert, $storeUuid, $environment);
             return $json->setData([
                 'success' => $valid,
-                'message' => $valid ? '' : __('Invalid credentials. Please check again: Store UUID, certificate and environment (mode)'),
+                'message' => $valid ? '' : __('Invalid credentials. Please check again: Store UUID and certificate.'),
             ]);
         } catch (Exception $e) {
             return $json->setData([

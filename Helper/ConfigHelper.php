@@ -37,6 +37,11 @@ class ConfigHelper extends AbstractHelper
         };
     }
 
+    public function getEnvironment()
+    {
+        return $this->scopeConfig->getValue(TwintConstant::CONFIG_TEST_MODE);
+    }
+
     public function getConfigs($sStoreCode = null)
     {
         $sScopeCode = ScopeInterface::SCOPE_STORES;

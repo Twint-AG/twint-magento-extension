@@ -16,7 +16,7 @@
 "Enter this code in your TWINT app:","Enter this code in your TWINT app:"
 "Certificate validation successful","Certificate validation successful"
 "Something went wrong while processing the data.","Something went wrong while processing the data."
-"Invalid credentials. Please check again: Store UUID, certificate and environment (mode)","Invalid credentials. Please check again: Store UUID, certificate and environment (mode)"
+"Invalid credentials. Please check again: Store UUID and certificate.","Invalid credentials. Please check again: Store UUID and certificate."
 "Request Log","Request Log"
 "Choose file","Choose file"
 "Only .p12 files are allowed","Only .p12 files are allowed"
