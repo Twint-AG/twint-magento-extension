@@ -15,7 +15,14 @@ bin/magento setup:upgrade
 bin/magento setup:di:compile
 
 # Build client resources (JS, CSS ...)
-bin/magento setup:static-content:deploy -f
+bin/magento setup:static-content:deploy -f de_CH
+bin/magento setup:static-content:deploy -f de_DE
+bin/magento setup:static-content:deploy -f en_GB
+bin/magento setup:static-content:deploy -f en_US
+bin/magento setup:static-content:deploy -f fr_CH
+bin/magento setup:static-content:deploy -f fr_FR
+bin/magento setup:static-content:deploy -f it_CH
+bin/magento setup:static-content:deploy -f it_IT
 
 bin/magento maintenance:disable
 
