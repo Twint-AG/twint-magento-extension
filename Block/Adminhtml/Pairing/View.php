@@ -14,10 +14,8 @@ class View extends Template
 
     private Pairing $entity;
 
-    public function __construct(
-        Context $context,
-        array $data = []
-    ) {
+    public function __construct(Context $context, array $data = [])
+    {
         parent::__construct($context, $data);
     }
 

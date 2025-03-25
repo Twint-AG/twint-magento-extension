@@ -11,10 +11,8 @@ class View extends Template
 {
     protected $_template = 'Twint_Magento::refund_history/view.phtml';
 
-    public function __construct(
-        Context $context,
-        array $data = []
-    ) {
+    public function __construct(Context $context, array $data = [])
+    {
         parent::__construct($context, $data);
     }
 }
