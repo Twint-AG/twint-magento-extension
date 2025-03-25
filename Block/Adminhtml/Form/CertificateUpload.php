@@ -71,7 +71,7 @@ class CertificateUpload extends AbstractElement
                 </div>
             </div>
             <div id="twint-certificate-loaded-container" class="d-none">
-                ' . __('Certificate encrypted and stored,') . '
+                ' . __('Certificate encrypted and stored') . ',
                 <span id="twint-upload-new">' . __('Upload new certificate') . '</span>
             </div>
         </div>';
