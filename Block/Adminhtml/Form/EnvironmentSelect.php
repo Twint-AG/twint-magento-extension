@@ -42,6 +42,10 @@ class EnvironmentSelect extends Select
 
     public function shouldDisplayTestingMode(): bool
     {
+        if ($this->request->getParam(self::TWINT_TEST_MODE) === '0') {
+            return false;
+        }
+
         return $this->request->getParam(
             self::TWINT_TEST_MODE
         ) === '1' || $this->configHelper->getEnvironment() === Option::TESTING;

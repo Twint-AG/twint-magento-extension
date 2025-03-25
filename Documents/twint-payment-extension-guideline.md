@@ -40,7 +40,6 @@ bin/magento cache:clean && bin/magento cache:flush
 - Enter the `Store UUID`.
 - Under the `Certificate file` click `Choose file` and browse to the `*.p12` certificate file.
 - Enter the `Certificate password`.
-- **For test environment:** please select the `Test` option under the `Environment` dropdown.
 
 <img src="./Screenshots/twint-credentials.png" alt="TWINT Credentials" width="900" height="auto">
 
