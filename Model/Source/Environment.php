@@ -29,7 +29,7 @@ class Environment extends Base
         if ($this->environmentSelect->shouldDisplayTestingMode()) {
             $options[] = [
                 'value' => Option::TESTING,
-                'label' => __('Test'),
+                'label' => __('Testing'),
             ];
         }
 
@@ -40,7 +40,7 @@ class Environment extends Base
     {
         return [
             Option::PRODUCTION => __('Production'),
-            Option::TESTING => __('Test'),
+            Option::TESTING => __('Testing'),
         ];
     }
 }
