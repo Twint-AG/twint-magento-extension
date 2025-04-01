@@ -19,7 +19,6 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
-use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
@@ -70,20 +69,19 @@ abstract class TwintMethod extends AbstractMethod
 
     public function isAvailable(CartInterface $quote = null): bool
     {
-        return $quote->getCurrency()
-            ->getQuoteCurrencyCode() === TwintConstant::CURRENCY
-            && $this->_scopeConfig->getValue(
-                TwintConstant::CONFIG_VALIDATED,
-                ScopeInterface::SCOPE_STORE,
-                $quote->getStoreId()
-            ) === '1'
-            && $this->isEnabled($quote->getStoreId());
+        return $quote->getCurrency()->getQuoteCurrencyCode() === TwintConstant::CURRENCY
+               && $this->_scopeConfig->getValue(
+                   TwintConstant::CONFIG_VALIDATED,
+                   ScopeInterface::SCOPE_STORE,
+                   $quote->getStoreId()
+               ) === '1'
+               && $this->isEnabled($quote->getStoreId());
     }
 
     public function isActive($storeId = null): bool
     {
         return $this->_scopeConfig->getValue(TwintConstant::CONFIG_VALIDATED, ScopeInterface::SCOPE_STORE, $storeId)
-            && $this->isEnabled($storeId);
+               && $this->isEnabled($storeId);
     }
 
     abstract public function isEnabled(string|int $storeId);
@@ -111,35 +109,6 @@ abstract class TwintMethod extends AbstractMethod
     public function canVoid(): bool
     {
         return true;
-    }
-
-    public function getConfigPaymentAction(): string
-    {
-        return MethodInterface::ACTION_AUTHORIZE;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function authorize(InfoInterface $payment, $amount): self
-    {
-        $amount = $this->priceCurrency->convertAndRound($amount);
-
-        /** @var Pairing $pairing */
-        list($order, $pairing, $history) = $this->clientService->createOrder($payment, $amount);
-        if (!$order) {
-            throw new Exception('Unable to handle payment');
-        }
-
-        $transactionId = $pairing->getPairingId() . '-' . $history->getId();
-
-        if ($payment instanceof Order\Payment) {
-            $payment->setTransactionId($transactionId);
-            $payment->setIsTransactionClosed(true);
-        }
-        $payment->setAdditionalInformation('pairing', $pairing->getPairingId());
-
-        return $this;
     }
 
     /**

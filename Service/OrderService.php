@@ -34,6 +34,8 @@ class OrderService
         $order->setBaseTotalPaid($this->getBaseAmount($order, $pairing->getAmount()));
         $order->setTotalDue(0);
         $order->setBaseTotalDue(0);
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus(Order::STATE_PROCESSING);
 
         $order->addCommentToStatusHistory(
             __('Captured amount of CHF %1, Transaction ID %2', $pairing->getAmount(), $transaction->getTxnId()),
