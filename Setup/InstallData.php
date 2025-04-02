@@ -26,6 +26,12 @@ class InstallData implements InstallDataInterface
             // express
             'payment/twint_express/sort_order' => 2,
             TwintConstant::EXPRESS_ENABLED => 0,
+            TwintConstant::EXPRESS_SCREENS => implode(',', [
+                TwintConstant::SCREEN_PDP,
+                TwintConstant::SCREEN_PLP,
+                TwintConstant::SCREEN_CART,
+                TwintConstant::SCREEN_CART_FLYOUT,
+            ]),
         ];
 
         $records = [];
