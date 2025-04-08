@@ -33,6 +33,30 @@ class TwintExpressMethod extends TwintMethod
         return MethodInterface::ACTION_AUTHORIZE_CAPTURE;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function authorize(InfoInterface $payment, $amount): self
+    {
+        $amount = $this->priceCurrency->convertAndRound($amount);
+
+        /** @var Pairing $pairing */
+        list($order, $pairing, $history) = $this->clientService->createOrder($payment, $amount);
+        if (!$order) {
+            throw new Exception('Unable to handle payment');
+        }
+
+        $transactionId = $pairing->getPairingId() . '-' . $history->getId();
+
+        if ($payment instanceof Order\Payment) {
+            $payment->setTransactionId($transactionId);
+            $payment->setIsTransactionClosed(true);
+        }
+        $payment->setAdditionalInformation('pairing', $pairing->getPairingId());
+
+        return $this;
+    }
+
     public function capture(InfoInterface $payment, $amount): self|static
     {
         $amount = $this->priceCurrency->convertAndRound($amount);

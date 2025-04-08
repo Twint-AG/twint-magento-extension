@@ -32,7 +32,6 @@ class ClientService
         private readonly ClientBuilder $connector,
         private readonly PairingService $pairingService,
         private readonly ApiService $api,
-        private readonly OrderService $orderService,
         private readonly MonitorService $monitor,
         private readonly Monolog $logger
     ) {
@@ -109,8 +108,6 @@ class ClientService
         $twintOrder = $res->getReturn();
 
         list($pairing, $history) = $this->pairingService->create($amount, $res, $payment);
-
-        $this->orderService->markAsPendingPayment($order);
 
         $this->monitor->status($pairing);
 
