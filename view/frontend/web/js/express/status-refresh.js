@@ -10,8 +10,8 @@ define([
       this.storage = storage;
       this.customerData = customerData;
 
-      this.url = window.checkout.expressStatusUrl;
-      this.cancelUrl = window.checkout.cancelCheckoutUrl;
+      this.url = window.twintConfig.expressStatusUrl;
+      this.cancelUrl = window.twintConfig.cancelCheckoutUrl;
       this.processing = false;
       this.stopped = false;
 

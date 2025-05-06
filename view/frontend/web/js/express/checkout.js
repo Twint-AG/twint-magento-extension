@@ -9,7 +9,7 @@ define([
   class TwintExpressCheckoutClass {
     constructor($, modal, refresher) {
       this.$ = $;
-      this.url = window.checkout.expressCheckoutUrl;
+      this.url = window.twintConfig.expressCheckoutUrl;
       this.modal = modal;
       this.loader = loader;
       this.refresher = refresher;
@@ -19,7 +19,7 @@ define([
       try {
         this.$('[data-block="minicart"]').find('[data-role="dropdownDialog"]').dropdownDialog("open");
       }catch (e) {
-        window.location.href = window.checkout.shoppingCartUrl;
+        window.location.href = window.twintConfig.shoppingCartUrl;
       }
     }
 
