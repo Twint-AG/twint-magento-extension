@@ -4,19 +4,27 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Plugin;
 
-use Magento\Config\Controller\Adminhtml\System\Config\Save;
+use Magento\Config\Model\Config;
 use Twint\Magento\Constant\TwintConstant;
 
 class ExpressUnselectOptionsPlugin
 {
-    public function afterGetConfigData(Save $subject, array $result): array
+    public function beforeSave(Config $subject): array
     {
-        if ($result['section'] === TwintConstant::SECTION_EXPRESS && !isset($result['groups']['express']['fields']['screens'])) {
-            $result['groups']['express']['fields']['screens'] = [
+        if ($subject->getData('section') !== TwintConstant::SECTION_EXPRESS) {
+            return [$subject];
+        }
+
+        $groupData = $subject->getData('groups');
+
+        if (!isset($groupData['express']['fields']['screens'])) {
+            $groupData['express']['fields']['screens'] = [
                 'value' => '',
             ];
         }
 
-        return $result;
+        $subject->setData('groups', $groupData);
+
+        return [$subject];
     }
 }

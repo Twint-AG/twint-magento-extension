@@ -1,9 +1,11 @@
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd">
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Twint_Magento::css/twint.css"/>
     </head>
     <body>
         <referenceContainer name="main">
+            <block class="Twint\Magento\Block\Frontend\TwintConfig" name="twint.config" template="Twint_Magento::twint-config.phtml"/>
             <block class="Twint\Magento\Block\Frontend\Loading" name="tw-loading" template="loading.phtml"/>
         </referenceContainer>
     </body>

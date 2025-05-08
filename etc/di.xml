@@ -12,11 +12,7 @@
         <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin"/>
     </type>
 
-    <type name="Magento\Checkout\Block\Cart\Sidebar">
-        <plugin name="express_checkout" type="Twint\Magento\Plugin\ExpressCheckoutPlugin"/>
-    </type>
-
-    <type name="Magento\Config\Controller\Adminhtml\System\Config\Save">
+    <type name="Magento\Config\Model\Config">
         <plugin name="unselect_options" type="Twint\Magento\Plugin\ExpressUnselectOptionsPlugin"/>
     </type>
 
