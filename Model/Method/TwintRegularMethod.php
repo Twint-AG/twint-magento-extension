@@ -37,6 +37,9 @@ class TwintRegularMethod extends TwintMethod
     {
         $payment = $this->getInfoInstance();
         $order = $payment->getOrder();
+
+        $order->setCanSendNewEmailFlag(false);
+
         $amount = $this->priceCurrency->convertAndRound($order->getGrandTotal());
 
         /** @var Pairing $pairing */
