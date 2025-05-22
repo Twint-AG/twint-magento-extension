@@ -11,7 +11,9 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment\Transaction;
+use Psr\Log\LoggerInterface;
 use Twint\Magento\Model\Pairing;
 
 class OrderService
@@ -21,7 +23,9 @@ class OrderService
         private readonly OrderRepositoryInterface $repository,
         private readonly OrderPaymentRepositoryInterface $paymentRepository,
         private readonly SearchCriteriaBuilder $criteriaBuilder,
-        private readonly PriceCurrencyInterface $priceCurrency
+        private readonly PriceCurrencyInterface $priceCurrency,
+        private readonly OrderSender $orderSender,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -36,6 +40,14 @@ class OrderService
         $order->setBaseTotalDue(0);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus(Order::STATE_PROCESSING);
+
+        if (!$order->getEmailSent()) {
+            try {
+                $this->orderSender->send($order);
+            } catch (Exception $e) {
+                $this->logger->critical($e);
+            }
+        }
 
         $order->addCommentToStatusHistory(
             __('Captured amount of CHF %1, Transaction ID %2', $pairing->getAmount(), $transaction->getTxnId()),

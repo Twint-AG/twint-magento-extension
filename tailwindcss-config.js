@@ -6,6 +6,7 @@ module.exports = {
     './view/frontend/**/*.js',
     './Block/Frontend/**/*.php'
   ],
+  important: '.twint',
   theme: {
     extend: {
       width: {
