@@ -28,11 +28,17 @@ test:
         PHP_VERSION: [ "8.1", "8.2" ]
       - MAGENTO_VERSION: [ "2.4.7" ]
         PHP_VERSION: [ "8.1", "8.2", "8.3" ]
+      - MAGENTO_VERSION: [ "2.4.8" ]
+        PHP_VERSION: [ "8.2", "8.3", "8.4" ]
   services:
     - mysql:8.0
     - name: elasticsearch:7.17.22
       alias: elasticsearch
       command: [ "elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node", "-Expack.license.self_generated.type=basic" ]
+    - name: opensearchproject/opensearch:2.11.0
+      alias: opensearch
+      command: [ "sh", "-c", "ulimit -n 65536; ulimit -u 4096; /usr/share/opensearch/opensearch-docker-entrypoint.sh" ]
+
   variables:
     ELASTIC_PASSWORD: e_password
     ES_JAVA_OPTS: "-Xms512m -Xmx512m"
@@ -74,14 +80,26 @@ test:
     
     - composer install --prefer-dist --no-progress --no-interaction
     
-    # Make sure elastic search is ready
+    # Make sure search engine is ready
     - |
-      until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
-        echo 'Waiting for Elasticsearch to be ready...'
-        sleep 5
-      done
-    
-    - bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
+      if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
+        until curl -s -X GET "http://opensearch:9200/_cluster/health" > /dev/null; do
+          echo 'Waiting for OpenSearch to be ready...'
+          sleep 5
+        done
+      else
+        until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
+          echo 'Waiting for Elasticsearch to be ready...'
+          sleep 5
+        done
+      fi
+
+    - |
+      if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
+        bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=opensearch --opensearch-enable-auth=1 --opensearch-host=http://opensearch --opensearch-username=admin --opensearch-password=admin --opensearch-index-prefix=magento2 > /dev/null
+      else
+        bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
+      fi
     
     - |
       composer config prefer-stable true
