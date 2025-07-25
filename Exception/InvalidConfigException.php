@@ -22,7 +22,7 @@ class InvalidConfigException extends RuntimeException
     public function __construct(
         string $message = 'Plugin Invalid configuration',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

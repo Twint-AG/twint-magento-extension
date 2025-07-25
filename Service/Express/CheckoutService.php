@@ -50,7 +50,7 @@ class CheckoutService
      * @throws LocalizedException
      * @throws Throwable
      */
-    public function checkout(Product|bool $product = null, $request = null)
+    public function checkout(Product|bool|null $product = null, $request = null)
     {
         /** @var Quote $quote */
         list($currentQuote, $quote) = $this->cartService->clone();

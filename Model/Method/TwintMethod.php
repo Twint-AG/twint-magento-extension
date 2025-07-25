@@ -47,10 +47,10 @@ abstract class TwintMethod extends AbstractMethod
         protected RefundService $refundService,
         protected PriceCurrencyInterface $priceCurrency,
         protected PairingRepositoryInterface $pairingRepository,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = [],
-        DirectoryHelper $directory = null
+        ?DirectoryHelper $directory = null
     ) {
         parent::__construct(
             $context,
@@ -67,7 +67,7 @@ abstract class TwintMethod extends AbstractMethod
         );
     }
 
-    public function isAvailable(CartInterface $quote = null): bool
+    public function isAvailable(?CartInterface $quote = null): bool
     {
         return $quote->getCurrency()->getQuoteCurrencyCode() === TwintConstant::CURRENCY
                && $this->_scopeConfig->getValue(
