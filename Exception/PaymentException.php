@@ -9,7 +9,7 @@ use Throwable;
 
 class PaymentException extends RuntimeException
 {
-    public function __construct(string $message = 'TWINT payment exception', int $code = 0, Throwable $previous = null)
+    public function __construct(string $message = 'TWINT payment exception', int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

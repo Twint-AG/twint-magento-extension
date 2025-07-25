@@ -27,7 +27,7 @@ class RefundService
     ) {
     }
 
-    public function refund(int|Pairing $pairing, float $amount, string $reversalReference = null): Refund
+    public function refund(int|Pairing $pairing, float $amount, ?string $reversalReference = null): Refund
     {
         if (is_int($pairing)) {
             $pairing = $this->pairingRepository->getById($pairing);

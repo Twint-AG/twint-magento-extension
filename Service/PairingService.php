@@ -389,7 +389,7 @@ class PairingService
         return [$pairing, $history];
     }
 
-    public function createHistory(Pairing $pairing, RequestLog $log, float $amount = null): PairingHistory
+    public function createHistory(Pairing $pairing, RequestLog $log, ?float $amount = null): PairingHistory
     {
         $history = $this->historyFactory->create();
         $history->setData('parent_id', (string) $pairing->getId());
