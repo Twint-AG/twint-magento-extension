@@ -9,6 +9,7 @@ use Magento\Checkout\Controller\Cart\Add;
 use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Cart\RequestQuantityProcessor;
 use Magento\Checkout\Model\Session;
+use Magento\Directory\Model\PriceCurrency;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
@@ -20,7 +21,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\DataObject;
 use Magento\Framework\Logger\Monolog;
-use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
 use Twint\Magento\Block\Frontend\ScanQrModal;
@@ -33,7 +33,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 {
     public function __construct(
         protected CheckoutService $checkoutService,
-        private readonly PriceHelper $priceHelper,
+        private readonly PriceCurrency $priceCurrency,
         private readonly Monolog $logger,
         Context $context,
         ScopeConfigInterface $scopeConfig,
@@ -106,11 +106,11 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 'id' => $pairing->getId(),
                 'pairingId' => $this->cryptoHandler->hash($pairing->getPairingId()),
                 'token' => $pairing->getToken(),
-                'amount' => $this->priceHelper->currency($pairing->getAmount(), true, false),
+                'amount' => $this->priceCurrency->format($pairing->getAmount()),
                 'modal' => $block->toHtml(),
             ]);
         } catch (Throwable $e) {
-            $this->logger->error('TWINT EC error: ' . $e->getMessage());
+            $this->logger->error("TWINT EC error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
 
             return $json->setData([
                 'success' => false,

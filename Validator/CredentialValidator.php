@@ -24,7 +24,7 @@ use Twint\Sdk\Value\Version;
 class CredentialValidator
 {
     public function __construct(
-        readonly CryptoHandler $crypto,
+        private readonly CryptoHandler $crypto,
         private readonly ProductMetadataInterface $system,
         private readonly Monolog $logger,
     ) {
