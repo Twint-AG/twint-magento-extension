@@ -117,7 +117,11 @@ abstract class TwintMethod extends AbstractMethod
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $amount = $this->priceCurrency->convertAndRound($amount);
+        $amount = $this->priceCurrency->convertAndRound(
+            $amount,
+            $payment->getOrder()->getStore(),
+            $payment->getOrder()->getOrderCurrencyCode()
+        );
 
         /** @var Order $order */
         $order = $payment->getOrder();

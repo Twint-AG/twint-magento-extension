@@ -16,6 +16,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\App\Emulation;
+use Magento\Store\Model\StoreManagerInterface;
 use Throwable;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingHistory;
@@ -31,7 +32,8 @@ class OrderConvertService
         private OrderRepository $orderRepository,
         private QuoteRepository $quoteRepository,
         private OrderSender $orderSender,
-        private Emulation $emulate
+        private Emulation $emulate,
+        private StoreManagerInterface $storeManager,
     ) {
     }
 
@@ -45,6 +47,9 @@ class OrderConvertService
     {
         /** @var Quote $quote */
         $quote = $this->quoteRepository->get($pairing->getQuoteId());
+
+        // Switch
+        $this->storeManager->getStore()->setCurrentCurrencyCode($quote->getQuoteCurrencyCode());
 
         // Update address and customer data for quote
         $this->addressService->handle($pairing, $quote);

@@ -40,7 +40,7 @@ class TwintRegularMethod extends TwintMethod
 
         $order->setCanSendNewEmailFlag(false);
 
-        $amount = $this->priceCurrency->convertAndRound($order->getGrandTotal());
+        $amount = $this->priceCurrency->convertAndRound($order->getBaseGrandTotal());
 
         /** @var Pairing $pairing */
         [$order, $pairing, $history] = $this->clientService->createOrder($payment, $amount);
