@@ -93,6 +93,8 @@ define([
     onCancelled() {
       this.finished = true;
       this.modal.close();
+
+      window.location.reload();
     }
 
     stop() {
