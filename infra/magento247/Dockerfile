@@ -94,6 +94,9 @@ RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME
 ARG GITLAB_USERNAME
 ARG GITLAB_TOKEN
 RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
+ARG HYVA_REPO_USERNAME
+ARG HYVA_REPO_TOKEN
+RUN composer config --global http-basic.gitlab.hyva.io ${HYVA_REPO_USERNAME} ${HYVA_REPO_TOKEN}
 
 RUN composer validate && \
     composer install \
