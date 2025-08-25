@@ -7,6 +7,7 @@ namespace Twint\Magento\Service\Express;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Webapi\Exception;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Model\Quote;
@@ -34,6 +35,7 @@ class OrderConvertService
         private OrderSender $orderSender,
         private Emulation $emulate,
         private StoreManagerInterface $storeManager,
+        private ResolverInterface $localeResolver
     ) {
     }
 
@@ -63,12 +65,14 @@ class OrderConvertService
                 $storeId = $order->getStoreId();
                 // Emulate the store's environment to ensure the correct language is applied
                 $this->emulate->startEnvironmentEmulation($storeId);
+                // switch locale to store locale
+                $this->localeResolver->emulate($storeId);
                 $this->orderSender->send($order);
                 // Stop the emulation after sending the email
                 $this->emulate->stopEnvironmentEmulation();
             }
         } catch (Throwable $e) {
-            //silence when error sending email
+            $this->localeResolver->revert();
         }
 
         //Update Pairing and History
