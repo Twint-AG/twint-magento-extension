@@ -75,7 +75,7 @@ RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/bin
 ENV PATH $NODE_PATH:$PATH
 RUN mkdir -p /var/www/.npm && \
-    chown -R www-data:www-data /var/www/.npm
+    chown www-data:www-data /var/www/.npm
 
 FROM base as build
 
