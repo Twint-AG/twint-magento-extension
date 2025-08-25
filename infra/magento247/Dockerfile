@@ -66,6 +66,15 @@ RUN touch /run/crond.pid && \
 RUN chmod gu+rw /var/run
 RUN chmod gu+s /usr/sbin/cron
 
+# Install nodejs and npm
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION v18.12.0
+RUN mkdir -p /usr/local/nvm && apt-get update && echo "y" | apt-get install curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use --delete-prefix $NODE_VERSION"
+ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/bin
+ENV PATH $NODE_PATH:$PATH
+
 FROM base as build
 
 COPY etc/supervisord.conf /etc/supervisor/supervisord.conf
