@@ -25,7 +25,7 @@ yes | php bin/magento setup:install \
     --base-url=$BASE_URL \
     --base-url-secure=$BASE_URL_SECURE \
     --use-secure=1 \
-    --use-secure-admin=1
+    --use-secure-admin=1 --cleanup-database
 
 mv app/etc/config.php.bak app/etc/config.php
 
