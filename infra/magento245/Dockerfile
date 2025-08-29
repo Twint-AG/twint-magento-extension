@@ -55,6 +55,7 @@ RUN echo "pm.status_listen=9001" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_path=/status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 
 RUN echo "error_log = /var/log/php-fpm.log" > /usr/local/etc/php/conf.d/error-log.ini
+RUN echo "log_errors = On" >> /usr/local/etc/php/conf.d/error-log.ini
 
 RUN echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf \
     && echo "pm.max_children = 10" >> /usr/local/etc/php-fpm.d/www.conf \
