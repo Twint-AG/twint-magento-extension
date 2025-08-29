@@ -54,6 +54,15 @@ RUN echo "; Expose PHP-FPM status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_listen=9001" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_path=/status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 
+RUN echo "error_log = /var/log/php-fpm.log" > /usr/local/etc/php/conf.d/error-log.ini
+
+RUN echo "pm = dynamic" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "pm.max_children = 10" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "pm.start_servers = 3" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "pm.min_spare_servers = 2" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "pm.max_spare_servers = 5" >> /usr/local/etc/php-fpm.d/www.conf \
+    && echo "request_terminate_timeout = 300" >> /usr/local/etc/php-fpm.d/www.conf
+
 RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
     chown -R www-data:www-data /var/lib/nginx
 
@@ -97,7 +106,17 @@ COPY --from=composer:2.7.1@sha256:da5213f1c0c4db435ad335be4e782ebf8677b45d37677a
 
 COPY --chown=www-data composer.json composer.json
 
-
+# Repo auth config
+#
+ARG MAGENTO_REPO_USERNAME
+ARG MAGENTO_REPO_PASSWORD
+RUN composer config --global http-basic.repo.magento.com ${MAGENTO_REPO_USERNAME} ${MAGENTO_REPO_PASSWORD}
+ARG GITLAB_USERNAME
+ARG GITLAB_TOKEN
+RUN composer config --global http-basic.git.nfq.asia ${GITLAB_USERNAME} ${GITLAB_TOKEN}
+ARG HYVA_REPO_USERNAME
+ARG HYVA_REPO_TOKEN
+RUN composer config --global http-basic.gitlab.hyva.io ${HYVA_REPO_USERNAME} ${HYVA_REPO_TOKEN}
 
 RUN composer validate && \
     composer install \
