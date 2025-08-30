@@ -127,7 +127,7 @@ RUN composer validate && \
         --no-dev
 
 COPY --chown=www-data _app/etc/config.php app/etc/config.php
-
+COPY --chown=www-data _patches patches
 COPY --chown=www-data _bin bin
 COPY _bin/entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
