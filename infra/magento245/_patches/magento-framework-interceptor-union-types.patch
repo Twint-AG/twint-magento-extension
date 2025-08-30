@@ -1,0 +1,30 @@
+Index: vendor/magento/framework/Interception/Code/Generator/Interceptor.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/vendor/magento/framework/Interception/Code/Generator/Interceptor.php b/vendor/magento/framework/Interception/Code/Generator/Interceptor.php
+--- a/vendor/magento/framework/Interception/Code/Generator/Interceptor.php
++++ b/vendor/magento/framework/Interception/Code/Generator/Interceptor.php
+@@ -212,10 +212,17 @@
+         $returnTypeValue = null;
+         $returnType = $method->getReturnType();
+         if ($returnType) {
+-            $returnTypeValue = ($returnType->allowsNull() ? '?' : '');
+-            $returnTypeValue .= ($returnType->getName() === 'self')
+-                ? $this->_getFullyQualifiedClassName($method->getDeclaringClass()->getName())
+-                : $returnType->getName();
++            if ($returnType instanceof \ReflectionUnionType) {
++                $returnTypeValue = implode('|', $returnType->getTypes());
++            } elseif ($returnType->getName() === 'self') {
++                $returnTypeValue = $this->_getFullyQualifiedClassName($method->getDeclaringClass()->getName());
++            } else {
++                $returnTypeValue = $returnType->getName();
++            }
++
++            if ($returnType->allowsNull()) {
++                $returnTypeValue = "?$returnTypeValue";
++            }
+         }
+
+         return $returnTypeValue;
