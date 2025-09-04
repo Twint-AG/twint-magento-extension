@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends gnupg \
     rsync \
     supervisor \
     unzip \
+    ngrep \
+    net-tools \
     ;
 
 RUN pecl install apcu-5.1.22
