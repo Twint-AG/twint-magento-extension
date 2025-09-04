@@ -7,6 +7,7 @@
             <tab>twint</tab>
             <label>TWINT Credentials</label>
             <resource>Twint_Magento::payment</resource>
+
             <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>TWINT Credentials</label>
                 <field id="storeUuid" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -23,6 +24,14 @@
                 <field id="certificate" translate="label" type="Twint\Magento\Block\Adminhtml\Form\CertificateUpload" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Certificate</label>
                     <config_path>twint/credentials/certificate</config_path>
+                </field>
+            </group>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="display_store_name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display Store Name</label>
+                    <config_path>twint/general/display_store_name</config_path>
                 </field>
             </group>
         </section>
