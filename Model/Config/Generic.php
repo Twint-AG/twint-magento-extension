@@ -36,4 +36,9 @@ class Generic extends AbstractConfig
     {
         return $this->express;
     }
+
+    public function getDisplayStoreName(): ?string
+    {
+        return $this->data['general']['display_store_name'] ?? null;
+    }
 }
