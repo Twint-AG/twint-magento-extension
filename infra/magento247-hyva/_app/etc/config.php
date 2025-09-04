@@ -384,7 +384,7 @@ return [
         'Magewirephp_Magewire' => 0,
         'Mageplaza_Core' => 0,
         'Mageplaza_Smtp' => 0,
-        'Hyva_Checkout' => 0,
+        'Hyva_Checkout' => 1,
         'Mollie_Payment' => 0,
         'Mollie_HyvaCompatibility' => 0,
         'PayPal_Braintree' => 0,
