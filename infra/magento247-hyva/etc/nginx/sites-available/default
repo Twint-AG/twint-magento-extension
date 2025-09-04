@@ -17,7 +17,6 @@ server {
     listen 8081 proxy_protocol;
     server_name _;
     set $MAGE_ROOT /var/www/html;
-    set $MEDIA_URL $MAGE_ROOT/pub/media;
 
     root $MAGE_ROOT/pub;
 
