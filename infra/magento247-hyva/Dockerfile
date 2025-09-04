@@ -54,7 +54,9 @@ RUN echo "; Expose PHP-FPM status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_listen=9001" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_path=/status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 
-RUN echo "error_log=/var/log/php-fpm-error.log" > /usr/local/etc/php-fpm.d/zz-error-log.conf
+RUN echo "error_log = /var/log/php-fpm-error.log" >> /usr/local/etc/php-fpm.conf && \
+    touch /var/log/php-fpm-error.log && \
+    chmod 666 /var/log/php-fpm-error.log
 
 RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
     chown -R www-data:www-data /var/lib/nginx
