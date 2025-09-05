@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends gnupg \
     rsync \
     supervisor \
     unzip \
+    ngrep \
+    net-tools \
     ;
 
 RUN pecl install apcu-5.1.22
@@ -53,6 +55,10 @@ RUN echo "[www]" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "; Expose PHP-FPM status" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_listen=9001" >> /usr/local/etc/php-fpm.d/zz-status.conf
 RUN echo "pm.status_path=/status" >> /usr/local/etc/php-fpm.d/zz-status.conf
+
+RUN echo "error_log=/var/log/php/php_errors.log" > /usr/local/etc/php/conf.d/zz-php-error-log.ini && \
+    mkdir -p /var/log/php && touch /var/log/php/php_errors.log && chmod 666 /var/log/php/php_errors.log
+RUN echo "log_errors=On" >> /usr/local/etc/php/conf.d/zz-php-error-log.ini
 
 RUN mkdir -p /var/lib/nginx/{body,fastcgi} && \
     chown -R www-data:www-data /var/lib/nginx

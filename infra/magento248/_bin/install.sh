@@ -19,13 +19,16 @@ yes | php bin/magento setup:install \
     --db-user=$DB_USER \
     --db-password=$DB_PASS \
     --db-name=$DB_NAME \
-    --search-engine=elasticsearch7 \
+    --search-engine=elasticsearch8 \
     --elasticsearch-host=$ELASTICSEARCH_HOST \
+    --elasticsearch-enable-auth=1 \
+    --elasticsearch-username=elastic \
+    --elasticsearch-password=$ELASTICSEARCH_PASSWORD \
     --elasticsearch-index-prefix=magento2 \
     --base-url=$BASE_URL \
     --base-url-secure=$BASE_URL_SECURE \
     --use-secure=1 \
-    --use-secure-admin=1
+    --use-secure-admin=1 --cleanup-database
 
 mv app/etc/config.php.bak app/etc/config.php
 

@@ -12,6 +12,7 @@ server {
 }
 server {
     access_log /dev/stdout;
+    error_log /dev/stderr;
 
     listen 8080;
     listen 8081 proxy_protocol;
