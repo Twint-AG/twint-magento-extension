@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Twint\Magento\Block\Frontend;
 
 use Magento\Framework\View\Element\Template;
+use Twint\Magento\Helper\ConfigHelper;
 use Twint\Magento\Service\AppsService;
 
 class ScanQrModal extends Template
@@ -13,6 +14,7 @@ class ScanQrModal extends Template
 
     public function __construct(
         private readonly AppsService $appService,
+        private readonly ConfigHelper $configHelper,
         Template\Context $context,
         array $data = []
     ) {
@@ -26,8 +28,7 @@ class ScanQrModal extends Template
 
     public function getStoreName(): string
     {
-        return $this->_storeManager->getStore()
-            ->getName();
+        return $this->configHelper->getConfigs()->getDisplayStoreName() ?? $this->_storeManager->getStore()->getName();
     }
 
     public function getMobileClass(): string
