@@ -43,7 +43,12 @@ define([
         this.guides.classList.remove('md:grid-cols-2');
       } else {
         this.guideContact.classList.remove('hidden');
-        this.guides.classList.add('md:grid-cols-2');
+
+        if (this.guideContact.closest('.tw-mobile')) {
+            this.guides.classList.remove('md:grid-cols-2');
+        } else {
+            this.guides.classList.add('md:grid-cols-2');
+        }
       }
     }
 
