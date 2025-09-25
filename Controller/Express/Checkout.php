@@ -14,10 +14,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\DataObject;
 use Magento\Framework\Logger\Monolog;
@@ -48,7 +45,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
         parent::__construct($context, $scopeConfig, $checkoutSession, $storeManager, $formKeyValidator, $cart, $productRepository, $quantityProcessor);
     }
 
-    public function execute(): Json|ResultInterface|ResponseInterface
+    public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $params = $this->getRequest()

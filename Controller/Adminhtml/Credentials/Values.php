@@ -9,10 +9,7 @@ use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Helper\ConfigHelper;
 use Twint\Magento\Validator\Input\ScopeInputValidator;
 
@@ -33,7 +30,7 @@ class Values extends Action implements ActionInterface, HttpPostActionInterface
         return $this->_authorization->isAllowed('Twint_Magento::payment');
     }
 
-    public function execute(): Json|ResultInterface|ResponseInterface
+    public function execute()
     {
         $json = $this->jsonFactory->create();
         $scope = $this->request->get('scope') ?? '';

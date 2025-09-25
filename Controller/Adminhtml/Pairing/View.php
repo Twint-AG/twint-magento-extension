@@ -7,9 +7,6 @@ namespace Twint\Magento\Controller\Adminhtml\Pairing;
 use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Block\Adminhtml\Pairing\View as PairingView;
@@ -33,7 +30,7 @@ class View extends Action
     /**
      * @throws Exception
      */
-    public function execute(): Page|ResultInterface|ResponseInterface
+    public function execute()
     {
         $id = $this->getRequest()
             ->getParam('id');
