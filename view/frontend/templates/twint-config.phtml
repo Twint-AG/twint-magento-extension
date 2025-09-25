@@ -3,4 +3,10 @@
 ?>
 <script>
     window.twintConfig = <?= json_encode($block->getConfig()) ?>;
+
+    window.addEventListener("message", (event) => {
+        if (event.data.action === "openTwint") {
+            window.location.replace(event.data.link);
+        }
+    });
 </script> 

@@ -49,6 +49,18 @@ define([
       if (link) {
         link = link.replace('--TOKEN--', this.values.token);
 
+        if(this.inIframe()){
+          // Try to bubble up to the top window
+          try {
+            window.top.location.replace(link);
+          } catch (e) {
+            // Fallback: ask parent to redirect via postMessage
+            window.parent.postMessage({ action: "openTwint", link }, "*");
+          }
+
+          return;
+        }
+
         try {
           window.location.replace(link);
 
@@ -63,6 +75,16 @@ define([
         }
       }
     }
+
+    inIframe() {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        // Cross-origin access throws an error → we know we're in an iframe
+        return true;
+      }
+    }
+
   }
 
   return IosConnector;
