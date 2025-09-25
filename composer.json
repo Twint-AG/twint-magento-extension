@@ -29,8 +29,8 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.1",
-    "magento/framework": ">=100.4.3",
-    "twint-ag/sdk": "dev-develop",
+    "magento/framework": ">=103.0.4",
+    "twint-ag/sdk": ">=1.7.0",
     "symfony/validator": ">=6.4"
   },
   "require-dev": {
