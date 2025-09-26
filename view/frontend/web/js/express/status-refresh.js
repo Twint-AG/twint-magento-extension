@@ -129,6 +129,13 @@ define([
     }
 
     showSuccess(order) {
+      const flow = (window.twintConfig && window.twintConfig.successfulFlow) || 'POPUP';
+      if (flow === 'SUCCESS_PAGE') {
+        window.location.href = '/checkout/onepage/success?twint_success_order=' + order;
+        return;
+      }
+
+      // Default: POPUP
       let modal = $('#qr-modal-content');
       let pay = modal.find('.to-pay');
       let success = modal.find('.on-success');

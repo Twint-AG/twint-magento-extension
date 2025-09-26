@@ -32,6 +32,7 @@ class InstallData implements InstallDataInterface
                 TwintConstant::SCREEN_CART,
                 TwintConstant::SCREEN_CART_FLYOUT,
             ]),
+            TwintConstant::EXPRESS_SUCCESSFUL_FLOW => TwintConstant::SUCCESSFUL_FLOW_POPUP,
         ];
 
         $records = [];

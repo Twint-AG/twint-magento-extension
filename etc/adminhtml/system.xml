@@ -77,6 +77,12 @@
                     <config_path>twint/express/screens</config_path>
                     <can_be_empty>1</can_be_empty>
                 </field>
+
+                <field id="successful_flow" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Successful Flow</label>
+                    <source_model>Twint\Magento\Model\Source\SuccessfulFlow</source_model>
+                    <config_path>twint/express/successful_flow</config_path>
+                </field>
             </group>
         </section>
     </system>
