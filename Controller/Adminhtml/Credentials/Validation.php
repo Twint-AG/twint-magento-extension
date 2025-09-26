@@ -9,10 +9,7 @@ use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\Http;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Controller\ResultInterface;
 use Twint\Magento\Validator\CredentialValidator;
 use Twint\Magento\Validator\Input\CredentialsInputValidator;
 use Twint\Sdk\Value\Environment;
@@ -34,11 +31,11 @@ class Validation extends Action implements ActionInterface, HttpPostActionInterf
         return $this->_authorization->isAllowed('Twint_Magento::payment');
     }
 
-    public function execute(): Json|ResultInterface|ResponseInterface
+    public function execute()
     {
         $json = $this->jsonFactory->create();
         $cert = $this->request->get('certificate') ?? [];
-        $environment = (string) $this->request->get('environment') ?? Environment::TESTING;
+        $environment = (string) ($this->request->get('environment') ?? Environment::TESTING);
         $storeUuid = $this->request->get('storeUuid') ?? '';
 
         $errors = $this->inputValidator->validate($cert, $environment, $storeUuid);

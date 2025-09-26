@@ -6,10 +6,7 @@ namespace Twint\Magento\Controller\Adminhtml\Request;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Twint\Magento\Api\RequestLogRepositoryInterface;
 use Twint\Magento\Block\Adminhtml\Request\View as RequestView;
@@ -32,7 +29,7 @@ class View extends Action
     /**
      * @throws LocalizedException
      */
-    public function execute(): Page|ResultInterface|ResponseInterface
+    public function execute()
     {
         $id = $this->getRequest()
             ->getParam('id');

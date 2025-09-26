@@ -8,10 +8,7 @@ use Http\Message\Exception\UnexpectedValueException;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ActionInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -38,7 +35,7 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
      * @throws Throwable
      * @throws LocalizedException
      */
-    public function execute(): Json|ResultInterface|ResponseInterface
+    public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
         $id = $this->getRequest()

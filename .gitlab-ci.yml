@@ -24,6 +24,8 @@ test:
   stage: check
   parallel:
     matrix:
+      - MAGENTO_VERSION: [ "2.4.5-p14" ]
+        PHP_VERSION: [ "8.1"]
       - MAGENTO_VERSION: [ "2.4.6" ]
         PHP_VERSION: [ "8.1", "8.2" ]
       - MAGENTO_VERSION: [ "2.4.7" ]
