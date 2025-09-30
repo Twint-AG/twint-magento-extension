@@ -2,7 +2,7 @@
 ### Requirement 
 1. PHP 8.1 for both web service (Apache) and CLI 
 2. Minimum Requirement for Shop-system versions: 
- -  Magento version: 2.4.6
+ -  Magento version: 2.4.5-p14
 
 ## Install the module
 

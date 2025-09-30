@@ -28,7 +28,7 @@ To customize or add language support, follow these steps:
 ### Requirements
 - PHP `>= 8.1`
 - PHP extension: `soap`
-- Magento 2.x (`magento/framework` version as `>=103.0.4`)
+- Minimum Magento version: 2.4.5-p14 (`magento/framework` version as `>=100.4.3`)
 - TWINT account
 
 ## Installation
