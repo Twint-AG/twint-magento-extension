@@ -36,4 +36,8 @@
         </arguments>
     </type>
 
+    <type name="Magento\Checkout\Controller\Onepage\Success">
+        <plugin name="twint_success_order_id" type="Twint\Magento\Plugin\SuccessSetOrderIdPlugin" sortOrder="10"/>
+    </type>
+
 </config>

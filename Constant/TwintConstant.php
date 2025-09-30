@@ -44,6 +44,12 @@ class TwintConstant
 
     public const SCREEN_CART_FLYOUT = 'minicart';
 
+    public const EXPRESS_SUCCESSFUL_FLOW = 'twint/express/successful_flow';
+
+    public const SUCCESSFUL_FLOW_POPUP = 'POPUP';
+
+    public const SUCCESSFUL_FLOW_SUCCESS_PAGE = 'SUCCESS_PAGE';
+
     public const MONITORING_TIME_WINDOW = 10; //Consider a pairing is under monitoring with in 10 seconds
 
     public const EXCEPTION_VERSION_CONFLICT = 45000;
