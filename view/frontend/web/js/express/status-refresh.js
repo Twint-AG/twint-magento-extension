@@ -131,7 +131,7 @@ define([
     showSuccess(order) {
       const flow = (window.twintConfig && window.twintConfig.successfulFlow) || 'POPUP';
       if (flow === 'SUCCESS_PAGE') {
-        window.location.href = '/checkout/onepage/success?twint_success_order=' + order;
+        window.location.href = '/checkout/onepage/success';
         return;
       }
 
