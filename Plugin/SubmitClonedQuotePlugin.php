@@ -14,6 +14,7 @@ use Twint\Magento\Service\CartService;
 class SubmitClonedQuotePlugin
 {
     public static array $pair = [];
+    public static bool $cloned = false;
 
     public function __construct(
         private readonly CartService $cartService,
@@ -32,6 +33,7 @@ class SubmitClonedQuotePlugin
             $cloned = $this->cartService->clone($quote);
 
             self::$pair = [$quote, $cloned];
+            self::$cloned = true;
             $this->checkoutSession->replaceQuote($cloned);
         }
 
