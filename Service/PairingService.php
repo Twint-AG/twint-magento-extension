@@ -14,13 +14,13 @@ use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Builder\ClientBuilder;
 use Twint\Magento\Constant\TwintConstant;
 use Twint\Magento\Model\Api\ApiResponse;
+use Twint\Magento\Model\CloneQuoteContext;
 use Twint\Magento\Model\Monitor\MonitorStatus;
 use Twint\Magento\Model\Pairing;
 use Twint\Magento\Model\PairingFactory;
 use Twint\Magento\Model\PairingHistory;
 use Twint\Magento\Model\PairingHistoryFactory;
 use Twint\Magento\Model\RequestLog;
-use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
 use Twint\Sdk\Exception\CancellationFailed;
 use Twint\Sdk\InvocationRecorder\InvocationRecordingClient;
 use Twint\Sdk\Value\FastCheckoutCheckIn;
@@ -49,7 +49,8 @@ class PairingService
         private readonly TransactionService                $transactionService,
         private readonly InvoiceService                    $invoiceService,
         private readonly CartService                       $cartService,
-        private readonly Monolog                           $logger
+        private readonly Monolog                           $logger,
+        private readonly CloneQuoteContext                 $quoteContext,
     ) {
     }
 
@@ -355,9 +356,9 @@ class PairingService
 
         $pairing->setData('captured', (int) $captured);
 
-        if ($pair = SubmitClonedQuotePlugin::$pair) {
-            $pairing->setData('org_quote_id', $pair[0]->getId());
-            $pairing->setData('quote_id', $pair[1]->getId());
+        if ($this->quoteContext->hasQuote()) {
+            $pairing->setData('org_quote_id', $this->quoteContext->getOriginalQuote()->getId());
+            $pairing->setData('quote_id', $this->quoteContext->getQuote()->getId());
         }
 
         $pairing = $this->pairingRepository->save($pairing);
