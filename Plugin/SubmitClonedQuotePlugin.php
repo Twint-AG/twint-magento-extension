@@ -8,16 +8,16 @@ use Closure;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
+use Twint\Magento\Model\CloneQuoteContext;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 use Twint\Magento\Service\CartService;
 
 class SubmitClonedQuotePlugin
 {
-    public static array $pair = [];
-
     public function __construct(
         private readonly CartService $cartService,
-        private readonly CheckoutSession $checkoutSession
+        private readonly CheckoutSession $checkoutSession,
+        private readonly CloneQuoteContext $quoteContext,
     ) {
     }
 
@@ -31,7 +31,7 @@ class SubmitClonedQuotePlugin
         if ($payment->getMethod() === TwintRegularMethod::CODE) {
             $cloned = $this->cartService->clone($quote);
 
-            self::$pair = [$quote, $cloned];
+            $this->quoteContext->setQuote($cloned, $quote);
             $this->checkoutSession->replaceQuote($cloned);
         }
 
