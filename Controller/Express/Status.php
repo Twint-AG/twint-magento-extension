@@ -61,8 +61,8 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
 
         $monitorStatus = $this->monitorService->status($pairing);
 
-        if ($monitorStatus->getFinished()) {
-            $this->setSuccessOrder($monitorStatus->getAdditionalInformation('order'));
+        if ($monitorStatus->paid() && $incrementId = $monitorStatus->getAdditionalInformation('order')) {
+            $this->setSuccessOrder($incrementId);
         }
 
         return $json->setData([
