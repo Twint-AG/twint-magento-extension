@@ -52,6 +52,7 @@ bin/magento setup:static-content:deploy
 ```bash
 bin/magento cache:clean && bin/magento cache:flush
 ```
+
 ## Configuration
 1. **Navigate to TWINT settings**:  
 In your Magento admin panel, select **TWINT** from the main left sidebar.
@@ -64,6 +65,10 @@ After completing the setup in each section, click **Save** to apply the changes.
 
 ## Usage
 Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full regular checkout process or via the streamlined **Express Checkout** button.
+
+## Hyva Theme and Hyva Checkout
+
+If you are using Hyva Theme and Hyva Checkout, please refer to the [TWINT Hyva Integration Guideline](https://github.com/Twint-AG/twint-magento-hyva-integration) for detailed integration instructions.
 
 
 ## Support
