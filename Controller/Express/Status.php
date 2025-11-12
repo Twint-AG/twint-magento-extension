@@ -46,31 +46,53 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $id = $this->getRequest()
-            ->getParam('id') ?? null;
+        $step = 'init';
+        try {
+            $step = 'get_id';
+            $id = $this->getRequest()
+                ->getParam('id') ?? null;
 
-        if (empty($id)) {
-            throw new UnexpectedValueException('Pairing Id is required');
+            if (empty($id)) {
+                throw new UnexpectedValueException('Pairing Id is required');
+            }
+
+            $step = 'decrypt_id';
+            $id = $this->cryptoHandler->unHash($id);
+
+            $step = 'load_pairing';
+            $pairing = $this->repository->getByPairingId($id);
+            if (!$pairing instanceof Pairing) {
+                throw new NotFoundHttpException('Pairing not found');
+            }
+
+            $step = 'monitor_status';
+            $monitorStatus = $this->monitorService->status($pairing);
+
+            if ($monitorStatus->paid() && $incrementId = $monitorStatus->getAdditionalInformation('order')) {
+                $step = 'set_success_order';
+                $this->setSuccessOrder($incrementId);
+            }
+
+            $step = 'response';
+            return $json->setData([
+                'finish' => $monitorStatus->getFinished(),
+                'status' => $monitorStatus->getStatus(),
+                'order' => $monitorStatus->getAdditionalInformation('order'),
+                'errorMessage' => $monitorStatus->getAdditionalInformation('message'),
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error('[TWINT] Express Status error', [
+                'step' => $step,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $json->setData([
+                'finish' => true,
+                'status' => 'error',
+                'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
         }
-
-        $id = $this->cryptoHandler->unHash($id);
-        $pairing = $this->repository->getByPairingId($id);
-        if (!$pairing instanceof Pairing) {
-            throw new NotFoundHttpException('Pairing not found');
-        }
-
-        $monitorStatus = $this->monitorService->status($pairing);
-
-        if ($monitorStatus->paid() && $incrementId = $monitorStatus->getAdditionalInformation('order')) {
-            $this->setSuccessOrder($incrementId);
-        }
-
-        return $json->setData([
-            'finish' => $monitorStatus->getFinished(),
-            'status' => $monitorStatus->getStatus(),
-            'order' => $monitorStatus->getAdditionalInformation('order'),
-            'errorMessage' => $monitorStatus->getAdditionalInformation('message'),
-        ]);
     }
 
     protected function setSuccessOrder(string $incrementId): void

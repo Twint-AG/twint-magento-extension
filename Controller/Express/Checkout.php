@@ -54,6 +54,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
         $product = $this->_initProduct();
         $request = new DataObject($params);
 
+        $step = 'init';
         try {
             $wholeCart = (bool) ($params['whole_cart'] ?? false);
 
@@ -61,6 +62,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             $count = is_array($items) ? count($items) : $items->count();
 
             if (!$wholeCart && $count > 0) {
+                $step = 'checkout_wholecart';
                 parent::execute();
 
                 $this->messageManager->addSuccessMessage(
@@ -80,21 +82,26 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
             }
 
             /** @var Pairing $pairing */
+            $step = 'checkout';
             try {
                 $pairing = $this->checkoutService->checkout($product, $request);
             } catch (CheckoutException $e) {
                 $this->messageManager->addWarningMessage($e->getMessage());
                 return $json->setData([
                     'backUrl' => $product->getProductUrl(),
+                    'step' => $step,
                 ]);
             }
 
             if ($count === 0) {
+                $step = 'clear_session';
                 $this->_checkoutSession->clearStorage();
             }
+            $step = 'set_quote';
             $this->_checkoutSession->setQuoteId($pairing->getOriginalQuoteId());
 
             /** @var ScanQrModal $block */
+            $step = 'render_modal';
             $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
             $block->setTemplate('Twint_Magento::qr.phtml');
 
@@ -111,6 +118,7 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
 
             return $json->setData([
                 'success' => false,
+                'step' => $step,
             ]);
         }
     }

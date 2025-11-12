@@ -38,21 +38,37 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $id = $this->getRequest()
-            ->getParam('id') ?? null;
+        $step = 'init';
+        try {
+            $step = 'get_id';
+            $id = $this->getRequest()
+                ->getParam('id') ?? null;
 
-        if (empty($id)) {
-            throw new UnexpectedValueException('Pairing Id is required');
+            if (empty($id)) {
+                throw new UnexpectedValueException('Pairing Id is required');
+            }
+
+            $step = 'decrypt_id';
+            $id = $this->cryptoHandler->unHash($id);
+
+            $step = 'load_pairing';
+            $pairing = $this->repository->getByPairingId($id);
+            if (!$pairing instanceof Pairing) {
+                throw new NotFoundHttpException('Pairing not found');
+            }
+
+            $step = 'cancel_pairing';
+            $success = $this->pairingService->cancel($pairing);
+
+            return $json->setData([
+                'success' => $success,
+            ]);
+        } catch (Throwable $e) {
+            return $json->setData([
+                'success' => false,
+                'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
         }
-
-        $id = $this->cryptoHandler->unHash($id);
-        $pairing = $this->repository->getByPairingId($id);
-        if (!$pairing instanceof Pairing) {
-            throw new NotFoundHttpException('Pairing not found');
-        }
-
-        return $json->setData([
-            'success' => $this->pairingService->cancel($pairing),
-        ]);
     }
 }
