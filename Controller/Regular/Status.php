@@ -41,20 +41,36 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $id = $this->getRequest()
-            ->getParam('id') ?? null;
-        $id = $this->cryptoHandler->unHash($id);
+        $step = 'init';
+        try {
+            $step = 'get_id';
+            $id = $this->getRequest()
+                ->getParam('id') ?? null;
 
-        $pairing = $this->repository->getByPairingId($id);
-        if (!$pairing instanceof Pairing) {
-            throw new NotFoundHttpException('Pairing not found');
+            $step = 'decrypt_id';
+            $id = $this->cryptoHandler->unHash($id);
+
+            $step = 'load_pairing';
+            $pairing = $this->repository->getByPairingId($id);
+            if (!$pairing instanceof Pairing) {
+                throw new NotFoundHttpException('Pairing not found');
+            }
+
+            $step = 'monitor_status';
+            $status = $this->monitorService->status($pairing);
+
+            $step = 'response';
+            return $json->setData([
+                'finish' => $status->getFinished(),
+                'paid' => $status->getStatus() === MonitorStatus::STATUS_PAID,
+            ]);
+        } catch (Throwable $e) {
+            return $json->setData([
+                'finish' => true,
+                'paid' => false,
+                'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
         }
-
-        $status = $this->monitorService->status($pairing);
-
-        return $json->setData([
-            'finish' => $status->getFinished(),
-            'paid' => $status->getStatus() === MonitorStatus::STATUS_PAID,
-        ]);
     }
 }

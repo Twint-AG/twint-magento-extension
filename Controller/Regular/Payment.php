@@ -41,31 +41,46 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $step = 'init';
+        try {
+            $step = 'get_post_data';
+            $data = $this->getPostData();
+            $orderId = (int) ($data['order'] ?? 0);
 
-        $data = $this->getPostData();
-        $orderId = (int) $data['order'] ?? 0;
+            $step = 'get_order';
+            $order = $this->getOrder($orderId);
 
-        $order = $this->getOrder($orderId);
+            $step = 'validate_payment';
+            $payment = $order->getPayment();
+            if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
+                throw new Exception('This order did not processed by TWINT');
+            }
 
-        $payment = $order->getPayment();
-        if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-            throw new Exception('This order did not processed by TWINT');
+            $step = 'get_pairing';
+            $pairing = $this->getPairing($order);
+
+            /** @var ScanQrModal $block */
+            $step = 'render_modal';
+            $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
+            $block->setTemplate('Twint_Magento::qr.phtml');
+
+            $step = 'response';
+            $data = [
+                'id' => $this->cryptoHandler->hash($pairing['pairing_id']),
+                'token' => $pairing['token'],
+                'orderNumber' => $order->getIncrementId(),
+                'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false),
+                'modal' => $block->toHtml(),
+            ];
+
+            return $json->setData($data);
+        } catch (Exception $e) {
+            return $json->setData([
+                'success' => false,
+                'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
         }
-
-        $pairing = $this->getPairing($order);
-        /** @var ScanQrModal $block */
-        $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
-        $block->setTemplate('Twint_Magento::qr.phtml');
-
-        $data = [
-            'id' => $this->cryptoHandler->hash($pairing['pairing_id']),
-            'token' => $pairing['token'],
-            'orderNumber' => $order->getIncrementId(),
-            'amount' => $this->priceHelper->currency($order->getBaseGrandTotal(), true, false),
-            'modal' => $block->toHtml(),
-        ];
-
-        return $json->setData($data);
     }
 
     /**

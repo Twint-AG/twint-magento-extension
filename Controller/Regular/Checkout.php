@@ -34,23 +34,35 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
     public function execute()
     {
         $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $order = $this->session->getLastRealOrder();
-        if (!$order) {
-            throw new Exception('Dont have needed order to pay');
+        $step = 'init';
+        try {
+            $step = 'get_order';
+            $order = $this->session->getLastRealOrder();
+            if (!$order) {
+                throw new Exception('Dont have needed order to pay');
+            }
+
+            $step = 'validate_payment';
+            $payment = $order->getPayment();
+            if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
+                throw new Exception('This order did not processed by TWINT');
+            }
+
+            $step = 'build_response';
+            $data = [
+                'token' => $payment->getAdditionalInformation()['qrToken'],
+                'orderNumber' => $order->getIncrementId(),
+                'storeName' => $this->storeManager->getStore()
+                    ->getName(),
+            ];
+
+            return $json->setData($data);
+        } catch (Exception $e) {
+            return $json->setData([
+                'success' => false,
+                'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
         }
-
-        $payment = $order->getPayment();
-        if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-            throw new Exception('This order did not processed by TWINT');
-        }
-
-        $data = [
-            'token' => $payment->getAdditionalInformation()['qrToken'],
-            'orderNumber' => $order->getIncrementId(),
-            'storeName' => $this->storeManager->getStore()
-                ->getName(),
-        ];
-
-        return $json->setData($data);
     }
 }
