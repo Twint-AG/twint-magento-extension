@@ -26,11 +26,11 @@ test:
     matrix:
       - MAGENTO_VERSION: [ "2.4.5-p14" ]
         PHP_VERSION: [ "8.1"]
-      - MAGENTO_VERSION: [ "2.4.6" ]
+      - MAGENTO_VERSION: [ "2.4.6-p13" ]
         PHP_VERSION: [ "8.1", "8.2" ]
-      - MAGENTO_VERSION: [ "2.4.7" ]
+      - MAGENTO_VERSION: [ "2.4.7-p8" ]
         PHP_VERSION: [ "8.1", "8.2", "8.3" ]
-      - MAGENTO_VERSION: [ "2.4.8" ]
+      - MAGENTO_VERSION: [ "2.4.8-p3" ]
         PHP_VERSION: [ "8.2", "8.3", "8.4" ]
   services:
     - mysql:8.0
@@ -84,7 +84,7 @@ test:
     
     # Make sure search engine is ready
     - |
-      if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
+      if [ "$MAGENTO_VERSION" = "2.4.8-p3" ]; then
         until curl -s -X GET "http://opensearch:9200/_cluster/health" > /dev/null; do
           echo 'Waiting for OpenSearch to be ready...'
           sleep 5
@@ -97,7 +97,7 @@ test:
       fi
 
     - |
-      if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
+      if [ "$MAGENTO_VERSION" = "2.4.8-p3" ]; then
         bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=opensearch --opensearch-enable-auth=1 --opensearch-host=http://opensearch --opensearch-username=admin --opensearch-password=admin --opensearch-index-prefix=magento2 > /dev/null
       else
         bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
