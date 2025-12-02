@@ -14,15 +14,31 @@ composer require twint-ag/twint-magento-extension
 ```bash
 bin/magento module:enable Twint_Magento
 ```
-3. Run setup upgrade and recompile dependencies
+
+## Hyva Checkout
+
+If you are using Hyva Theme and Hyva Checkout, please follow these steps:
+
+1. Install TWINT Hyva Integration via Composer:
+```bash
+composer require twint-ag/twint-magento-hyva-integration
+```
+2. Enable the Module
+```bash
+bin/magento module:enable Twint_MagentoHyva
+```
+
+## Setup upgrade and compile
+
+1. Run setup upgrade and recompile dependencies
 ```bash
 bin/magento setup:upgrade && bin/magento setup:di:compile
 ```
-4. Deploy static content (if in production mode)
+2. Deploy static content (if in production mode)
 ```bash
 bin/magento setup:static-content:deploy
 ```
-5. Clear cache (if needed):
+3. Clear cache (if needed):
 ```bash
 bin/magento cache:clean && bin/magento cache:flush
 ```
