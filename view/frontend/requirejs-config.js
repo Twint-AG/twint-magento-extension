@@ -1,8 +1,8 @@
 const config = {
   map: {
     '*': {
-      'qrcodejs': 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
-      'clipboard': 'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.4.0/clipboard.min.js',
+      'qrcodejs': 'Twint_Magento/js/bundles/qrcode.min',
+      'clipboard': 'Twint_Magento/js/bundles/clipboard.min',
 
       'Twint_Magento/js/action/regular-checkout': 'Twint_Magento/js/action/regular-checkout',
 
