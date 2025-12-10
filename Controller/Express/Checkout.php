@@ -114,9 +114,15 @@ class Checkout extends Add implements ActionInterface, HttpPostActionInterface
                 'modal' => $block->toHtml(),
             ]);
         } catch (Throwable $e) {
-            $this->logger->error("TWINT EC error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}");
+            $this->logger->error(
+                "[TWINT] Express Checkout error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
 
-            return $json->setData([
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'success' => false,
                 'step' => $step,
             ]);

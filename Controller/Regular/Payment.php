@@ -15,6 +15,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
 use Twint\Magento\Block\Frontend\ScanQrModal;
 use Twint\Magento\Model\Method\TwintRegularMethod;
@@ -30,6 +34,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
         private readonly SearchCriteriaBuilder $criteriaBuilder,
         private readonly PriceHelper $priceHelper,
         private readonly CryptoHandler $cryptoHandler,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($context);
     }
@@ -53,7 +58,7 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
             $step = 'validate_payment';
             $payment = $order->getPayment();
             if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-                throw new Exception('This order did not processed by TWINT');
+                throw new BadRequestHttpException('This order did not processed by TWINT');
             }
 
             $step = 'get_pairing';
@@ -74,10 +79,23 @@ class Payment extends BaseAction implements ActionInterface, HttpPostActionInter
             ];
 
             return $json->setData($data);
-        } catch (Exception $e) {
-            return $json->setData([
+        } catch (HttpException $e) {
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'success' => false,
                 'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Regular Payment error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
                 'step' => $step,
             ]);
         }

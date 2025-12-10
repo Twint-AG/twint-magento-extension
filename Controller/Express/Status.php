@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Express;
 
-use Http\Message\Exception\UnexpectedValueException;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Action\Context;
@@ -15,6 +14,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Twint\Magento\Controller\Regular\BaseAction;
@@ -53,7 +54,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
                 ->getParam('id') ?? null;
 
             if (empty($id)) {
-                throw new UnexpectedValueException('Pairing Id is required');
+                throw new BadRequestHttpException('Pairing Id is required');
             }
 
             $step = 'decrypt_id';
@@ -80,16 +81,24 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
                 'order' => $monitorStatus->getAdditionalInformation('order'),
                 'errorMessage' => $monitorStatus->getAdditionalInformation('message'),
             ]);
-        } catch (Throwable $e) {
-            $this->logger->error('[TWINT] Express Status error', [
-                'step' => $step,
-                'error' => $e->getMessage(),
-            ]);
-
-            return $json->setData([
+        } catch (HttpException $e) {
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'finish' => true,
                 'status' => 'error',
                 'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Express Status error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
                 'step' => $step,
             ]);
         }
