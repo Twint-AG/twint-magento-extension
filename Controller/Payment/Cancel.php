@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Twint\Magento\Controller\Payment;
 
-use Http\Message\Exception\UnexpectedValueException;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Twint\Magento\Controller\Regular\BaseAction;
@@ -25,7 +27,8 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
         Context $context,
         private readonly PairingService $pairingService,
         private readonly CryptoHandler $cryptoHandler,
-        private readonly PairingRepository $repository
+        private readonly PairingRepository $repository,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($context);
     }
@@ -45,7 +48,7 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
                 ->getParam('id') ?? null;
 
             if (empty($id)) {
-                throw new UnexpectedValueException('Pairing Id is required');
+                throw new BadRequestHttpException('Pairing Id is required');
             }
 
             $step = 'decrypt_id';
@@ -63,10 +66,23 @@ class Cancel extends BaseAction implements ActionInterface, HttpGetActionInterfa
             return $json->setData([
                 'success' => $success,
             ]);
-        } catch (Throwable $e) {
-            return $json->setData([
+        } catch (HttpException $e) {
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'success' => false,
                 'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Payment Cancel error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
                 'step' => $step,
             ]);
         }

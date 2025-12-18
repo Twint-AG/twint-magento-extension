@@ -12,6 +12,8 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Exception;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use Twint\Magento\Model\Monitor\MonitorStatus;
@@ -27,6 +29,7 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
         private readonly MonitorService $monitorService,
         private readonly PairingRepository $repository,
         private readonly CryptoHandler $cryptoHandler,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($context);
     }
@@ -64,11 +67,24 @@ class Status extends BaseAction implements ActionInterface, HttpGetActionInterfa
                 'finish' => $status->getFinished(),
                 'paid' => $status->getStatus() === MonitorStatus::STATUS_PAID,
             ]);
-        } catch (Throwable $e) {
-            return $json->setData([
+        } catch (HttpException $e) {
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'finish' => true,
                 'paid' => false,
                 'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Regular Status error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
                 'step' => $step,
             ]);
         }

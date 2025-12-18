@@ -14,6 +14,10 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 use Twint\Magento\Model\Method\TwintRegularMethod;
 
 class Checkout extends Action implements ActionInterface, HttpPostActionInterface
@@ -21,7 +25,8 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
     public function __construct(
         Context $context,
         private Session $session,
-        private readonly StoreManagerInterface $storeManager
+        private readonly StoreManagerInterface $storeManager,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($context);
     }
@@ -39,13 +44,13 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
             $step = 'get_order';
             $order = $this->session->getLastRealOrder();
             if (!$order) {
-                throw new Exception('Dont have needed order to pay');
+                throw new BadRequestHttpException('Dont have needed order to pay');
             }
 
             $step = 'validate_payment';
             $payment = $order->getPayment();
             if (!$payment || $payment->getMethod() !== TwintRegularMethod::CODE) {
-                throw new Exception('This order did not processed by TWINT');
+                throw new BadRequestHttpException('This order did not processed by TWINT');
             }
 
             $step = 'build_response';
@@ -57,10 +62,23 @@ class Checkout extends Action implements ActionInterface, HttpPostActionInterfac
             ];
 
             return $json->setData($data);
-        } catch (Exception $e) {
-            return $json->setData([
+        } catch (HttpException $e) {
+            return $json->setHttpResponseCode($e->getCode())->setData([
                 'success' => false,
                 'errorMessage' => $e->getMessage(),
+                'step' => $step,
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Regular Checkout error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
                 'step' => $step,
             ]);
         }
