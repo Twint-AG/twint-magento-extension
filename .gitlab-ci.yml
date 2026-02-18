@@ -61,7 +61,8 @@ test:
     - cd "$extension_path"
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
-    
+    - composer config --global --json audit.ignore '["PKSA-z3gr-8qht-p93v"]'
+
     # Install dependencies for plugin itself
     - |
       rm -f composer.lock

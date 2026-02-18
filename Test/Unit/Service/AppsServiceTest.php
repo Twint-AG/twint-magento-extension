@@ -95,7 +95,7 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
             'ios' => [
                 [
                     'name' => 'TWINT',
-                    'link' => 'twint://applinks/?al_applink_data={"app_action_type":"TWINT_PAYMENT","extras": {"code": "' . $token . '",},"referer_app_link": {"target_url": "", "url": "", "app_name": "EXTERNAL_WEB_BROWSER"}, "version": "6.0"}',
+                    'link' => 'twint://applinks/?al_applink_data={"app_action_type":"TWINT_PAYMENT","extras": {"code": "' . $token . '"},"referer_app_link": {"target_url": "", "url": "", "app_name": "EXTERNAL_WEB_BROWSER"}, "version": "6.0"}',
                 ],
             ],
         ];
