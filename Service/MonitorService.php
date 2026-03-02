@@ -11,6 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Logger\Monolog;
 use Magento\Framework\Webapi\Exception;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Throwable;
 use Twint\Magento\Api\PairingRepositoryInterface;
@@ -89,8 +90,10 @@ class MonitorService
 
         if (!$pairing->isMonitoring()) {
             try {
+                $phpBinary = (new PhpExecutableFinder())->find() ?: 'php';
+
                 $process = new Process([
-                    'php',
+                    $phpBinary,
                     $this->directoryList->getRoot() . '/bin/magento',
                     PollCommand::COMMAND,
                     $pairing->getPairingId(),
