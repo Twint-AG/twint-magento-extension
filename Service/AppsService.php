@@ -7,6 +7,7 @@ namespace Twint\Magento\Service;
 use Exception;
 use Magento\Framework\App\CacheInterface;
 use Twint\Magento\Builder\ClientBuilder;
+use Twint\Sdk\Value\AlphanumericPairingToken;
 use function Psl\Type\string;
 
 class AppsService
@@ -26,16 +27,17 @@ class AppsService
         try {
             $client = $this->connector->build($storeCode);
             $device = $client->detectDevice(string()->assert($_SERVER['HTTP_USER_AGENT'] ?? ''));
+            $pairingToken = AlphanumericPairingToken::fromString($token);
 
             if ($device->isAndroid()) {
-                $links['android'] = 'intent://payment#Intent;action=ch.twint.action.TWINT_PAYMENT;scheme=twint;S.code=' . $token . ';S.startingOrigin=EXTERNAL_WEB_BROWSER;S.browser_fallback_url=;end';
+                $links['android'] = (string) $client->getAndroidAppUrl($pairingToken);
             } elseif ($device->isIos()) {
                 $links['ios'] = [];
 
                 foreach ($client->getIosAppSchemes() as $app) {
                     $links['ios'][] = [
                         'name' => $app->displayName(),
-                        'link' => $app->scheme() . 'applinks/?al_applink_data={"app_action_type":"TWINT_PAYMENT","extras": {"code": "' . $token . '"},"referer_app_link": {"target_url": "", "url": "", "app_name": "EXTERNAL_WEB_BROWSER"}, "version": "6.0"}',
+                        'link' => (string) $client->getIosAppUrl($app, $pairingToken),
                     ];
                 }
             }

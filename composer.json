@@ -25,12 +25,12 @@
     "magento",
     "magento2"
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
     "php": ">=8.1",
     "magento/framework": ">=100.4.3",
-    "twint-ag/sdk": ">=1.7.0",
+    "twint-ag/sdk": "^1.8.2",
     "symfony/validator": ">=5.4",
     "symfony/http-kernel": "*",
     "symfony/process": ">=5.4"
@@ -44,12 +44,16 @@
     "mockery/mockery": "^1.6",
     "squizlabs/php_codesniffer": "^3.0"
   },
-  "repositories": [
-    {
+  "repositories": {
+    "0": {
       "type": "composer",
       "url": "https://repo.magento.com/"
+    },
+    "twint-php-sdk": {
+      "type": "vcs",
+      "url": "https://git.nfq.asia/twint-ag/php-sdk.git"
     }
-  ],
+  },
   "autoload": {
     "files": [
       "registration.php"
