@@ -117,12 +117,6 @@ abstract class TwintMethod extends AbstractMethod
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $amount = $this->priceCurrency->convertAndRound(
-            $amount,
-            $payment->getOrder()->getStore(),
-            $payment->getOrder()->getOrderCurrencyCode()
-        );
-
         /** @var Order $order */
         $order = $payment->getOrder();
 
@@ -132,12 +126,12 @@ abstract class TwintMethod extends AbstractMethod
         }
 
         try {
-            $refund = $this->refundService->refund($pairing, $amount);
+            $refund = $this->refundService->refund($pairing, (float) $amount);
             if ($payment instanceof Order\Payment) {
                 $payment->setTransactionId("R-{$pairing->getPairingId()}-{$refund->getId()}");
             }
         } catch (Throwable $e) {
-            $this->logger->debug([$order->getIncrementId(), $amount, $order->getStoreId()]);
+            $this->logger->debug([$order->getIncrementId(), $amount, (float) $amount, $order->getStoreId()]);
             throw $e;
         }
     }
