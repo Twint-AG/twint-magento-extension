@@ -40,6 +40,7 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
 
         $clientMock = Mockery::mock('overload:Twint\Sdk\InvocationRecorder\InvocationRecordingClient');
         $deviceMock = Mockery::mock('overload:Twint\Sdk\Value\DetectedDevice');
+        $urlMock = Mockery::mock('overload:Twint\Sdk\Value\Url');
 
         $this->clientBuilderMock->shouldReceive('build')
             ->with($storeCode)
@@ -52,11 +53,16 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
         $deviceMock->shouldReceive('isIos')
             ->andReturn(false);
 
+        $clientMock->shouldReceive('getAndroidAppUrl')
+            ->andReturn($urlMock);
+        $urlMock->shouldReceive('__toString')
+            ->andReturn('android-url');
+
         $expectedLinks = [
-            'android' => 'intent://payment#Intent;action=ch.twint.action.TWINT_PAYMENT;scheme=twint;S.code=' . $token . ';S.startingOrigin=EXTERNAL_WEB_BROWSER;S.browser_fallback_url=;end',
+            'android' => 'android-url',
         ];
 
-        $result = $this->appsService->buildLinks($storeCode, $token);
+        $result = $this->appsService->getLinks($storeCode, $token);
 
         self::assertSame($expectedLinks, $result);
     }
@@ -72,6 +78,7 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
         $clientMock = Mockery::mock('overload:Twint\Sdk\InvocationRecorder\InvocationRecordingClient');
         $deviceMock = Mockery::mock('overload:Twint\Sdk\Value\DetectedDevice');
         $iosAppMock = Mockery::mock('overload:Twint\Sdk\Value\IosAppScheme');
+        $urlMock = Mockery::mock('overload:Twint\Sdk\Value\Url');
 
         $this->clientBuilderMock->shouldReceive('build')
             ->with($storeCode)
@@ -88,19 +95,23 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
             ->andReturn([$iosAppMock]);
         $iosAppMock->shouldReceive('displayName')
             ->andReturn('TWINT');
-        $iosAppMock->shouldReceive('scheme')
-            ->andReturn('twint://');
+
+        $clientMock->shouldReceive('getIosAppUrl')
+            ->with($iosAppMock, Mockery::any())
+            ->andReturn($urlMock);
+        $urlMock->shouldReceive('__toString')
+            ->andReturn('ios-url');
 
         $expectedLinks = [
             'ios' => [
                 [
                     'name' => 'TWINT',
-                    'link' => 'twint://applinks/?al_applink_data={"app_action_type":"TWINT_PAYMENT","extras": {"code": "' . $token . '"},"referer_app_link": {"target_url": "", "url": "", "app_name": "EXTERNAL_WEB_BROWSER"}, "version": "6.0"}',
+                    'link' => 'ios-url',
                 ],
             ],
         ];
 
-        $result = $this->appsService->buildLinks($storeCode, $token);
+        $result = $this->appsService->getLinks($storeCode, $token);
 
         self::assertSame($expectedLinks, $result);
     }
@@ -121,7 +132,7 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
             ->with($cacheKey)
             ->andReturn(serialize($cachedData));
 
-        $result = $this->appsService->getLinks($storeCode, $token);
+        $result = $this->appsService->getCachedLinks($storeCode, $token);
 
         self::assertSame($cachedData, $result);
     }
@@ -141,6 +152,7 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
 
         $clientMock = Mockery::mock('overload:Twint\Sdk\InvocationRecorder\InvocationRecordingClient');
         $deviceMock = Mockery::mock('overload:Twint\Sdk\Value\DetectedDevice');
+        $urlMock = Mockery::mock('overload:Twint\Sdk\Value\Url');
 
         $this->clientBuilderMock->shouldReceive('build')
             ->with($storeCode)
@@ -153,14 +165,19 @@ class Test_Unit_AppsServiceTest extends MockeryTestCase
         $deviceMock->shouldReceive('isIos')
             ->andReturn(false);
 
+        $clientMock->shouldReceive('getAndroidAppUrl')
+            ->andReturn($urlMock);
+        $urlMock->shouldReceive('__toString')
+            ->andReturn('android-url');
+
         $expectedLinks = [
-            'android' => 'intent://payment#Intent;action=ch.twint.action.TWINT_PAYMENT;scheme=twint;S.code=' . $token . ';S.startingOrigin=EXTERNAL_WEB_BROWSER;S.browser_fallback_url=;end',
+            'android' => 'android-url',
         ];
 
         $this->cacheMock->shouldReceive('save')
             ->with(serialize($expectedLinks), $cacheKey, [], 86400)->once();
 
-        $result = $this->appsService->getLinks($storeCode, $token);
+        $result = $this->appsService->getCachedLinks($storeCode, $token);
 
         self::assertSame($expectedLinks, $result);
     }

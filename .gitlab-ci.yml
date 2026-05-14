@@ -26,7 +26,7 @@ test:
     matrix:
       - MAGENTO_VERSION: [ "2.4.5-p14" ]
         PHP_VERSION: [ "8.1"]
-      - MAGENTO_VERSION: [ "2.4.6-p13" ]
+      - MAGENTO_VERSION: [ "2.4.6-p14" ]
         PHP_VERSION: [ "8.1", "8.2" ]
       - MAGENTO_VERSION: [ "2.4.7-p8" ]
         PHP_VERSION: [ "8.1", "8.2", "8.3" ]
@@ -61,7 +61,7 @@ test:
     - cd "$extension_path"
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
-    - composer config --global --json audit.ignore '["PKSA-z3gr-8qht-p93v", "PKSA-y2cr-5h3j-g3ys"]'
+    - if [ "$MAGENTO_VERSION" = "2.4.5-p14" ]; then composer config --global audit.block-insecure false; fi
 
     # Install dependencies for plugin itself
     - |
