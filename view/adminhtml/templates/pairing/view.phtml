@@ -1,0 +1,15 @@
+<?php
+/** @var View $block */
+
+use Twint\Magento\Block\Adminhtml\Pairing\View;
+
+if(!$block->isExpress()){
+    echo "<h2>" .__("Reversal history") ."</h2>";
+    echo $block->getChildHtml('twint.grid.refund_history.container');
+
+    echo "<h2>" .__("Transaction logs") ."</h2>";
+    echo $block->getChildHtml('twint.grid.pairing_history.container');
+}else{
+    echo "<h2>" .__("Transaction logs") ."</h2>";
+    echo $block->getChildHtml('twint.grid.pairing_express_history.container');
+}

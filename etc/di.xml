@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Framework\Data\Form\FormKey\Validator" type="Twint\Magento\Validator\FormKeyValidator"/>
+    <preference for="Twint\Magento\Api\PairingRepositoryInterface" type="Twint\Magento\Model\PairingRepository"/>
+    <preference for="Twint\Magento\Api\PairingHistoryRepositoryInterface"
+                type="Twint\Magento\Model\PairingHistoryRepository"/>
+    <preference for="Twint\Magento\Api\RequestLogRepositoryInterface" type="Twint\Magento\Model\RequestLogRepository"/>
+    <preference for="Twint\Magento\Api\RefundRepositoryInterface" type="Twint\Magento\Model\RefundRepository"/>
+
+    <type name="Magento\Payment\Block\Form\Container">
+        <plugin name="twint_payment_form_plugin" type="Twint\Magento\Plugin\PaymentFormPlugin"/>
+    </type>
+
+    <type name="Magento\Config\Model\Config">
+        <plugin name="unselect_options" type="Twint\Magento\Plugin\ExpressUnselectOptionsPlugin"/>
+    </type>
+
+    <type name="Magento\Quote\Model\SubmitQuoteValidator">
+        <plugin name="disable_address_validation" type="Twint\Magento\Plugin\ExpressAddressValidationPlugin"/>
+    </type>
+
+    <type name="Magento\Quote\Model\QuoteManagement">
+        <plugin name="submit_cloned_quote" type="Twint\Magento\Plugin\SubmitClonedQuotePlugin"/>
+    </type>
+
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routers" xsi:type="array">
+                <item name="twint" xsi:type="array">
+                    <item name="class" xsi:type="string">Magento\Framework\App\Router\Base</item>
+                    <item name="frontName" xsi:type="string">twint</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="pairing_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\PairingHistory\Grid\Collection
+                </item>
+                <item name="refund_history_grid_data_source" xsi:type="string">
+                    Twint\Magento\Model\ResourceModel\Refund\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="commandTwintPoll" xsi:type="object">Twint\Magento\Console\Command\PollCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

@@ -1,0 +1,131 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Twint\Magento\Controller\Express;
+
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Checkout\Controller\Cart\Add;
+use Magento\Checkout\Model\Cart;
+use Magento\Checkout\Model\Cart\RequestQuantityProcessor;
+use Magento\Checkout\Model\Session;
+use Magento\Directory\Model\PriceCurrency;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Data\Form\FormKey\Validator;
+use Magento\Framework\DataObject;
+use Magento\Framework\Logger\Monolog;
+use Magento\Store\Model\StoreManagerInterface;
+use Throwable;
+use Twint\Magento\Block\Frontend\ScanQrModal;
+use Twint\Magento\Exception\CheckoutException;
+use Twint\Magento\Model\Pairing;
+use Twint\Magento\Service\Express\CheckoutService;
+use Twint\Magento\Util\CryptoHandler;
+
+class Checkout extends Add implements ActionInterface, HttpPostActionInterface
+{
+    public function __construct(
+        protected CheckoutService $checkoutService,
+        private readonly PriceCurrency $priceCurrency,
+        private readonly Monolog $logger,
+        Context $context,
+        ScopeConfigInterface $scopeConfig,
+        Session $checkoutSession,
+        StoreManagerInterface $storeManager,
+        Validator $formKeyValidator,
+        private CryptoHandler $cryptoHandler,
+        Cart $cart,
+        ProductRepositoryInterface $productRepository,
+        protected ?RequestQuantityProcessor $quantityProcessor = null
+    ) {
+        parent::__construct($context, $scopeConfig, $checkoutSession, $storeManager, $formKeyValidator, $cart, $productRepository, $quantityProcessor);
+    }
+
+    public function execute()
+    {
+        $json = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $params = $this->getRequest()
+            ->getParams();
+
+        $product = $this->_initProduct();
+        $request = new DataObject($params);
+
+        $step = 'init';
+        try {
+            $wholeCart = (bool) ($params['whole_cart'] ?? false);
+
+            $items = $this->cart->getItems();
+            $count = is_array($items) ? count($items) : $items->count();
+
+            if (!$wholeCart && $count > 0) {
+                $step = 'checkout_wholecart';
+                parent::execute();
+
+                $this->messageManager->addSuccessMessage(
+                    __('You have existing products in the shopping cart. Please review your shopping cart before continue.')
+                );
+
+                return $json->setData([
+                    'showMiniCart' => true,
+                ]);
+            }
+
+            // Checkout in cart but don't have item
+            if ($wholeCart && $count === 0) {
+                return $json->setData([
+                    'reload' => true,
+                ]);
+            }
+
+            /** @var Pairing $pairing */
+            $step = 'checkout';
+            try {
+                $pairing = $this->checkoutService->checkout($product, $request);
+            } catch (CheckoutException $e) {
+                $this->messageManager->addWarningMessage($e->getMessage());
+                return $json->setData([
+                    'backUrl' => $product->getProductUrl(),
+                    'step' => $step,
+                ]);
+            }
+
+            if ($count === 0) {
+                $step = 'clear_session';
+                $this->_checkoutSession->clearStorage();
+            }
+            $step = 'set_quote';
+            $this->_checkoutSession->setQuoteId($pairing->getOriginalQuoteId());
+
+            /** @var ScanQrModal $block */
+            $step = 'render_modal';
+            $block = $this->_view->getLayout()->createBlock(ScanQrModal::class);
+            $block->setTemplate('Twint_Magento::qr.phtml');
+
+            return $json->setData([
+                'success' => true,
+                'id' => $pairing->getId(),
+                'pairingId' => $this->cryptoHandler->hash($pairing->getPairingId()),
+                'token' => $pairing->getToken(),
+                'amount' => $this->priceCurrency->format($pairing->getAmount()),
+                'modal' => $block->toHtml(),
+            ]);
+        } catch (Throwable $e) {
+            $this->logger->error(
+                "[TWINT] Express Checkout error: {$e->getMessage()} at {$e->getFile()}:{$e->getLine()}",
+                [
+                    'step' => $step,
+                    'error' => $e->getMessage(),
+                ]
+            );
+
+            return $json->setHttpResponseCode($e->getCode())->setData([
+                'success' => false,
+                'step' => $step,
+            ]);
+        }
+    }
+}

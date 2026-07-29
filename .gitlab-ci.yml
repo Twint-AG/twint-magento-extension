@@ -1,0 +1,142 @@
+image: shivammathur/node:jammy
+
+variables:
+  COMPOSER_ALLOW_SUPERUSER: "1"
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: magento2_test
+
+stages:
+  - check
+  - release
+
+.base:
+  before_script:
+    - set -euo pipefail
+  tags:
+    - d13-runner
+
+test:
+  only:
+    - merge_requests
+    - master
+    - staging
+  extends: .base
+  stage: check
+  parallel:
+    matrix:
+      - MAGENTO_VERSION: [ "2.4.5-p14" ]
+        PHP_VERSION: [ "8.1"]
+      - MAGENTO_VERSION: [ "2.4.6-p14" ]
+        PHP_VERSION: [ "8.1", "8.2" ]
+      - MAGENTO_VERSION: [ "2.4.7-p8" ]
+        PHP_VERSION: [ "8.1", "8.2", "8.3" ]
+      - MAGENTO_VERSION: [ "2.4.8-p3" ]
+        PHP_VERSION: [ "8.2", "8.3", "8.4" ]
+  services:
+    - mysql:8.0
+    - name: elasticsearch:7.17.22
+      alias: elasticsearch
+      command: [ "elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node", "-Expack.license.self_generated.type=basic" ]
+    - name: opensearchproject/opensearch:2.11.0
+      alias: opensearch
+      command: [ "sh", "-c", "ulimit -n 65536; ulimit -u 4096; /usr/share/opensearch/opensearch-docker-entrypoint.sh -Ediscovery.type=single-node -Eplugins.security.disabled=true" ]
+
+  variables:
+    ELASTIC_PASSWORD: e_password
+    ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+   
+  script:
+    # Update spc (See https://github.com/shivammathur/spc for options)
+    - spc -U
+
+    # Setup PHP
+    - spc --php-version "$PHP_VERSION" --extensions "bcmath, ctype, curl, dom, fileinfo, filter,gd, hash, iconv, intl, json, libxml, mbstring, openssl, pcre, pdo_mysql, simplexml, soap, sockets, sodium, xsl, tokenizer, xmlwriter, xsl, zlib, libxml"
+    
+    - extension_path="/tmp/$CI_COMMIT_SHA"
+    - rm -rf "$extension_path"
+    - mkdir "$extension_path"
+    - rm -rf zinfra infra
+    - cp -R ./* "$extension_path"
+    
+    - cd "$extension_path"
+    - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
+    - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
+    - if [ "$MAGENTO_VERSION" = "2.4.5-p14" ] || [ "$MAGENTO_VERSION" = "2.4.6-p14" ]; then composer config --global audit.block-insecure false; fi
+
+    # Install dependencies for plugin itself
+    - |
+      rm -f composer.lock
+      composer config prefer-stable true
+      composer config minimum-stability dev
+      composer install --prefer-dist --no-progress --no-interaction
+    - composer outdated --no-dev || true
+    
+    # Run coding standard
+    - ./vendor/bin/ecs --no-progress-bar
+    - vendor/bin/rector process --dry-run
+    
+    # Checkout Magento Community template, and change working directory to magento root folder
+    - cd -
+    - composer create-project --repository-url=https://repo.magento.com/
+      magento/project-community-edition=$MAGENTO_VERSION magento > /dev/null
+    - cd magento
+    
+    - composer install --prefer-dist --no-progress --no-interaction
+    
+    # Make sure search engine is ready
+    - |
+      if [ "$MAGENTO_VERSION" = "2.4.8-p3" ]; then
+        until curl -s -X GET "http://opensearch:9200/_cluster/health" > /dev/null; do
+          echo 'Waiting for OpenSearch to be ready...'
+          sleep 5
+        done
+      else
+        until curl -s -X GET "http://elasticsearch:9200/_cluster/health" > /dev/null; do
+          echo 'Waiting for Elasticsearch to be ready...'
+          sleep 5
+        done
+      fi
+
+    - |
+      if [ "$MAGENTO_VERSION" = "2.4.8-p3" ]; then
+        bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=opensearch --opensearch-host=http://opensearch --opensearch-index-prefix=magento2 > /dev/null
+      else
+        bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
+      fi
+    
+    - |
+      composer config prefer-stable true
+      composer config minimum-stability dev
+      composer config repositories.twint-ag/twint-magento-extension path "$extension_path"
+      sed -i 's#"/tmp/extension"#"/tmp/extension", "symlink": true#g' composer.json
+    
+    - rm -rf "$extension_path/vendor"
+    - rm -rf "$extension_path/Test"
+    - ls -al "$extension_path"
+    
+    - composer require twint-ag/twint-magento-extension:9.9.9-dev
+    - composer install --prefer-dist --no-progress --no-interaction
+    
+    - bin/magento cache:clean && bin/magento cache:flush > /dev/null
+    
+    - bin/magento module:enable Twint_Magento
+    - bin/magento setup:upgrade | grep Twint
+    - bin/magento setup:di:compile
+  #    - bin/magento setup:static-content:deploy -f > /dev/null
+  
+  cache:
+    key: $CI_COMMIT_REF_SLUG-${CI_JOB_NAME}
+    paths:
+      - $CI_PROJECT_DIR/.gitlab-ci-cache
+
+release:
+  only:
+    - tags
+  stage: release
+  image: alpine:3
+  extends: .base
+  variables:
+    GIT_DEPTH: 0
+  script:
+    - apk add --no-cache git openssh bash
+    - ./bin/sync.sh

@@ -1,0 +1,5 @@
+zinfra/ export-ignore
+infra/ export-ignore
+Test/ export-ignore
+devbox/ export-ignore
+docs/ export-ignore
