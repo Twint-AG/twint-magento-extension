@@ -1,0 +1,37 @@
+<?php
+/** @var View $block */
+
+use Twint\Magento\Block\Adminhtml\Request\View;
+
+$request = $block->getEntity();
+$invocations = $block->getInvocations();
+
+?>
+<div class="request-view">
+    <div class="field-block">
+        <label for="method"><b><?=  __("API method"); ?></b></label>
+        <span class="twint-tag bg-white"><?= htmlspecialchars($request->getMethod()); ?><span></span>
+    </div>
+
+    <div class="field-block">
+        <label for="request"><b><?=  __("Request"); ?></b></label>
+        <textarea id="request" name="request" class="full-width" rows="4"><?= htmlspecialchars($request->getRequest()); ?></textarea>
+    </div>
+
+    <div class="field-block">
+        <label for="response"><b><?=  __("Response"); ?></b></label>
+        <textarea id="response" name="response" class="full-width" rows="4"><?= htmlspecialchars($request->getResponse()); ?></textarea>
+    </div>
+
+        <?php foreach ($invocations as $invocation) { ?>
+        <div class="field-block">
+            <h3><?=  $invocation['action'] ?></h3>
+            <label><b><?=  __("Request"); ?></b></label>
+            <textarea class="full-width" rows="4"><?= htmlspecialchars($invocation['req']); ?></textarea>
+
+            <label><b><?=  __("Response"); ?></b></label>
+            <textarea class="full-width" rows="4"><?= htmlspecialchars($invocation['res']); ?></textarea>
+        </div>
+
+        <?php } ?>
+</div>
