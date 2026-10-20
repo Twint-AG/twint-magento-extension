@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">pairing_grid.pairing_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>pairing_columns</spinner>
+        <deps>
+            <dep>pairing_grid.pairing_grid_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="pairing_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <filterUrlParams>
+                <param name="order_id">*</param>
+            </filterUrlParams>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+        </settings>
+        <aclResource>Magento_Sales::sales_order</aclResource>
+        <dataProvider class="Twint\Magento\Provider\Data\PairingHistoryDataProvider" name="pairing_grid_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <columnsControls name="columns_controls"/>
+    </listingToolbar>
+
+    <columns name="pairing_columns">
+        <column name="parent_id">
+            <settings>
+                <label translate="true">ID</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="order_id">
+            <settings>
+                <label translate="true">Order ID</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
+            <settings>
+                <label translate="true">Purchase Point</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="method" component="Twint_Magento/js/grid/column/tag">
+            <settings>
+                <label translate="true">Method</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="soap_action" component="Twint_Magento/js/grid/column/tags">
+            <settings>
+                <label translate="true">SOAP action</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="status" component="Twint_Magento/js/grid/column/status">
+            <settings>
+                <label translate="true">TWINT statuses</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="amount" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Amount</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="token">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Token</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="shipping_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Shipping Method</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="customer">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Customer Data</label>
+                <sortable>false</sortable>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <dataType>date</dataType>
+                <label translate="true">Transaction Date</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+
+        <column name="actions" class="Twint\Magento\Block\Adminhtml\Listing\LogAction" component="Twint_Magento/js/grid/column/link">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="viewUrlPath" xsi:type="string">twint/request/view</item>
+                    <item name="field" xsi:type="string">request_id</item>
+                    <item name="text" xsi:type="string">Details</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Actions</label>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+    </columns>
+</listing>

@@ -1,0 +1,27 @@
+<aside role="dialog"
+       class="twint text-16 modal-<%- data.type %> <%- data.modalClass %>
+               <% if(data.responsive){ %><%- data.responsiveClass %><% } %>
+               <% if(data.innerScroll){ %><%- data.innerScrollClass %><% } %> "
+       <% if(data.title){ %> aria-labelledby="modal-title-<%- data.id %>"<% } %>
+       aria-describedby="modal-content-<%- data.id %>"
+       data-role="modal"
+       data-type="<%- data.type %>"
+       tabindex="0">
+    <div data-role="focusable-start" tabindex="0"></div>
+    <div class="modal-inner-wrap twint tw-modal"
+         data-role="focusable-scope">
+        <header class="twint-modal-header sticky top-0 flex justify-between items-center bg-white">
+            <img class="tw-logo hidden md:block ml-4" src="<%= data.twintLogo %>" alt="TWINT Logo">
+            <button id="tw-close" class="flex items-center justify-between sm:justify-start"
+                    data-role="closeBtn"
+                    type="button">
+                <span class="order-last sm:order-first"><%= data.closeText %></span>
+                <svg class="mr-3 md:mr-0 md:ml-3" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.40001 12.8078L0.692261 12.1L6.29226 6.50001L0.692261 0.900011L1.40001 0.192261L7.00001 5.79226L12.6 0.192261L13.3078 0.900011L7.70776 6.50001L13.3078 12.1L12.6 12.8078L7.00001 7.20776L1.40001 12.8078Z" fill="#1C1B1F"/>
+                </svg>
+            </button>
+        </header>
+        <div id="twint-body-content" class="twint-modal-content p-0 md:p-4" data-role="content"></div>
+    </div>
+    <div data-role="focusable-end" tabindex="0"></div>
+</aside>

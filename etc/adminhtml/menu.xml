@@ -1,0 +1,49 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- First level -->
+        <add id="Twint_Magento::core"
+            title="TWINT"
+            translate="title"
+            module="Twint_Magento"
+            sortOrder="19"
+            resource="Twint_Magento::payment"/>
+
+        <!-- Configuration - second level -->
+        <add id="Twint_Magento::configuration"
+             title="Configuration"
+             translate="title"
+             module="Twint_Magento"
+             sortOrder="20"
+             parent="Twint_Magento::core"
+             resource="Twint_Magento::payment"/>
+
+        <add id="Twint_Magento::general"
+             title="Credentials"
+             translate="title"
+             module="Twint_Magento"
+             sortOrder="10"
+             parent="Twint_Magento::configuration"
+             action="adminhtml/system_config/edit/section/twint"
+             resource="Twint_Magento::payment"/>
+
+        <add id="Twint_Magento::regular"
+             title="TWINT Checkout"
+             translate="title"
+             module="Twint_Magento"
+             sortOrder="10"
+             parent="Twint_Magento::configuration"
+             action="adminhtml/system_config/edit/section/twint_regular"
+             resource="Twint_Magento::payment"/>
+
+        <add id="Twint_Magento::express"
+             title="TWINT Express Checkout"
+             translate="title"
+             module="Twint_Magento"
+             sortOrder="10"
+             parent="Twint_Magento::configuration"
+             action="adminhtml/system_config/edit/section/twint_express"
+             resource="Twint_Magento::payment"/>
+
+    </menu>
+</config>

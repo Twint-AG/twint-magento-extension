@@ -1,0 +1,8 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="twint_payment">
+        <job name="twint_transaction_process" instance="Twint\Magento\Cron\UpdatePairingStatus" method="execute">
+            <schedule>*/1 * * * *</schedule>
+        </job>
+    </group>
+</config>
